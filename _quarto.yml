@@ -1,0 +1,70 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "ETR Atlas 2026"
+  description: "Pipeline documentation and methodology for the Atlas of the Offshore World"
+  navbar:
+    left:
+      - text: "Home"
+        href: index.qmd
+      - text: "Pipeline"
+        menu:
+          - text: "How to Run"
+            href: how-to-run.qmd
+          - text: "Pipeline Map"
+            href: pipeline-map.qmd
+          - text: "Data Sources"
+            href: data-sources.qmd
+          - text: "Update Checklist"
+            href: update-checklist.qmd
+      - text: "Dofile Inventory"
+        menu:
+          - text: "Revenue Module"
+            href: revenue.qmd
+          - text: "Factor Shares Module"
+            href: factor-shares.qmd
+          - text: "ETR Module"
+            href: etr-module.qmd
+      - text: "Reference"
+        menu:
+          - text: "Formulas and Revision Guide"
+            href: formulas.qmd
+          - text: "Key Variables"
+            href: variables.qmd
+          - text: "Abbreviations"
+            href: abbreviations.qmd
+
+  sidebar:
+    style: "docked"
+    search: true
+    contents:
+      - text: "Introduction"
+        href: index.qmd
+      - section: "Pipeline"
+        contents:
+          - how-to-run.qmd
+          - pipeline-map.qmd
+          - data-sources.qmd
+          - update-checklist.qmd
+      - section: "Dofile Inventory"
+        contents:
+          - revenue.qmd
+          - factor-shares.qmd
+          - etr-module.qmd
+      - section: "Reference"
+        contents:
+          - formulas.qmd
+          - variables.qmd
+          - abbreviations.qmd
+
+format:
+  html:
+    theme: flatly
+    toc: true
+    toc-depth: 3
+    toc-title: "On this page"
+    smooth-scroll: true
+    code-fold: false
+    highlight-style: github

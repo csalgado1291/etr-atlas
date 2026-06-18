@@ -1,0 +1,30 @@
+---
+title: "Abbreviations"
+---
+
+| Term | Meaning |
+|---|---|
+| ETR | Effective Tax Rate |
+| ETR_K | Effective Tax Rate on Capital |
+| ETR_L | Effective Tax Rate on Labour |
+| ETR_cit | Effective Tax Rate on Corporations (CIT) |
+| NNI | Net National Income |
+| NDP | Net Domestic Product |
+| NIT | Net Indirect Taxes (taxes on production minus subsidies) |
+| CFC | Consumption of Fixed Capital (depreciation) |
+| CE | Compensation of Employees |
+| OS | Operating Surplus |
+| MI | Mixed Income |
+| MIOS | Mixed Income and Operating Surplus combined |
+| NFI | Net Factor Income from abroad |
+| WID | World Inequality Database |
+| SNA | System of National Accounts |
+| HA | Historical Archives (long historical revenue source) |
+| NS | National Statistics (country-level revenue source) |
+| ICTD | International Centre for Tax and Development |
+| GFS | Government Finance Statistics (IMF) |
+| OECD GRS | OECD Global Revenue Statistics |
+| PYZ | Piketty-Yang-Zucman (2019) methodology for China |
+| RPC | Revenue and Primary Commodities (supplementary social contributions source) |
+| PIT | Personal Income Tax |
+| CIT | Corporate Income Tax |

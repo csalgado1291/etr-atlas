@@ -1,0 +1,174 @@
+---
+title: "Dofile Inventory — ETR Module"
+---
+
+This page documents all substantive dofiles in the ETR module (3_x), in execution order.
+
+---
+
+## 3_1_ETR_revenue_source.do
+
+**Short description:** This is the first dofile in the ETR revenue module. It takes the raw harmonized revenue dataset (ETR_1_revenue_raw.dta) and, country by country, selects the appropriate source(s) for each tax series, stitches together multiple sources across time, applies interpolations to fill gaps, reconstructs aggregates from disaggregates where needed, and saves one harmonized country-level file per country into work_data/revenue_harmonized_v24/.
+
+**Objective:** Produce a set of country-level files in work_data/revenue_harmonized_v24/, each containing harmonized annual tax revenue series (as shares of NNI) covering the main OECD tax categories (1000, 1100, 1200, 1300, 2000, 4000, 5000, 6000), alongside source, stitch, and interpolation flags.
+
+**Main activities:**
+
+- For each of the approximately 160 countries, load ETR_1_revenue_raw.dta and subset to the country of interest. Initialize blank pct_X series for all tax categories and assign values from the best available source by time period.
+- Where a source transition creates a discontinuity, flag stitch years (stitch = 1) and bridge short gaps by linear interpolation, with interpolated years flagged accordingly.
+- For several countries, reconstruct sub-aggregate series by computing their ratio to the aggregate in an overlap period and applying that ratio to the other source's aggregate.
+- Recompute aggregates (pct_1000, pct_5000, pct_tax) from disaggregates after any stitching or interpolation. Apply ad hoc corrections where needed. Save each country file.
+
+**Important to keep in mind for the update:**
+
+- The dofile is structured as a long sequential script with one block per country. There is no looping over countries. Any country added or substantially revised requires a dedicated new or modified block.
+- The output folder is work_data/revenue_harmonized_v24/. If the vintage changes, this path must be updated consistently throughout all approximately 160 save statements and in all downstream dofiles.
+- VUT (entry 159) is currently commented out entirely due to data ambiguity. It should be reviewed at each update.
+- The 2000 (social contributions) series is frequently the most difficult to harmonize and receives country-specific treatment in many blocks.
+
+---
+
+## 3_2_ETR_revenue_merge.do
+
+**Short description:** This is a short utility dofile that appends all country-level harmonized revenue files produced in the previous step into a single panel dataset, applies a small set of cleaning rules, and saves the consolidated revenue output used by downstream ETR construction dofiles.
+
+**Objective:** Produce output/ETR_3_revenue_2026.dta, a balanced panel of harmonized tax revenue shares (as a percentage of NNI) for all countries from 1965 to 2023.
+
+**Main activities:**
+
+- Change directory to work_data/revenue_harmonized_v24/ and loop over all .dta files in that folder, appending them sequentially.
+- Compute the latest available year per country and tabulate which countries only reach 2022, as a diagnostic check on coverage.
+- Drop observations where pct_tax is missing and drop year 2024 from the panel.
+- Replace all remaining missing values across all pct_* variables with zero and save the final panel.
+
+**Important to keep in mind for the update:**
+
+- The append loop picks up all .dta files in the folder indiscriminately. Any stale or test files left in that directory will be silently included.
+- The zero-fill for missing pct_* values treats missing sub-categories as truly zero rather than unknown. This is appropriate when a tax category is structurally absent but could be misleading if missingness reflects data gaps.
+- The tabulation of countries with last == 2022 should be reviewed at each update to confirm which countries are lagging.
+
+---
+
+## 3_3_ETR_revenue_factor.do
+
+**Short description:** This is a short merging dofile that joins the harmonized revenue panel with the factor income dataset, brings in the NNI current LCU series, applies a small set of sample restriction rules, declares the panel structure, and saves the merged dataset used by downstream ETR construction dofiles.
+
+**Objective:** Produce output/ETR_4_revenue_factor_2026.dta, a fully merged panel combining harmonized tax revenue shares, factor income components, and NNI in current LCU for all countries from 1965 to 2023.
+
+**Main activities:**
+
+- Load ETR_3_revenue_2026.dta and merge 1:1 on country and year with ETR_2_factorincome_2026.dta. Drop unmatched revenue observations.
+- Drop countries that never have any tax data in the merged panel.
+- Merge 1:1 on country and year with work_data/nni_current to bring in NNI in current LCU from WID.
+- Declare the panel by encoding country as a numeric identifier (cid) and calling tsset cid year. Save the merged panel.
+
+**Important to keep in mind for the update:**
+
+- Both input files reference the 2026 vintage suffix. If the vintage label changes, both merge statements must be updated.
+- The approximately 140 country-years dropped due to missing factor shares include Venezuela and Myanmar. Review the tab country if _merge==1 output at each update.
+- The nni_current file is sourced from WID May 2024. Verify at each update whether a newer vintage for NNI in current LCU is available.
+
+---
+
+## 3_4_ETR_clean.do
+
+**Short description:** This dofile takes the merged revenue-factor panel, harmonizes denominators, cleans flags, merges auxiliary variables (NNI weights, PIT thresholds, dividend-PIT ratios), and saves the pre-ETR dataset used in the construction step.
+
+**Objective:** Produce output/ETR_5_preliminary_2026.dta, a clean, fully labelled panel with all revenue and factor income components expressed as shares of NDP minus NIT, augmented with PIT and dividend tax auxiliary variables, ready for ETR construction.
+
+**Main activities:**
+
+- Correct China's GDP and NDP using the sum of factor income components.
+- Re-express all revenue and factor income variables as shares of NDP minus NIT. Consolidate SNA stitch flags and standardize all flag variables to 0/1.
+- Merge WID NNI weights, drop years before 1965 and countries that never have any tax data. Construct NDP equivalents in PPP and USD.
+- Merge PIT exemption threshold and pit_alpha, carrying forward pit_thr for 2023 where missing. Merge OECD dividend-to-PIT statutory rate ratio and back-fill to the earliest available year.
+
+**Important to keep in mind for the update:**
+
+- The China GDP correction is a manual patch applied here. If the CHN country routine is ever updated to correct GDP upstream, this block should be removed to avoid double-correction.
+- The pit_thr carry-forward for 2023 was added in Update 2026. Verify at the next update whether 2024 is similarly missing.
+- The div_pit_oecd back-fill loop was extended to 2024 in Update 2026. Check at each update whether the auxiliary file has been extended and adjust the loop bound.
+
+---
+
+## 3_5_ETR_construction.do
+
+**Short description:** This is the core ETR construction dofile. It takes the preliminary merged panel, applies tax incidence assumptions to allocate PIT revenue between labor and capital, computes labor and capital tax revenue aggregates, derives factor income shares, calculates the three benchmark effective tax rates, applies a sample restriction for ex-communist countries, and saves the pre-atlas output.
+
+**Objective:** Produce output/ETR_6_preatlas_2026.dta, a country-year panel containing ETR_L, ETR_K, and ETR_cit alongside factor income shares, tax revenue components, and key income aggregates, for all countries from 1965 to 2023.
+
+**Main activities:**
+
+- Define global incidence parameters: 50% of the unallocable 1300 income tax series is attributed to labor and 50% to capital.
+- Construct the country-year PIT capital share (alpha_prime) using PIT exemption thresholds (0.15 for OECD, 0.30 for low-income, interpolated in between) and adjust for dual PIT systems using the OECD dividend-to-PIT statutory rate ratio.
+- Compute labor tax revenue (Tau_L) as the labor share of PIT plus 50% of the 1300 series plus social contributions. Compute capital tax revenue (Tau_K) as the capital share of PIT plus CIT plus 50% of the 1300 series plus property taxes.
+- Calculate ETR_L, ETR_K, and ETR_cit. Drop all country-years before 1994 for ex-communist economies.
+
+**Important to keep in mind for the update:**
+
+- The alpha_prime rescaling depends on mi_hh_L and mi_hh_K being available. If the factor income variables are renamed upstream, this block will silently produce missing values.
+- The 1994 cutoff for ex-communist countries is hardcoded. If the sample is extended backward for any of these countries, the drop condition must be revised explicitly.
+- ETR_cit uses os_corp as the denominator. If os_corp is missing or near-zero, ETR_cit will be missing or extreme. No winsorization is applied at this stage.
+
+---
+
+## 3_6_ETR_countrychecks.do
+
+**Short description:** This dofile applies post-construction quality checks, country-specific corrections, and winsorization to the ETR panel before it enters the Atlas database. It handles France's tax credit adjustment, Mozambique and Chad's corporate denominator correction, and a final hard winsorization of all ETR and total tax variables to the unit interval.
+
+**Objective:** Produce output/ETR_7_atlas_2026.dta, the final ETR panel ready for the Atlas database, with outliers diagnosed, country cases corrected, and all ETR and total tax variables bounded between 0 and 1.
+
+**Main activities:**
+
+- Run diagnostic tabulations of countries with ETR_K, ETR_L, ETR_cit and total tax revenue above 0.55 and outside the unit interval, to flag outliers before winsorization.
+- Apply the France tax credit correction: merge INSEE tax credit data, subtract credits from CIT revenue, and recompute ETR_cit and ETR_K for France from 1995 onward.
+- Apply the Mozambique and Chad correction: recompute ETR_cit by adding government operating surplus to the corporate operating surplus in the denominator.
+- Apply hard winsorization: cap ETR_K, ETR_L, ETR_cit and total tax revenue at 1 from above and at 0 from below. Save the final output.
+
+**Important to keep in mind for the update:**
+
+- The France correction relies on the INSEE credits file in aux_data/fra_credits. This file must be updated at each vintage to extend coverage to the latest year.
+- The Mozambique and Chad ETR_cit correction is a permanent methodological choice applied unconditionally for all years.
+- The April 2026 winsorization loop replaces the earlier country-by-country approach. Review the diagnostic tabulations before proceeding to winsorization at each update.
+
+---
+
+## 3_7_ETR_atlas.do
+
+**Short description:** This is the final dofile in the ETR module. It takes the quality-checked ETR panel, adjusts tax revenue denominators, merges country frame metadata, balances the panel, constructs all tooltip and summary variables for the Atlas website, and exports the results to Excel across five structured sheets.
+
+**Objective:** Produce output/ETR_fully_balanced_2026.dta as the analytical Stata output and output/global_ETR_v26_new.xlsx as the Atlas website delivery file, containing ETR series, revenue composition shares, regional and income-group averages, and data quality indicators for all countries from 1965 to 2023.
+
+**Main activities:**
+
+- Re-express all tax revenue shares from factor-price NDP terms back to NDP terms by multiplying by (NDP minus NIT) divided by NDP.
+- Merge the country frame metadata (iso2, country name, region, income level). Balance the panel using tsfill, then restore string identifiers via a temporary file.
+- Construct tooltip variables: country-level all-years averages, GDP-weighted regional and income-group averages varying by year, and revenue composition shares. All averages are computed as NDP-USD weighted means.
+- Rename all variables to Atlas website labels and save the Stata file. Export to output/global_ETR_v26_new.xlsx across five sheets: Data, P1_2_Region_average, P1_3_Income_average, P1_1_Country_average, P2_Share_revenue, and P3_Data_quality.
+
+**Important to keep in mind for the update:**
+
+- The tax revenue denominator adjustment at the top was introduced in October 2024 and must remain in place unless upstream construction dofiles are changed.
+- The tsfill step sets the maximum year to 2023 explicitly. If the panel is extended to 2024, this line must be updated.
+- The WDD denominator block is fully commented out and requires manual activation at each update. The target year must be changed and the raw WDD file must be refreshed before running.
+
+---
+
+## 3_8_ETR_robust.do
+
+**Short description:** This is a robustness check dofile that recomputes the three ETRs using absolute currency values rather than shares of NDP. It applies the same incidence assumptions as the main pipeline and saves the resulting ETR series as a separate auxiliary file for comparison against the benchmark estimates.
+
+**Objective:** Produce aux_data/ETR_robust_2026.dta, containing ETR_K_robust, ETR_L_robust and ETR_cit_robust computed with numerators and denominators in current LCU levels.
+
+**Main activities:**
+
+- Convert all tax revenue series and factor income components from NDP share terms to absolute current LCU levels.
+- Reconstruct alpha_prime using the same two-step procedure as in the main pipeline.
+- Compute labor and capital tax revenue and factor income denominators in absolute levels. Divide to obtain ETR_K, ETR_L and ETR_cit.
+- Keep only country, year and the three ETRs, rename them with a robust suffix, and save.
+
+**Important to keep in mind for the update:**
+
+- The div_pit_oecd back-fill loop runs to 2023 here, versus 2024 in the main pipeline. Both loops should be set to the same upper bound at each update.
+- This dofile loads ETR_4_revenue_factor_2026.dta, bypassing the China GDP correction and the WID NNI weight merge applied in 3_4_ETR_clean.do. This is intentional for a clean robustness check.
+- The test plot for France is hardcoded and will display during a standard run. It can be commented out if the dofile is run in batch mode.

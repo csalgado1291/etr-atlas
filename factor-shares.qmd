@@ -1,0 +1,256 @@
+---
+title: "Dofile Inventory — Factor Shares Module"
+---
+
+This page documents all substantive dofiles in the factor shares module (2_x), in execution order.
+
+---
+
+## 2_1_factorshares_importwid_2026.do
+
+**Short description:** This dofile downloads and processes national income component data from WID to produce the factor share variables used as denominators in ETR_L and ETR_K. It is substantially updated for the 2026 vintage, primarily because the WID restructured how it reports compensation of employees (CE) and introduced new sector-level GVA variables.
+
+**Objective:** Produce two output files: the main factor shares dataset (work_data/Lsh_compo_wid2026_raw.dta) containing all WID national income components as percentages of NNI, and an auxiliary NNI series file (work_data/wid2026_nni.dta) used by downstream dofiles.
+
+**Main activities:**
+
+- Download WID data in three parts due to server size limits, plus a separate population download. Append all parts and save the raw file. This step is commented out and only needs to be re-run when a new WID vintage is released.
+- Clean the raw dataset, keep only macro aggregates (m- prefix variables), drop provincial observations and pre-1950 years, reshape from long to wide, apply labels from wid_labels_2026.do, and save as wid2026_basic_raw.dta.
+- Construct the CE total variable (ce_hh) as the sum of three sector components from WID 2026 (ce_hh_sector + ce_corp_sector + ce_gov_wid), replacing the old single concept mcomhn which no longer exists in the new WID.
+- Reconstruct derived variables (mios_hh, mios_total, os_total, nfi, ndp), interpolate and extrapolate NFI_L and NFI_K where missing, apply the Sierra Leone NIT correction, and convert NNI to constant 2021 USD.
+
+**Important to keep in mind for the update:**
+
+- The WID download block (Section 1) is commented out. At each update, uncomment it, verify the API indicator codes, and re-run to refresh the raw data.
+- Two auxiliary dofiles must be updated before running: wid_rename_2026.do and wid_labels_2026.do. Both must reflect any new variables added in future WID vintages.
+- The CE construction changed fundamentally in this update. The old WID reported total CE as mcomhn. The new WID 2026 reports CE split by sector. If WID changes this structure again, the construction logic must be updated.
+- The constant-price base year was updated from 2019 to 2021. Downstream files using nni_ppp or nnipc_ppp must be aware that these series are now in 2021 USD.
+- The output file was renamed from Lsh_compo_wid_raw.dta to Lsh_compo_wid2026_raw.dta. All downstream files must reference the new filename.
+
+---
+
+## 2_2_factorshares_importsna1968_1gdp.do
+
+**Short description:** This dofile takes the raw SNA 1968 database and ensures every observation has a consistent GDP value using a three-step fallback strategy: first from the same series within SNA 1968, then from any other series for the same country-year in SNA 1968, and finally from WID where neither is available.
+
+**Objective:** Produce work_data/sna1968_basic_pct_gdp.dta, a cleaned version of the SNA 1968 raw data where all item values are expressed as percentages of GDP, covering 1965 to 1996.
+
+**Main activities:**
+
+- Extract all GDP observations from SNA 1968 table 103, deduplicate by taking the mean, and save as a temporary reference file.
+- Merge the full dataset against the same-series GDP first, then against the any-series GDP for the same country-year, flagging observations where GDP had to be retrieved from a different series.
+- For remaining country-years still missing GDP, merge against WID (raw_wid2026_plus.dta) and compute GDP from the WID GDP share of NNI multiplied by NNI. Drop Kazakhstan pre-1990.
+- Divide all item values by GDP to express them as percentages, drop the GDP row, generate a within-group id variable, and save.
+
+**Important to keep in mind for the update:**
+
+- The SNA 1968 source is a historical dataset covering 1965 to 1996 and does not update annually.
+- The WID fallback now uses raw_wid2026_plus.dta following the 2026 rename. If the WID file is renamed again, the merge path must be updated.
+- Kazakhstan pre-1990 is dropped because no consistent GDP is available for those years in any of the three sources.
+
+---
+
+## 2_2_factorshares_importsna1968_2compo.do
+
+**Short description:** This dofile maps the SNA 1968 item descriptions to WID income concept labels (ce_hh, mios_total, mios_hh, os_corp, os_gov, nit, cfc, ce_gov), resolves cross-table consistency issues, converts gross to net variables, enforces accounting identities, and resolves duplicate country-year observations from overlapping series.
+
+**Objective:** Produce work_data/sna1968_compo.dta, a wide-format dataset of SNA 1968 national income components in WID variable names expressed as percentages of GDP, covering 1965 to 1996, net of CFC and consistent with GDP = CE + MIOS + NIT + CFC.
+
+**Main activities:**
+
+- Map SNA 1968 item descriptions from tables 103 to 106 to WID concept names and reshape to wide format.
+- Resolve NIT inconsistencies and reconcile os_gov, os_corp, and mios_hh across tables. Drop known erroneous observations for BWA, CMR, DNK, and PYF.
+- Convert gross to net variables using CFC from WID (Lsh_compo_wid2026_raw.dta). For sector-level cases, allocate CFC proportionally using a 33% share assumption for the household sector.
+- Enforce the accounting identity with GDP and CFC held fixed. Drop observations where enforced mios_total is below 0.10. Resolve 120+ duplicate country-year observations for CAN, ESP, EST, IND, ISL, ITA, LSO, MAR, MUS, NGA, NOR, PAN, and ROU.
+
+**Important to keep in mind for the update:**
+
+- The SNA 1968 source is historical and does not update. Re-run only if the raw file is corrected or the WID CFC series is updated.
+- There are two separate WID merges in this file for CFC. Both must point to the correct filename (Lsh_compo_wid2026_raw.dta).
+- Lithuania (LTU) 1988 requires a manual fix zeroing out all component variables. This must not be removed.
+
+---
+
+## 2_3_factorshares_importsna2024_1import.do
+
+**Short description:** This dofile imports and assembles the UN SNA national accounts data by institutional sector, covering the total economy and four sectors (non-financial corporations, financial corporations, government, and households including NPISH). Each sector is imported from multiple CSV files, aligned to the GDP series reference, and merged into a single dataset covering 1965 to 2022.
+
+**Objective:** Produce work_data/sna2025_all_raw.dta, a wide-format dataset of gross national accounts components by sector (GDP, CE, gross OS by sector, gross mixed income, and net taxes on production).
+
+**Main activities:**
+
+- Import five CSV files for the total economy (sector S1), append them, replace 2021 and 2022 observations with the dedicated update file, align to the highest series number with CE data, collapse duplicates, and save as sna2025_s1.dta.
+- Repeat the same import and clean routine for sectors S11, S12, S13, S14, and S15, merging each against sna2025_s1 to verify series consistency.
+- Merge all sector files, compute total corporate OS as S11 plus S12, set gross mixed income from S14, and save the combined dataset.
+
+**Important to keep in mind for the update:**
+
+- This dofile must be replicated for each new update. At each update cycle, new CSV files must be downloaded from the UN National Accounts Statistics database and added as an additional numbered file.
+- The series alignment logic keeps only observations matching the highest series number. The exception for China 1996 to 1999 is hardcoded.
+- The output file is named sna2025_all_raw despite being used in the 2026 update. This reflects when the routine was introduced.
+
+---
+
+## 2_3_factorshares_importsna2024_2clean.do
+
+**Short description:** This dofile takes the assembled SNA gross components, merges them with WID CFC data, computes net income measures by subtracting CFC from each sector's gross OS, expresses all variables as shares of GDP, enforces accounting identities, and saves the final cleaned SNA dataset.
+
+**Objective:** Produce work_data/sna2025.dta, a wide-format dataset of net national accounts components expressed as shares of GDP, with all variable names aligned to the WID pipeline convention and a _sna2025 suffix.
+
+**Main activities:**
+
+- Import the WID raw dataset (wid_basic_raw.dta), retain CFC total and sector components, convert from constant to current prices, compute each sector's share of total CFC, and extrapolate using a constant share assumption for years beyond the last observed decomposition.
+- Merge the SNA raw data with the WID CFC data. Drop observations present only in SNA with no CFC data.
+- Compute net variables (NDP, net OS for corporations, government, and households, net mixed income) by subtracting the corresponding CFC from each gross series.
+- Convert all variables to shares of GDP, rename to WID pipeline conventions, enforce accounting identities with GDP, CFC, NIT, and CE held fixed, and add a _sna2025 suffix.
+
+**Important to keep in mind for the update:**
+
+- This dofile reads from wid_basic_raw.dta, the pre-2026 WID file. Verify at the 2026 update whether this should be changed to wid2026_basic_raw.dta.
+- The CFC extrapolation uses the most recently observed sector share held constant. Verify that extrapolated years are reasonable at each update.
+- The output file is named sna2025 despite being used in the 2026 update.
+
+---
+
+## 2_4_factorshares_import_chn.do
+
+**Short description:** This dofile constructs a corrected national accounts dataset for China specifically, combining the UN SNA data extended through OECD for recent years, a correction based on the Piketty-Yang-Zucman (PYZ 2019) methodology, and WID for NNI and CFC coverage in the pre-1992 period.
+
+**Objective:** Produce work_data/chn_sna2026_correct.dta, a wide-format dataset of net national accounts components for China expressed as shares of NNI, with all components named using the WID pipeline convention and a _chn_correct suffix, covering 1965 to 2023.
+
+**Main activities:**
+
+- Import the OECD SNA annual accounts for China and use them to extend SNA through 2022 to 2023, where UN SNA ends at 2021. Extrapolate OS government and NIT for 2022 to 2023 using proportional shares from the last SNA year.
+- Import the PYZ 2019 corrected household income data and allocate mixed income between labour and capital using PYZ sector-specific ratios (70/30 for agriculture, 95/5 for industry-business).
+- Merge the PYZ corrections into the China SNA series, carrying forward 2021 PYZ values for 2022 to 2023. Subtract PYZ-implied CE and capital components to avoid double-counting.
+- Merge with WID 2026 to obtain NNI and CFC for the pre-1992 period. Divide all variables by NNI, enforce accounting identities, and rename with a _chn_correct suffix.
+
+**Important to keep in mind for the update:**
+
+- The OECD SNA download for China must be refreshed at each update from OECD Data Explorer, Annual non-financial accounts by institutional sector (SNA_TABLE14a), country CHN.
+- The PYZ correction data only covers through 2021. When an updated PYZ dataset becomes available, the carry-forward block can be removed for the covered years.
+- The 0.75/0.25 and 70/30/95/5 allocation parameters are the PYZ methodology and should not be changed without a methodological justification.
+
+---
+
+## 2_5_factorshares_combine_1sna1968.do
+
+**Short description:** This dofile integrates the WID national income component dataset with the SNA 1968 historical series to extend coverage into the pre-WID period. It converts SNA 1968 values into NNI terms, enforces accounting identities on the WID data, backcasts missing WID values using SNA 1968 growth rates, and saves a harmonised historical dataset.
+
+**Objective:** Produce work_data/Lsh_compo_harmonized_1968.dta, combining WID national income components with SNA 1968 backcasts for CE, MIOS total, NIT, and CE government, covering all available countries from 1965 onwards.
+
+**Main activities:**
+
+- Load the WID 2026 dataset (Lsh_compo_wid2026_raw.dta) and merge with the SNA 1968 components file (sna1968_compo.dta). Flag countries that appear in both sources.
+- Convert SNA 1968 variables from percentage-of-GDP to NNI terms. Enforce accounting identities on the WID data with GDP and CFC held fixed.
+- Backcast missing WID values using SNA 1968 growth rates: for each year from 2021 back to 1950, propagate the WID level forward using the ratio of adjacent SNA 1968 values.
+- Apply country-specific corrections for Hungary and Mongolia. Drop SNA 1968 variables once integrated and save.
+
+**Important to keep in mind for the update:**
+
+- Only CE, MIOS total, NIT, and CE government are backcast from SNA 1968. The sector breakdown within MIOS is intentionally not used because the statistical and conceptual distinctions were imperfect in the 1968 SNA framework.
+- Six countries are explicitly excluded from the SNA 1968 plug-in step (ABW, GEO, HUN, KEN, PAN, SVN) because their values are known to be inconsistent with modern SNA.
+
+---
+
+## 2_5_factorshares_combine_2sna2024chn.do
+
+**Short description:** This dofile integrates the WID 2026 national income component dataset with the SNA 2025 series for recent years (2020 onwards) and applies the China-specific PYZ correction. It uses first differences rather than growth rates for forward extension and fully replaces China with the corrected series.
+
+**Objective:** Produce work_data/Lsh_compo_harmonized_2026.dta, the main factor shares dataset used by all downstream ETR dofiles, combining WID as the primary source with SNA 2025 extensions and the PYZ-corrected China series throughout.
+
+**Main activities:**
+
+- Load the WID 2026 dataset and merge with the SNA 2025 components. Drop post-socialist early 1990s observations without a WID match. Set all WID component values after 2024 to missing.
+- Extend WID values forward into 2020 to 2024 using SNA 2025 first differences. Where no WID anchor exists within two years, plug in the raw SNA 2025 level directly.
+- Merge the China-corrected dataset (chn_sna2026_correct.dta) and fully replace all WID component values for China with the PYZ-corrected series.
+- Drop all working variables and save the final harmonised dataset.
+
+**Important to keep in mind for the update:**
+
+- The output was renamed from Lsh_compo_harmonized_2025.dta to Lsh_compo_harmonized_2026.dta. All downstream dofiles must reference the new name.
+- WID component values are set to missing for all years after 2024. If WID releases a new vintage covering 2025 or later, this cutoff must be updated.
+- The cfc_mios_hh replacement for China is handled with a cap command outside the main loop due to a known Stata abbreviated naming issue. This fix must be preserved.
+
+---
+
+## 2_5_factorshares_combine_3all.do
+
+**Short description:** This is the final assembly step in the factor shares module. It combines the two harmonised datasets: WID and SNA 1968 for the pre-2020 period, and WID and SNA 2025 with the China PYZ correction for 2020 onwards.
+
+**Objective:** Produce work_data/Lsh_compo_harmonized_all.dta, the unified factor shares dataset used as input to the ETR construction module, with a clean split at year 2020.
+
+**Main activities:**
+
+- Load Lsh_compo_harmonized_1968.dta, drop all observations from 2020 onwards, and drop China entirely from this file.
+- Load Lsh_compo_harmonized_2026.dta, drop all observations before 2020 except for China (which is retained for all years).
+- Append the two files, sort by country and year, and save the combined dataset.
+
+**Important to keep in mind for the update:**
+
+- The split year is 2020. For all countries except China, observations before 2020 come from WID plus the SNA 1968 backcast, and observations from 2020 onwards come from WID plus the SNA 2025 forward extension.
+- China is fully excluded from the pre-2020 file and fully retained from the post-2019 file.
+- This dofile is very short and purely structural. If it produces unexpected output, the issue will always originate in one of the two input files.
+
+---
+
+## 2_6_factorshares_countrychecks.do
+
+**Short description:** This dofile applies a comprehensive set of country-by-country corrections to the harmonised factor shares dataset, removing observations from periods before independence, during wars, or during periods of statistical instability, and setting specific component variables to missing where values are known to be implausible. It is an institutional knowledge register in code form.
+
+**Objective:** Produce work_data/Lsh_compo_checked.dta, a cleaned version of the combined factor shares panel where coverage starts no earlier than each country's relevant reference year and known data quality issues are flagged.
+
+**Main activities:**
+
+- Drop observations before independence, statehood, or the start of reliable national accounts for approximately 100 countries.
+- Set individual component variables to missing for specific country-year ranges where values are known to be implausible, covering countries including AZE, BFA, BLR, BTN, CIV, EST, GAB, GHA, IRQ, KAZ, LKA, LVA, MDA, MOZ, NGA, QAT, ROU, SRB, UKR, UZB, VEN, ZMB, and others.
+- Apply the Mexico NIT correction for a structural jump in 2019, the Slovakia OS_corp correction for 2020 to 2022, and the Mozambique OS_corp correction for 2012 onwards.
+
+**Important to keep in mind for the update:**
+
+- This dofile is a living register of country-specific data quality decisions. At each update, new issues may be identified and should be added here with a comment explaining the rationale.
+- The Mexico NIT correction is currently applied through 2022. The year range may need extending at each update.
+- The Mozambique cfc_corp correction is new in the 2026 update. ETRs for MOZ should be interpreted with caution.
+
+---
+
+## 2_7_factorshares_imputemissing.do
+
+**Short description:** This dofile imputes missing values for all national income components using a three-level nested random effects model with AR(1) errors, proceeding from aggregate to disaggregate. After each step, components are rescaled to satisfy accounting identities. A final NFI_K correction ensures the capital NFI component does not exceed the observable capital income total.
+
+**Objective:** Produce work_data/compo_full.dta, a fully populated factor shares panel where all component variables have imputed values where observed data was missing, with prediction intervals and imputation flags attached.
+
+**Main activities:**
+
+- Merge the gross output-to-value-added ratio (ov_ratio), declare the panel with xtset, and fill gaps using tsfill.
+- Run three sequential imputation scripts covering CE, MIOS total, and NIT; MIOS sector breakdown; and MI_hh and OS_hh. After each step, rescale imputed values to satisfy the relevant accounting identity.
+- Run a fourth imputation for ov_ratio and ce_gov. Set mi_hh to zero for New Zealand. Flag country-years where both CE and MIOS total are significantly imputed.
+- Correct NFI_K where its absolute value exceeds total observable capital income by redistributing the excess to NFI_L.
+
+**Important to keep in mind for the update:**
+
+- The three imputation scripts live in the code/ subfolder and are called via do. If these scripts are modified, this dofile must be re-run from the top.
+- China is excluded from the standard rescaling at levels 1 and 2 because its components are set precisely from the PYZ correction.
+- New Zealand mi_hh is always set to zero. This reflects StatsNZ national accounting conventions and should not be treated as a data error.
+
+---
+
+## 2_8_factorshares_clean.do
+
+**Short description:** This is the final dofile in the factor shares module. It takes the fully imputed components dataset, generates source tracking and stitch flags, relabels source categories for downstream compatibility, drops variables not needed in the ETR module, and saves the final factor income dataset.
+
+**Objective:** Produce output/ETR_2_factorincome_2026.dta, the final factor shares output file containing all national income components, NNI series, NFI components, source labels, and imputation flags for all countries from 1965 to 2023.
+
+**Main activities:**
+
+- Load compo_full.dta, declare the panel, and generate a source_id group variable. Flag country-years where the SNA source changes and where the SNA 1968 series number increases.
+- Relabel source categories: replace composite with WID for years 2022 onwards. Reset all imputation flags for 2023 to zero.
+- Retain a defined set of variables covering NNI, GDP, NDP, CFC, NFI components, all national income components, and all imputation flags. Drop year 2024 as unreliable.
+- Save the final dataset with a 2026 vintage suffix.
+
+**Important to keep in mind for the update:**
+
+- The output file is named ETR_2_factorincome_2026.dta. All downstream ETR dofiles must reference the new name.
+- Year 2024 is dropped. If WID or SNA 2025 data for 2024 becomes reliable in a future update, the drop condition can be adjusted.
+- va_corp is excluded from the 2026 output because the WID 2026 CE restructuring changed the underlying components.
+- The comparison block at the end of the dofile (commented out) is the recommended quality check before updating downstream files.

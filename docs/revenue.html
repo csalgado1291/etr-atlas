@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Dofile Inventory — Revenue Module – ETR Atlas 2026</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-fd7a8af413f073a9aed129c24f141b63.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">ETR Atlas 2026</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-pipeline" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Pipeline</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-pipeline">    
+        <li>
+    <a class="dropdown-item" href="./how-to-run.html">
+ <span class="dropdown-text">How to Run</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pipeline-map.html">
+ <span class="dropdown-text">Pipeline Map</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./data-sources.html">
+ <span class="dropdown-text">Data Sources</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./update-checklist.html">
+ <span class="dropdown-text">Update Checklist</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-dofile-inventory" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Dofile Inventory</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-dofile-inventory">    
+        <li>
+    <a class="dropdown-item" href="./revenue.html">
+ <span class="dropdown-text">Revenue Module</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./factor-shares.html">
+ <span class="dropdown-text">Factor Shares Module</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./etr-module.html">
+ <span class="dropdown-text">ETR Module</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-reference" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Reference</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-reference">    
+        <li>
+    <a class="dropdown-item" href="./formulas.html">
+ <span class="dropdown-text">Formulas and Revision Guide</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./variables.html">
+ <span class="dropdown-text">Key Variables</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./abbreviations.html">
+ <span class="dropdown-text">Abbreviations</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./revenue.html">Dofile Inventory</a></li><li class="breadcrumb-item"><a href="./revenue.html">Dofile Inventory — Revenue Module</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Pipeline</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./how-to-run.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How to Run the Pipeline</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pipeline-map.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Pipeline Map</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data-sources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Sources</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./update-checklist.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Update Checklist</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Dofile Inventory</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./revenue.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Dofile Inventory — Revenue Module</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./factor-shares.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dofile Inventory — Factor Shares Module</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./etr-module.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dofile Inventory — ETR Module</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Reference</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./formulas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Formulas and Revision Guide</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Key Variables</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./abbreviations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Abbreviations</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#revenue_crosswalks.do" id="toc-revenue_crosswalks.do" class="nav-link active" data-scroll-target="#revenue_crosswalks.do">1_01_revenue_crosswalks.do</a></li>
+  <li><a href="#revenue_oecd.do" id="toc-revenue_oecd.do" class="nav-link" data-scroll-target="#revenue_oecd.do">1_1_revenue_oecd.do</a></li>
+  <li><a href="#revenue_ha.do" id="toc-revenue_ha.do" class="nav-link" data-scroll-target="#revenue_ha.do">1_2_revenue_ha.do</a></li>
+  <li><a href="#revenue_imf.do" id="toc-revenue_imf.do" class="nav-link" data-scroll-target="#revenue_imf.do">1_3_revenue_imf.do</a></li>
+  <li><a href="#revenue_ns_1_old.do" id="toc-revenue_ns_1_old.do" class="nav-link" data-scroll-target="#revenue_ns_1_old.do">1_4_revenue_ns_1_old.do</a></li>
+  <li><a href="#revenue_ns_2_bigthree.do" id="toc-revenue_ns_2_bigthree.do" class="nav-link" data-scroll-target="#revenue_ns_2_bigthree.do">1_4_revenue_ns_2_bigthree.do</a></li>
+  <li><a href="#revenue_ns_3_new_updt.do" id="toc-revenue_ns_3_new_updt.do" class="nav-link" data-scroll-target="#revenue_ns_3_new_updt.do">1_4_revenue_ns_3_new_updt.do</a></li>
+  <li><a href="#revenue_ns_4_append.do" id="toc-revenue_ns_4_append.do" class="nav-link" data-scroll-target="#revenue_ns_4_append.do">1_4_revenue_ns_4_append.do</a></li>
+  <li><a href="#revenue_ictd.do" id="toc-revenue_ictd.do" class="nav-link" data-scroll-target="#revenue_ictd.do">1_5_revenue_ictd.do</a></li>
+  <li><a href="#revenue_imf_hist.do" id="toc-revenue_imf_hist.do" class="nav-link" data-scroll-target="#revenue_imf_hist.do">1_6_revenue_imf_hist.do</a></li>
+  <li><a href="#revenue_other.do" id="toc-revenue_other.do" class="nav-link" data-scroll-target="#revenue_other.do">1_7_revenue_other.do</a></li>
+  <li><a href="#revenue_combine.do" id="toc-revenue_combine.do" class="nav-link" data-scroll-target="#revenue_combine.do">1_8_revenue_combine.do</a></li>
+  <li><a href="#revenue_nni_1_collect.do" id="toc-revenue_nni_1_collect.do" class="nav-link" data-scroll-target="#revenue_nni_1_collect.do">1_9_revenue_nni_1_collect.do</a></li>
+  <li><a href="#revenue_nni_2_append.do" id="toc-revenue_nni_2_append.do" class="nav-link" data-scroll-target="#revenue_nni_2_append.do">1_9_revenue_nni_2_append.do</a></li>
+  <li><a href="#revenue_currency.do" id="toc-revenue_currency.do" class="nav-link" data-scroll-target="#revenue_currency.do">1_10_revenue_currency.do</a></li>
+  <li><a href="#revenue_pct.do" id="toc-revenue_pct.do" class="nav-link" data-scroll-target="#revenue_pct.do">1_11_revenue_pct.do</a></li>
+  <li><a href="#revenue_clean.do" id="toc-revenue_clean.do" class="nav-link" data-scroll-target="#revenue_clean.do">1_12_revenue_clean.do</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./revenue.html">Dofile Inventory</a></li><li class="breadcrumb-item"><a href="./revenue.html">Dofile Inventory — Revenue Module</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Dofile Inventory — Revenue Module</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This page documents all substantive dofiles in the revenue module (1_x), in execution order.</p>
+<hr>
+<section id="revenue_crosswalks.do" class="level2">
+<h2 class="anchored" data-anchor-id="revenue_crosswalks.do">1_01_revenue_crosswalks.do</h2>
+<p><strong>Short description:</strong> This dofile is the first step in the revenue sub-routine. It converts the master crosswalk Excel file, which maps raw tax revenue categories from each data source into the harmonised ETR classification, into Stata .dta files ready for use downstream. It runs once at the start of each update and produces no analytical output of its own. Its sole function is to make the crosswalk lookups available to all subsequent revenue dofiles.</p>
+<p><strong>Objective:</strong> Generate crosswalk .dta files that map raw tax revenue categories from each source (OECD, IMF, and National Statistics) into the harmonised ETR classification used throughout the Atlas pipeline. The crosswalks are maintained manually in a single Excel workbook (reclassify_online_code.xlsx) and converted here to .dta format so that downstream dofiles can merge against them without depending on Excel at runtime.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Import the OECD, IMF, and general NS crosswalk sheets from reclassify_online_code.xlsx and save each as a separate .dta file in aux_data.</li>
+<li>Import five country-specific NS crosswalk sheets (Bangladesh, Ethiopia, Russia, Sudan, Taiwan) and save each as a separate .dta file.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>This dofile must be run first, before any other revenue dofile. All crosswalk merges in the pipeline depend on the .dta files it produces.</li>
+<li>The sole input, reclassify_online_code.xlsx, is maintained manually. If a new tax category appears in the OECD, IMF, or NS raw data, the relevant crosswalk sheet must be updated in the Excel file before re-running this dofile.</li>
+<li>Country-specific NS crosswalks currently exist for BGD, ETH, RUS, SDN, and TWN. If a new country requires a bespoke mapping, a new sheet must be added to the Excel file and a new import block added to this dofile.</li>
+</ul>
+<hr>
+</section>
+<section id="revenue_oecd.do" class="level2">
+<h2 class="anchored" data-anchor-id="revenue_oecd.do">1_1_revenue_oecd.do</h2>
+<p><strong>Short description:</strong> This dofile imports the OECD Global Revenue Statistics CSV, cleans and reshapes it into a long-format panel of tax revenue by country, year, and category, and appends it to the historical OECD series to produce the full panel used in the ETR pipeline. It is organised in two sections: the first prepares and saves an intermediate file covering new periods and selected backfill observations; the second applies the crosswalk, converts to common units, appends the historical data, removes duplicates, and saves the final output.</p>
+<p><strong>Objective:</strong> Produce a complete long-format OECD tax revenue panel (1965 to 2023) that integrates the most recent OECD download with the existing historical series, resolves unit and powercode inconsistencies across countries, and maps all tax categories to the Atlas ETR classification.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Import the raw OECD CSV, keep only relevant variables, recode government levels (NES, STATE, FED, LOCAL), and drop non-applicable currency rows.</li>
+<li>Update powercode_unit_new.dta with any new countries appearing in the current download, then split the data into post-2021 observations and a selected set of pre-2022 backfill observations. Save the combined intermediate file as oecd_raw_2023.dta.</li>
+<li>Load the intermediate file, merge with powercodes, clean and standardise tax category codes, verify that subcategory values do not exceed their aggregate, and reshape wide then long.</li>
+<li>Apply the OECD crosswalk, append manually collected data for CPV and GUY, apply country-specific powercode corrections, convert all values to a common unit, append the historical panel (1965 to 2021), remove duplicates, and save the final dataset.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>The raw CSV must be downloaded manually from the OECD Global Revenue Statistics database each update cycle. The filename and column structure should be verified against the previous vintage before running.</li>
+<li>The backfill country list was defined by comparing OECD coverage against the existing Atlas sources. If OECD coverage expands to new countries or earlier years, this list should be reviewed.</li>
+<li>Four powercode corrections were applied in the 2026 update: ROU, HRV, and UKR were corrected to billions (9) for all years, and BGR to billions only for years after 2021. These are hardcoded and must be reviewed if OECD changes its reporting units.</li>
+<li>CPV and GUY must be collected manually and kept current in oecd_raw_manual.dta. Colombia (COL) has category 1300 reassigned to 1230. This is a deliberate methodological decision and should not be removed.</li>
+<li>The aggregate wiping logic for categories 1000 and 5000 was updated in 2026: aggregates are now only wiped when meaningful subcategory disaggregation exists. The previous version caused data loss for BGR, HRV, ROU, and UKR.</li>
+</ul>
+<hr>
+</section>
+<section id="revenue_ha.do" class="level2">
+<h2 class="anchored" data-anchor-id="revenue_ha.do">1_2_revenue_ha.do</h2>
+<p><strong>Short description:</strong> This dofile collects and harmonises tax revenue data from the Historical Archives (HA) source, which provides long historical series for a set of countries not fully covered by OECD or IMF. It loops over all country-level raw files, scales values to a common unit using powercodes, appends all countries into a single panel, and applies a set of corrections before saving the final dataset.</p>
+<p><strong>Objective:</strong> Produce a single cleaned long-format panel of HA tax revenue data (work_data/data_2_ha.dta) covering all available countries and years, with values converted to common units and tax codes harmonised to the Atlas classification.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Loop over all .dta files in raw_data/HA, extract the ISO3 code from each filename, scale the raw amount using the powercode to compute amount_tax, and append all countries into a single dataset.</li>
+<li>Clean variable types, resolve tax code inconsistencies (tax_code 2000 reclassified as 2400, tax_code 712 corrected to 7120), and drop observations with missing tax codes.</li>
+<li>Correct double-year entries for Egypt and Jamaica, where historical fiscal years were coded as combined values, keeping only the first year.</li>
+<li>Drop duplicate years arising from overlapping HA series for Chile (1964 to 1966), Nicaragua (1982 to 1984), Argentina (1980 to 1981), and Paraguay (1952 to 1953), retaining the preferred series in each case.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>The HA source is historical and does not update annually. At each update cycle, verify whether any new country files have been added to raw_data/HA.</li>
+<li>The ISO3 code for each country is extracted from the first three characters of the filename. Any new file must follow this naming convention exactly.</li>
+<li>Afghanistan (AFG) has a specific drop for observations in US Dollars. This is a deliberate methodological decision and should not be removed.</li>
+<li>The duplicate-year corrections for CHL, NIC, ARG, and PRY are hardcoded by unit label. If the raw HA files are ever revised, these labels should be verified.</li>
+</ul>
+<hr>
+</section>
+<section id="revenue_imf.do" class="level2">
+<h2 class="anchored" data-anchor-id="revenue_imf.do">1_3_revenue_imf.do</h2>
+<p><strong>Short description:</strong> This dofile imports the IMF Government Finance Statistics raw CSV, cleans and reshapes it into a long-format panel of tax revenue by country, year, and category, and produces the final IMF dataset used in the ETR pipeline. It is organised in two sections: the first handles the raw data import, string cleaning, reshaping, and ISO3 code assignment; the second applies the crosswalk, selects the appropriate government sector, resolves double-counting issues, and saves the final output.</p>
+<p><strong>Objective:</strong> Produce a clean long-format IMF tax revenue panel (1972 to 2023) with values in domestic currency, tax categories mapped to the Atlas ETR classification, and a single government sector selected per country-year according to a defined preference order.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Import the raw IMF CSV, drop Percent of GDP observations, rename year columns from the IMF index format (v10 to v61) to calendar years (1972 to 2023), strip non-numeric string flags, destring all year columns, and save the cleaned wide file.</li>
+<li>Reshape to long format, generate the simplified IMF classification code (code_IMF_simplified), harmonise country names, assign ISO3 codes via correspondence_iso_country_names.xlsx, and save the intermediate long file.</li>
+<li>Apply the IMF-to-ETR crosswalk, resolve double-counting in social contributions and aggregate tax codes, reclassify G11 residual as tax code 6300, and save the pre-clean file.</li>
+<li>Select the best available government sector per country-year (General government first, then Central government, then Budgetary central), apply manual fixes for Argentina and Uruguay, collapse to country-year-tax_code level, apply the Sierra Leone redenomination correction, and save the final dataset.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>The raw CSV must be downloaded manually each update cycle from Government Finance Statistics, Revenue, Statement of Operations. Verify column structure before running.</li>
+<li>If the IMF extends the time series in future vintages, new columns will appear and the rename loop must be updated accordingly.</li>
+<li>ISO3 codes are assigned via a merge against correspondence_iso_country_names.xlsx. Any country that fails to match must be handled with a manual name fix before the merge.</li>
+<li>Jamaica and Nicaragua intentionally retain two sectors because together they sum to General government. Peru has a specific drop for classification code G1214. Sierra Leone requires a redenomination correction dividing all values by 1000.</li>
+</ul>
+<hr>
+</section>
+<section id="revenue_ns_1_old.do" class="level2">
+<h2 class="anchored" data-anchor-id="revenue_ns_1_old.do">1_4_revenue_ns_1_old.do</h2>
+<p><strong>Short description:</strong> This dofile processes the old National Statistics (NS) data, defined as tax revenue data collected from national statistical offices prior to the 2020 version of the Atlas. It covers 19 countries and applies a shared cleaning and aggregation routine before merging each country with its corresponding crosswalk and appending all countries into a single wide-format dataset.</p>
+<p><strong>Objective:</strong> Produce a cleaned wide-format panel of old NS tax revenue data (work_data/NS/data_4_ns_old.dta) covering all available countries and years, with values converted to common units and tax categories mapped to the Atlas ETR classification.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Define a reusable Stata program (aggregate_category_OECD) that destringes values, drops aggregates and missing tax codes, removes duplicates, reshapes to wide, verifies subcategory consistency, and reshapes back to long.</li>
+<li>Loop over 13 standard countries (COD, GIN, HTI, IND, KEN, NER, PAK, LKA, UGA, UKR, KAZ, MMR, TZA), importing each NS Excel file, assigning the ISO3 code, running the cleaning program, and applying the general NS crosswalk.</li>
+<li>Process Myanmar and Tanzania separately without running the cleaning program. Process five countries with country-specific crosswalks (SDN, ETH, BGD, RUS, TWN).</li>
+<li>Append all country tempfiles, convert values to common units, collapse to country-year-tax_code level, reshape to wide, and save with NS_new = 0.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>This dofile processes historical NS data that does not update annually. It should only need to be re-run if a raw NS file is corrected or a crosswalk is revised.</li>
+<li>Myanmar (MMR) and Tanzania (TZA) are excluded from the aggregate_category_OECD program because their data structure causes it to fail.</li>
+<li>The five country-specific crosswalks must be kept consistent with the general NS crosswalk. Any update to the classification scheme must be reflected in all crosswalk files.</li>
+<li>Kazakhstan (KAZ) was flagged as a query in 2024 and should be verified to confirm it is handled correctly and not duplicated downstream.</li>
+</ul>
+<hr>
+</section>
+<section id="revenue_ns_2_bigthree.do" class="level2">
+<h2 class="anchored" data-anchor-id="revenue_ns_2_bigthree.do">1_4_revenue_ns_2_bigthree.do</h2>
+<p><strong>Short description:</strong> This dofile processes NS tax revenue data for three large countries, China, India, and Pakistan, which rely on national statistics sources added later in the project and cover more recent years than the old NS series.</p>
+<p><strong>Objective:</strong> Produce a cleaned wide-format panel of NS tax revenue data for CHN, IND, and PAK (work_data/NS/data_4_ns_bigthree.dta), with values collapsed to country-year-tax_code level and NS_new set to 1.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Load each country’s raw file, reclassify source labels to a common NS designation, reshape from wide to long, and save individual country working files for CHN, IND, and PAK.</li>
+<li>Apply two specific data corrections for India: one value for tax code 1330 in 1983 and one for tax code 6300 in 1963 are replaced due to identified errors in the Indiastat source.</li>
+<li>Append the three country files, collapse to country-year-tax_code level, check for duplicates, reshape to wide, and save with NS_new set to 1.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>The raw files for CHN, IND, and PAK in raw_data/NS/2_bigthree must be updated manually if new years are added.</li>
+<li>Pakistan’s raw file mixes federal government data from NS with provincial data from HA. The source label is reclassified to NS for consistency.</li>
+<li>The two India corrections are hardcoded fixes for known errors in the Indiastat source. These should not be removed and should be verified if the raw file is ever replaced.</li>
+</ul>
+<hr>
+</section>
+<section id="revenue_ns_3_new_updt.do" class="level2">
+<h2 class="anchored" data-anchor-id="revenue_ns_3_new_updt.do">1_4_revenue_ns_3_new_updt.do</h2>
+<p><strong>Short description:</strong> This dofile processes NS tax revenue data for 16 countries that are intended to be updated in future editions of the Atlas. Unlike the old NS and big-three series, this group covers more recent years and is the active NS series going forward.</p>
+<p><strong>Objective:</strong> Produce a cleaned wide-format panel of new and updatable NS tax revenue data (work_data/NS/data_4_ns_new_updt.dta), with values scaled by powercode, collapsed to country-year-tax_code level, and identified with NS_new = 2.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Load each country’s raw file from raw_data/NS/3_new, assign source as NS and the corresponding country code, reshape from wide to long, compute amount_tax by scaling the raw value by the powercode, and save individual working files for all 16 countries: MMR, TWN, BDI, IND, DZA, OMN, KWT, ETH, RUS, BLR, QAT, MKD, CYP, SRB, and UZB.</li>
+<li>Append all country files, collapse to country-year-tax_code level, check for duplicates, reshape to wide, and save with NS_new set to 2.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>This is the active NS series and the one most likely to require attention at each update cycle. When new years are available for any of the 16 countries, the corresponding raw file must be updated and this dofile re-run.</li>
+<li>India appears in both this file and in the big-three file. The two series cover different time periods and care should be taken to avoid overlapping years.</li>
+<li>Four countries (MKD, CYP, SRB, UZB) were added in the 2025 update. New countries should follow the same import and reshape pattern.</li>
+<li>This file was not updated in 2026 because the WID database was reintroduced as the primary source. It is retained for comparison purposes.</li>
+<li>Tanzania (TZA) is listed in the comments as a former member of this group but is currently commented out of the append step. Verify at each update whether TZA needs to be reintroduced.</li>
+</ul>
+<hr>
+</section>
+<section id="revenue_ns_4_append.do" class="level2">
+<h2 class="anchored" data-anchor-id="revenue_ns_4_append.do">1_4_revenue_ns_4_append.do</h2>
+<p><strong>Short description:</strong> This dofile is the final step in the NS sub-routine. It appends the three NS datasets into a single panel, resolves duplicate country-year observations for countries that appear in more than one NS series, and saves the combined NS dataset for use downstream.</p>
+<p><strong>Objective:</strong> Produce a single consolidated NS tax revenue dataset (work_data/data_4_ns.dta) covering all NS countries and years, with one observation per country-year-source after resolving overlaps between the three NS series.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Append the three NS wide-format files (data_4_NS_old, data_4_NS_bigthree, data_4_NS_new_updt) into a single dataset.</li>
+<li>Identify country-year duplicates and apply the following resolution decisions: reclassify the old NS observations for IND and PAK as source Other; drop all old NS observations for TWN and MMR, keeping only the new updated series.</li>
+<li>Run a second duplicate check after the resolution and save the final dataset.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>All three preceding NS dofiles must be run successfully before running this one.</li>
+<li>The duplicate resolution decisions for IND, PAK, TWN, and MMR are explicit methodological choices. These should be reviewed if the underlying raw data changes substantially.</li>
+<li>The second duplicate check (tag2) should show zero duplicates. If it does not, the overlap must be traced back and resolved before proceeding.</li>
+<li>Note that data_7_other.dta is not appended in this dofile. Verify with the master dofile where and how the other source is introduced into the pipeline.</li>
+</ul>
+<hr>
+</section>
+<section id="revenue_ictd.do" class="level2">
+<h2 class="anchored" data-anchor-id="revenue_ictd.do">1_5_revenue_ictd.do</h2>
+<p><strong>Short description:</strong> This dofile imports and processes ICTD tax revenue data, which provides percentage-of-GDP revenue series for a broad set of countries and is used as a fallback source where OECD, IMF, HA, or NS data are unavailable. It applies an extensive crosswalk, computes residual allocations, converts percentages to absolute amounts using IMF WEO GDP data, and saves the final dataset.</p>
+<p><strong>Objective:</strong> Produce a cleaned dataset of ICTD tax revenue in absolute amounts (work_data/data_5_ictd.dta), with all revenue categories mapped to the Atlas ETR classification and values expressed in domestic currency using IMF WEO GDP as the conversion factor.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Import the ICTD Excel file, label all variables, retain only the relevant columns, and save a temporary working file.</li>
+<li>Apply the crosswalk from ICTD categories to Atlas ETR tax codes across all series. Compute residuals floored at zero for each series.</li>
+<li>Correct known data inconsistencies in the ICTD source for indirect taxes, VAT, and social contributions.</li>
+<li>Merge with IMF WEO GDP data to convert all percentage-of-GDP series to absolute amounts. Apply the Belarus 1994 GDP correction. Save observations without a GDP match to aux_data/data_ICTD_nogdp.dta.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>The ICTD raw file (ICTD-import-2025.xlsx, downloaded March 2026) must be downloaded and placed in raw_data before running. Verify the sheet name and column structure against the previous vintage.</li>
+<li>The GDP conversion uses aux_data/gdp_weo_new. At each update, verify that this file covers the most recent years in the ICTD data.</li>
+<li>Kosovo and Palestine use non-standard ISO codes in ICTD (KSV and WBG) and are recoded to KOS and PSE.</li>
+<li>The Belarus 1994 GDP correction is hardcoded and should be reviewed if the WEO data for BLR is ever updated for that year.</li>
+</ul>
+<hr>
+</section>
+<section id="revenue_imf_hist.do" class="level2">
+<h2 class="anchored" data-anchor-id="revenue_imf_hist.do">1_6_revenue_imf_hist.do</h2>
+<p><strong>Short description:</strong> This dofile imports and harmonises IMF historical tax revenue data from a multi-sheet Excel workbook covering 162 countries for the period 1972 to 1989. It is a stable historical file that is not expected to change at future updates.</p>
+<p><strong>Objective:</strong> Produce a wide-format dataset of IMF historical tax revenue (work_data/data_6_imf_hist.dta) covering 162 countries for 1972 to 1989, with values expressed in common units and mapped to the Atlas ETR tax code classification.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Clear the existing data_6_imf_hist.dta file before the loop to avoid accumulating stale observations across runs.</li>
+<li>Loop over all 162 sheets in raw_data/imf_hist_raw, renaming year columns to y_1972 through y_1989, assigning ISO3 codes via the isocodes command, and mapping original IMF category labels to Atlas tax codes.</li>
+<li>Apply the conversion factor to scale values, handle missing value flags, collapse to resolve duplicate rows for categories 2000 and 5000, reshape, and append each country to the cumulative dataset.</li>
+<li>After the loop, rename amount_tax8000 to amount_taxtax to align with the naming convention used downstream.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>This dofile processes a fixed historical source (1972 to 1989) that does not update. It should only need to be re-run if the raw Excel file is corrected.</li>
+<li>The loop clears data_6_imf_hist.dta at the start of every run. Do not interrupt the run midway.</li>
+<li>Tax code 8000 is a temporary code used only in this dofile and should not be confused with a standard OECD category.</li>
+</ul>
+<hr>
+</section>
+<section id="revenue_other.do" class="level2">
+<h2 class="anchored" data-anchor-id="revenue_other.do">1_7_revenue_other.do</h2>
+<p><strong>Short description:</strong> This dofile collects and harmonises a set of country-specific tax revenue data that does not fit into any of the standard sources (OECD, IMF, HA, NS, ICTD). It covers ten countries sourced from academic papers, historical archives, and CIAT, plus a supplementary group of countries drawn from the ICTD dataset that have revenue data but no IMF WEO GDP available.</p>
+<p><strong>Objective:</strong> Produce a cleaned dataset of other-source tax revenue data (work_data/data_7_other.dta) covering ten country-specific series and a set of ICTD no-GDP countries, with all percentage values converted to absolute terms using the GDP-to-NNI conversion factor.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Load and clean each of the ten country-specific raw files individually: Russia (Ivanova 2005), Brazil (Afonso Araujo 2004), Argentina (Alvaredo 2010), Lebanon (Saleh 2004), Nicaragua (historical archive), Jamaica (historical archive), Chile (Corbo 1989 and CIAT combined), Ecuador (CIAT-IDB), Egypt (paper), and Sierra Leone (historical archive).</li>
+<li>Load the ICTD no-GDP auxiliary file, restrict to a defined list of 22 countries and relevant year ranges, reconstruct aggregate series, and save as a separate working file.</li>
+<li>Append all 11 working files, merge with aux_data/other_gdp_to_nni.dta, multiply all percentage series by the GDP value to convert to absolute amounts, and save.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>This dofile was updated in October 2024 to correct missing observations for Egypt (34), Qatar (2), Russia (13), and Zimbabwe (8). A second update in December 2024 changed the ECU handling.</li>
+<li>The ICTD no-GDP country list was extended in June 2025. At each future update, check whether new countries appear in aux_data/data_ICTD_nogdp.</li>
+<li>Argentina’s raw values are stored as percentages multiplied by 100 and require division by 100. This correction is hardcoded and must be retained.</li>
+<li>Chile combines two sources (Corbo 1989 and CIAT) via merge-update. If either raw file is revised, check continuity around the overlap period.</li>
+</ul>
+<hr>
+</section>
+<section id="revenue_combine.do" class="level2">
+<h2 class="anchored" data-anchor-id="revenue_combine.do">1_8_revenue_combine.do</h2>
+<p><strong>Short description:</strong> This dofile is the consolidation step in the revenue sub-routine. It appends all cleaned source datasets into a single panel, reshapes to wide format, and creates unique series identifiers for each country-source combination. The output is the master revenue dataset used by all downstream ETR dofiles.</p>
+<p><strong>Objective:</strong> Produce a single wide-format dataset (work_data/data_8_combine.dta) containing tax revenue from all sources (OECD, HA, IMF, NS, ICTD, IMF historical, and other), with one row per country-year-source and tax codes as columns.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Append OECD, HA, and IMF datasets, collapse to the sum of subcategories by country-year-tax_code-source, and reshape to wide format.</li>
+<li>Append the remaining sources (NS, ICTD, IMF historical) to the wide dataset.</li>
+<li>Generate a series_id variable concatenating country, source, and NS_new to uniquely identify each revenue series. Label all variables and save.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>All seven upstream source datasets must be successfully produced before running this dofile. Running it with a stale or missing input will silently produce an incomplete dataset.</li>
+<li>The series_id variable uses NS_new as a third component to distinguish old, big-three, and new NS observations for the same country.</li>
+<li>Note that data_7_other.dta is not appended in this dofile. Verify with the master dofile where and how the other source is introduced into the pipeline.</li>
+</ul>
+<hr>
+</section>
+<section id="revenue_nni_1_collect.do" class="level2">
+<h2 class="anchored" data-anchor-id="revenue_nni_1_collect.do">1_9_revenue_nni_1_collect.do</h2>
+<p><strong>Short description:</strong> This dofile extracts Net National Income (NNI) data from the WID raw dataset, converts it from constant to current prices using the WID price index, applies two country-specific corrections for Gambia and Guinea, and saves a clean country-year NNI series used as the revenue denominator in the ETR pipeline.</p>
+<p><strong>Objective:</strong> Produce a clean dataset of NNI in current prices (aux_data/nni_current.dta) covering all available countries from 1965 onwards.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Load work_data/wid_basic_raw.dta, keep the NNI, price index (nyixx), and GDP variables from 1965 onwards, and assign ISO3 codes via the isocodes command.</li>
+<li>Convert NNI from constant to current prices by multiplying nninc by the price index nyixx.</li>
+<li>For Gambia (GMB), correct a discontinuity in the price index between 1990 and 1991. For Guinea (GIN), correct an anomalous drop in NNI in 2016 by interpolating the GDP-to-NNI ratio from adjacent years.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>The input file wid_basic_raw.dta must be updated at each cycle when a new WID vintage is released.</li>
+<li>Four non-standard WID regional codes are explicitly dropped (XR, XN, XL, XM). If WID introduces new non-standard codes, they must be added to this drop list.</li>
+<li>Verify at each update whether the Guinea 2016 anomaly has been corrected in the new WID vintage, in which case the fix can be removed.</li>
+</ul>
+<hr>
+</section>
+<section id="revenue_nni_2_append.do" class="level2">
+<h2 class="anchored" data-anchor-id="revenue_nni_2_append.do">1_9_revenue_nni_2_append.do</h2>
+<p><strong>Short description:</strong> This dofile merges the combined revenue dataset with the NNI series, restricts the sample to country-years where both revenue and NNI data are available, and saves the result as the final pre-currency dataset.</p>
+<p><strong>Objective:</strong> Produce a dataset (work_data/data_9_nni.dta) that combines all tax revenue sources with their corresponding NNI values, retaining only country-years with matched observations.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Load data_8_combine.dta and merge many-to-one with aux_data/nni_current.dta on country and year, keeping only the nni variable.</li>
+<li>Drop unmatched observations from the NNI side (_merge == 2) and from the revenue side (_merge == 1) as these are pre-1965 country-years outside the analysis sample.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>This dofile acts as a gatekeeper for the sample. Any country-year in data_8_combine but not in nni_current will be silently dropped. After each update, check for _merge == 1 cases with year &gt; 1965.</li>
+<li>Both upstream files must reflect the current update vintage before running this dofile.</li>
+</ul>
+<hr>
+</section>
+<section id="revenue_currency.do" class="level2">
+<h2 class="anchored" data-anchor-id="revenue_currency.do">1_10_revenue_currency.do</h2>
+<p><strong>Short description:</strong> This dofile applies all historical currency conversions needed to make tax revenue values from different sources comparable over time and across sources. It is the most historically complex dofile in the revenue pipeline.</p>
+<p><strong>Objective:</strong> Produce a currency-harmonised dataset (work_data/data_10_currency.dta) in which tax revenue and NNI values are expressed in consistent historical currency units for every country-year.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Flag approximately 130 country-year exchange rate events covering currency reforms, devaluations, and regime changes.</li>
+<li>Rescale NNI values to match the historical local currency units used in the HA and NS revenue data, applying country-specific multiplication factors for 70+ countries.</li>
+<li>Apply the same conversion factors to all amount_tax variables in the OECD, IMF, ICTD, NS, and IMF historical datasets, generating a conversion_factor variable and populating unit_revised and currency_note string variables.</li>
+<li>Apply manual country-specific adjustments for Brazil, Nigeria, Uganda, Tanzania, Kenya, Sudan, Indonesia, Vietnam, DRC, Afghanistan, Peru, Chile, Ecuador, Nicaragua, Liberia, Jamaica, and Angola.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>This dofile should only be modified when a new source introduces a currency unit not already covered, or when a known issue with an existing series is identified and corrected.</li>
+<li>The conversion factors for NNI and for each source are applied separately in four distinct loops. If a new source is added, a corresponding conversion loop must be added here.</li>
+<li>Vietnam NNI is set to missing for years before 1975 because the pre-1975 revenue data refers to South Vietnam while the WID NNI refers to North Vietnam or a combined series. This is a deliberate methodological decision.</li>
+</ul>
+<hr>
+</section>
+<section id="revenue_pct.do" class="level2">
+<h2 class="anchored" data-anchor-id="revenue_pct.do">1_11_revenue_pct.do</h2>
+<p><strong>Short description:</strong> This dofile reconstructs all tax revenue aggregate series from their subcategories, handles source-specific aggregation rules for ICTD, NS, and IMF historical data, converts all amount variables to percentages of NNI, and produces a set of supplementary percentage and amount variables ready for ETR construction.</p>
+<p><strong>Objective:</strong> Produce a dataset (work_data/data_11_pct.dta) containing fully reconstructed aggregate tax revenue series (amt_* and pct_*) for all tax categories from 1000 to 7000, expressed both as absolute amounts and as shares of NNI.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Declare the dataset as a time series using id and year, then reconstruct aggregate amount variables by summing subcategories for all series. Apply source-specific overrides for ICTD, new NS (NS_new == 2, except India), and IMF historical data.</li>
+<li>Apply a specific correction for Greece (GRC) in 1996 where amount_tax4500 is 100 times too large. Drop Poland 1989 and Syria 2007 as intractable country-years.</li>
+<li>Rename all amount_tax* variables to amt_*, drop observations with missing or zero subtotals (except IMF historical), and reorder variables.</li>
+<li>Divide all aggregate amount series by NNI to produce pct_* percentage variables.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>The Greece 1996 correction is hardcoded. Verify at each update whether this anomaly has been corrected upstream.</li>
+<li>Poland 1989 and Syria 2007 are permanently dropped. If new source data resolves these cases, the drops can be removed.</li>
+<li>India is explicitly excluded from the NS override because its new NS series includes disaggregated subcategories unlike the other new NS countries.</li>
+</ul>
+<hr>
+</section>
+<section id="revenue_clean.do" class="level2">
+<h2 class="anchored" data-anchor-id="revenue_clean.do">1_12_revenue_clean.do</h2>
+<p><strong>Short description:</strong> This is the final dofile in the revenue sub-routine. It appends two supplementary social contributions datasets (UN and RPC), appends the other-source dataset, collapses duplicates, retains a clean set of variables, generates within-series composition ratios, reshapes the data from long to wide format by source, and saves the final revenue dataset.</p>
+<p><strong>Objective:</strong> Produce the final wide-format revenue dataset (output/ETR_1_revenue_raw.dta) with one row per country-year and one column per source for each percentage and ratio variable.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Append aux_data/UN social contributions.dta and aux_data/tax and 2000 _ RPC.dta, then append work_data/data_7_other.dta.</li>
+<li>Drop GDP variables, regenerate series_id and id, and collapse duplicates using firstnm to retain the first non-missing value across duplicate rows.</li>
+<li>Retain a defined set of variables, apply tsfill to complete the panel, and rename pct_subset to pct_subtotal_1245.</li>
+<li>Generate within-series composition ratios (win_*) for all main tax categories. Reshape from long to wide by source, alphabetically order all variables, and save.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>The two supplementary files (UN social contributions and tax and 2000 _ RPC) must be updated if new years of social contributions data become available.</li>
+<li>The reshape from long to wide uses source as the j variable. If a new source is introduced upstream, verify that downstream ETR dofiles can handle any new source columns.</li>
+<li>The final save path is output/ETR_1_revenue_raw.dta. A commented-out alternative save with a 2026 vintage suffix can be activated if a versioned save is needed.</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

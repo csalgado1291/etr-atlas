@@ -1,0 +1,360 @@
+---
+title: "Dofile Inventory — Revenue Module"
+---
+
+This page documents all substantive dofiles in the revenue module (1_x), in execution order.
+
+---
+
+## 1_01_revenue_crosswalks.do
+
+**Short description:** This dofile is the first step in the revenue sub-routine. It converts the master crosswalk Excel file, which maps raw tax revenue categories from each data source into the harmonised ETR classification, into Stata .dta files ready for use downstream. It runs once at the start of each update and produces no analytical output of its own. Its sole function is to make the crosswalk lookups available to all subsequent revenue dofiles.
+
+**Objective:** Generate crosswalk .dta files that map raw tax revenue categories from each source (OECD, IMF, and National Statistics) into the harmonised ETR classification used throughout the Atlas pipeline. The crosswalks are maintained manually in a single Excel workbook (reclassify_online_code.xlsx) and converted here to .dta format so that downstream dofiles can merge against them without depending on Excel at runtime.
+
+**Main activities:**
+
+- Import the OECD, IMF, and general NS crosswalk sheets from reclassify_online_code.xlsx and save each as a separate .dta file in aux_data.
+- Import five country-specific NS crosswalk sheets (Bangladesh, Ethiopia, Russia, Sudan, Taiwan) and save each as a separate .dta file.
+
+**Important to keep in mind for the update:**
+
+- This dofile must be run first, before any other revenue dofile. All crosswalk merges in the pipeline depend on the .dta files it produces.
+- The sole input, reclassify_online_code.xlsx, is maintained manually. If a new tax category appears in the OECD, IMF, or NS raw data, the relevant crosswalk sheet must be updated in the Excel file before re-running this dofile.
+- Country-specific NS crosswalks currently exist for BGD, ETH, RUS, SDN, and TWN. If a new country requires a bespoke mapping, a new sheet must be added to the Excel file and a new import block added to this dofile.
+
+---
+
+## 1_1_revenue_oecd.do
+
+**Short description:** This dofile imports the OECD Global Revenue Statistics CSV, cleans and reshapes it into a long-format panel of tax revenue by country, year, and category, and appends it to the historical OECD series to produce the full panel used in the ETR pipeline. It is organised in two sections: the first prepares and saves an intermediate file covering new periods and selected backfill observations; the second applies the crosswalk, converts to common units, appends the historical data, removes duplicates, and saves the final output.
+
+**Objective:** Produce a complete long-format OECD tax revenue panel (1965 to 2023) that integrates the most recent OECD download with the existing historical series, resolves unit and powercode inconsistencies across countries, and maps all tax categories to the Atlas ETR classification.
+
+**Main activities:**
+
+- Import the raw OECD CSV, keep only relevant variables, recode government levels (NES, STATE, FED, LOCAL), and drop non-applicable currency rows.
+- Update powercode_unit_new.dta with any new countries appearing in the current download, then split the data into post-2021 observations and a selected set of pre-2022 backfill observations. Save the combined intermediate file as oecd_raw_2023.dta.
+- Load the intermediate file, merge with powercodes, clean and standardise tax category codes, verify that subcategory values do not exceed their aggregate, and reshape wide then long.
+- Apply the OECD crosswalk, append manually collected data for CPV and GUY, apply country-specific powercode corrections, convert all values to a common unit, append the historical panel (1965 to 2021), remove duplicates, and save the final dataset.
+
+**Important to keep in mind for the update:**
+
+- The raw CSV must be downloaded manually from the OECD Global Revenue Statistics database each update cycle. The filename and column structure should be verified against the previous vintage before running.
+- The backfill country list was defined by comparing OECD coverage against the existing Atlas sources. If OECD coverage expands to new countries or earlier years, this list should be reviewed.
+- Four powercode corrections were applied in the 2026 update: ROU, HRV, and UKR were corrected to billions (9) for all years, and BGR to billions only for years after 2021. These are hardcoded and must be reviewed if OECD changes its reporting units.
+- CPV and GUY must be collected manually and kept current in oecd_raw_manual.dta. Colombia (COL) has category 1300 reassigned to 1230. This is a deliberate methodological decision and should not be removed.
+- The aggregate wiping logic for categories 1000 and 5000 was updated in 2026: aggregates are now only wiped when meaningful subcategory disaggregation exists. The previous version caused data loss for BGR, HRV, ROU, and UKR.
+
+---
+
+## 1_2_revenue_ha.do
+
+**Short description:** This dofile collects and harmonises tax revenue data from the Historical Archives (HA) source, which provides long historical series for a set of countries not fully covered by OECD or IMF. It loops over all country-level raw files, scales values to a common unit using powercodes, appends all countries into a single panel, and applies a set of corrections before saving the final dataset.
+
+**Objective:** Produce a single cleaned long-format panel of HA tax revenue data (work_data/data_2_ha.dta) covering all available countries and years, with values converted to common units and tax codes harmonised to the Atlas classification.
+
+**Main activities:**
+
+- Loop over all .dta files in raw_data/HA, extract the ISO3 code from each filename, scale the raw amount using the powercode to compute amount_tax, and append all countries into a single dataset.
+- Clean variable types, resolve tax code inconsistencies (tax_code 2000 reclassified as 2400, tax_code 712 corrected to 7120), and drop observations with missing tax codes.
+- Correct double-year entries for Egypt and Jamaica, where historical fiscal years were coded as combined values, keeping only the first year.
+- Drop duplicate years arising from overlapping HA series for Chile (1964 to 1966), Nicaragua (1982 to 1984), Argentina (1980 to 1981), and Paraguay (1952 to 1953), retaining the preferred series in each case.
+
+**Important to keep in mind for the update:**
+
+- The HA source is historical and does not update annually. At each update cycle, verify whether any new country files have been added to raw_data/HA.
+- The ISO3 code for each country is extracted from the first three characters of the filename. Any new file must follow this naming convention exactly.
+- Afghanistan (AFG) has a specific drop for observations in US Dollars. This is a deliberate methodological decision and should not be removed.
+- The duplicate-year corrections for CHL, NIC, ARG, and PRY are hardcoded by unit label. If the raw HA files are ever revised, these labels should be verified.
+
+---
+
+## 1_3_revenue_imf.do
+
+**Short description:** This dofile imports the IMF Government Finance Statistics raw CSV, cleans and reshapes it into a long-format panel of tax revenue by country, year, and category, and produces the final IMF dataset used in the ETR pipeline. It is organised in two sections: the first handles the raw data import, string cleaning, reshaping, and ISO3 code assignment; the second applies the crosswalk, selects the appropriate government sector, resolves double-counting issues, and saves the final output.
+
+**Objective:** Produce a clean long-format IMF tax revenue panel (1972 to 2023) with values in domestic currency, tax categories mapped to the Atlas ETR classification, and a single government sector selected per country-year according to a defined preference order.
+
+**Main activities:**
+
+- Import the raw IMF CSV, drop Percent of GDP observations, rename year columns from the IMF index format (v10 to v61) to calendar years (1972 to 2023), strip non-numeric string flags, destring all year columns, and save the cleaned wide file.
+- Reshape to long format, generate the simplified IMF classification code (code_IMF_simplified), harmonise country names, assign ISO3 codes via correspondence_iso_country_names.xlsx, and save the intermediate long file.
+- Apply the IMF-to-ETR crosswalk, resolve double-counting in social contributions and aggregate tax codes, reclassify G11 residual as tax code 6300, and save the pre-clean file.
+- Select the best available government sector per country-year (General government first, then Central government, then Budgetary central), apply manual fixes for Argentina and Uruguay, collapse to country-year-tax_code level, apply the Sierra Leone redenomination correction, and save the final dataset.
+
+**Important to keep in mind for the update:**
+
+- The raw CSV must be downloaded manually each update cycle from Government Finance Statistics, Revenue, Statement of Operations. Verify column structure before running.
+- If the IMF extends the time series in future vintages, new columns will appear and the rename loop must be updated accordingly.
+- ISO3 codes are assigned via a merge against correspondence_iso_country_names.xlsx. Any country that fails to match must be handled with a manual name fix before the merge.
+- Jamaica and Nicaragua intentionally retain two sectors because together they sum to General government. Peru has a specific drop for classification code G1214. Sierra Leone requires a redenomination correction dividing all values by 1000.
+
+---
+
+## 1_4_revenue_ns_1_old.do
+
+**Short description:** This dofile processes the old National Statistics (NS) data, defined as tax revenue data collected from national statistical offices prior to the 2020 version of the Atlas. It covers 19 countries and applies a shared cleaning and aggregation routine before merging each country with its corresponding crosswalk and appending all countries into a single wide-format dataset.
+
+**Objective:** Produce a cleaned wide-format panel of old NS tax revenue data (work_data/NS/data_4_ns_old.dta) covering all available countries and years, with values converted to common units and tax categories mapped to the Atlas ETR classification.
+
+**Main activities:**
+
+- Define a reusable Stata program (aggregate_category_OECD) that destringes values, drops aggregates and missing tax codes, removes duplicates, reshapes to wide, verifies subcategory consistency, and reshapes back to long.
+- Loop over 13 standard countries (COD, GIN, HTI, IND, KEN, NER, PAK, LKA, UGA, UKR, KAZ, MMR, TZA), importing each NS Excel file, assigning the ISO3 code, running the cleaning program, and applying the general NS crosswalk.
+- Process Myanmar and Tanzania separately without running the cleaning program. Process five countries with country-specific crosswalks (SDN, ETH, BGD, RUS, TWN).
+- Append all country tempfiles, convert values to common units, collapse to country-year-tax_code level, reshape to wide, and save with NS_new = 0.
+
+**Important to keep in mind for the update:**
+
+- This dofile processes historical NS data that does not update annually. It should only need to be re-run if a raw NS file is corrected or a crosswalk is revised.
+- Myanmar (MMR) and Tanzania (TZA) are excluded from the aggregate_category_OECD program because their data structure causes it to fail.
+- The five country-specific crosswalks must be kept consistent with the general NS crosswalk. Any update to the classification scheme must be reflected in all crosswalk files.
+- Kazakhstan (KAZ) was flagged as a query in 2024 and should be verified to confirm it is handled correctly and not duplicated downstream.
+
+---
+
+## 1_4_revenue_ns_2_bigthree.do
+
+**Short description:** This dofile processes NS tax revenue data for three large countries, China, India, and Pakistan, which rely on national statistics sources added later in the project and cover more recent years than the old NS series.
+
+**Objective:** Produce a cleaned wide-format panel of NS tax revenue data for CHN, IND, and PAK (work_data/NS/data_4_ns_bigthree.dta), with values collapsed to country-year-tax_code level and NS_new set to 1.
+
+**Main activities:**
+
+- Load each country's raw file, reclassify source labels to a common NS designation, reshape from wide to long, and save individual country working files for CHN, IND, and PAK.
+- Apply two specific data corrections for India: one value for tax code 1330 in 1983 and one for tax code 6300 in 1963 are replaced due to identified errors in the Indiastat source.
+- Append the three country files, collapse to country-year-tax_code level, check for duplicates, reshape to wide, and save with NS_new set to 1.
+
+**Important to keep in mind for the update:**
+
+- The raw files for CHN, IND, and PAK in raw_data/NS/2_bigthree must be updated manually if new years are added.
+- Pakistan's raw file mixes federal government data from NS with provincial data from HA. The source label is reclassified to NS for consistency.
+- The two India corrections are hardcoded fixes for known errors in the Indiastat source. These should not be removed and should be verified if the raw file is ever replaced.
+
+---
+
+## 1_4_revenue_ns_3_new_updt.do
+
+**Short description:** This dofile processes NS tax revenue data for 16 countries that are intended to be updated in future editions of the Atlas. Unlike the old NS and big-three series, this group covers more recent years and is the active NS series going forward.
+
+**Objective:** Produce a cleaned wide-format panel of new and updatable NS tax revenue data (work_data/NS/data_4_ns_new_updt.dta), with values scaled by powercode, collapsed to country-year-tax_code level, and identified with NS_new = 2.
+
+**Main activities:**
+
+- Load each country's raw file from raw_data/NS/3_new, assign source as NS and the corresponding country code, reshape from wide to long, compute amount_tax by scaling the raw value by the powercode, and save individual working files for all 16 countries: MMR, TWN, BDI, IND, DZA, OMN, KWT, ETH, RUS, BLR, QAT, MKD, CYP, SRB, and UZB.
+- Append all country files, collapse to country-year-tax_code level, check for duplicates, reshape to wide, and save with NS_new set to 2.
+
+**Important to keep in mind for the update:**
+
+- This is the active NS series and the one most likely to require attention at each update cycle. When new years are available for any of the 16 countries, the corresponding raw file must be updated and this dofile re-run.
+- India appears in both this file and in the big-three file. The two series cover different time periods and care should be taken to avoid overlapping years.
+- Four countries (MKD, CYP, SRB, UZB) were added in the 2025 update. New countries should follow the same import and reshape pattern.
+- This file was not updated in 2026 because the WID database was reintroduced as the primary source. It is retained for comparison purposes.
+- Tanzania (TZA) is listed in the comments as a former member of this group but is currently commented out of the append step. Verify at each update whether TZA needs to be reintroduced.
+
+---
+
+## 1_4_revenue_ns_4_append.do
+
+**Short description:** This dofile is the final step in the NS sub-routine. It appends the three NS datasets into a single panel, resolves duplicate country-year observations for countries that appear in more than one NS series, and saves the combined NS dataset for use downstream.
+
+**Objective:** Produce a single consolidated NS tax revenue dataset (work_data/data_4_ns.dta) covering all NS countries and years, with one observation per country-year-source after resolving overlaps between the three NS series.
+
+**Main activities:**
+
+- Append the three NS wide-format files (data_4_NS_old, data_4_NS_bigthree, data_4_NS_new_updt) into a single dataset.
+- Identify country-year duplicates and apply the following resolution decisions: reclassify the old NS observations for IND and PAK as source Other; drop all old NS observations for TWN and MMR, keeping only the new updated series.
+- Run a second duplicate check after the resolution and save the final dataset.
+
+**Important to keep in mind for the update:**
+
+- All three preceding NS dofiles must be run successfully before running this one.
+- The duplicate resolution decisions for IND, PAK, TWN, and MMR are explicit methodological choices. These should be reviewed if the underlying raw data changes substantially.
+- The second duplicate check (tag2) should show zero duplicates. If it does not, the overlap must be traced back and resolved before proceeding.
+- Note that data_7_other.dta is not appended in this dofile. Verify with the master dofile where and how the other source is introduced into the pipeline.
+
+---
+
+## 1_5_revenue_ictd.do
+
+**Short description:** This dofile imports and processes ICTD tax revenue data, which provides percentage-of-GDP revenue series for a broad set of countries and is used as a fallback source where OECD, IMF, HA, or NS data are unavailable. It applies an extensive crosswalk, computes residual allocations, converts percentages to absolute amounts using IMF WEO GDP data, and saves the final dataset.
+
+**Objective:** Produce a cleaned dataset of ICTD tax revenue in absolute amounts (work_data/data_5_ictd.dta), with all revenue categories mapped to the Atlas ETR classification and values expressed in domestic currency using IMF WEO GDP as the conversion factor.
+
+**Main activities:**
+
+- Import the ICTD Excel file, label all variables, retain only the relevant columns, and save a temporary working file.
+- Apply the crosswalk from ICTD categories to Atlas ETR tax codes across all series. Compute residuals floored at zero for each series.
+- Correct known data inconsistencies in the ICTD source for indirect taxes, VAT, and social contributions.
+- Merge with IMF WEO GDP data to convert all percentage-of-GDP series to absolute amounts. Apply the Belarus 1994 GDP correction. Save observations without a GDP match to aux_data/data_ICTD_nogdp.dta.
+
+**Important to keep in mind for the update:**
+
+- The ICTD raw file (ICTD-import-2025.xlsx, downloaded March 2026) must be downloaded and placed in raw_data before running. Verify the sheet name and column structure against the previous vintage.
+- The GDP conversion uses aux_data/gdp_weo_new. At each update, verify that this file covers the most recent years in the ICTD data.
+- Kosovo and Palestine use non-standard ISO codes in ICTD (KSV and WBG) and are recoded to KOS and PSE.
+- The Belarus 1994 GDP correction is hardcoded and should be reviewed if the WEO data for BLR is ever updated for that year.
+
+---
+
+## 1_6_revenue_imf_hist.do
+
+**Short description:** This dofile imports and harmonises IMF historical tax revenue data from a multi-sheet Excel workbook covering 162 countries for the period 1972 to 1989. It is a stable historical file that is not expected to change at future updates.
+
+**Objective:** Produce a wide-format dataset of IMF historical tax revenue (work_data/data_6_imf_hist.dta) covering 162 countries for 1972 to 1989, with values expressed in common units and mapped to the Atlas ETR tax code classification.
+
+**Main activities:**
+
+- Clear the existing data_6_imf_hist.dta file before the loop to avoid accumulating stale observations across runs.
+- Loop over all 162 sheets in raw_data/imf_hist_raw, renaming year columns to y_1972 through y_1989, assigning ISO3 codes via the isocodes command, and mapping original IMF category labels to Atlas tax codes.
+- Apply the conversion factor to scale values, handle missing value flags, collapse to resolve duplicate rows for categories 2000 and 5000, reshape, and append each country to the cumulative dataset.
+- After the loop, rename amount_tax8000 to amount_taxtax to align with the naming convention used downstream.
+
+**Important to keep in mind for the update:**
+
+- This dofile processes a fixed historical source (1972 to 1989) that does not update. It should only need to be re-run if the raw Excel file is corrected.
+- The loop clears data_6_imf_hist.dta at the start of every run. Do not interrupt the run midway.
+- Tax code 8000 is a temporary code used only in this dofile and should not be confused with a standard OECD category.
+
+---
+
+## 1_7_revenue_other.do
+
+**Short description:** This dofile collects and harmonises a set of country-specific tax revenue data that does not fit into any of the standard sources (OECD, IMF, HA, NS, ICTD). It covers ten countries sourced from academic papers, historical archives, and CIAT, plus a supplementary group of countries drawn from the ICTD dataset that have revenue data but no IMF WEO GDP available.
+
+**Objective:** Produce a cleaned dataset of other-source tax revenue data (work_data/data_7_other.dta) covering ten country-specific series and a set of ICTD no-GDP countries, with all percentage values converted to absolute terms using the GDP-to-NNI conversion factor.
+
+**Main activities:**
+
+- Load and clean each of the ten country-specific raw files individually: Russia (Ivanova 2005), Brazil (Afonso Araujo 2004), Argentina (Alvaredo 2010), Lebanon (Saleh 2004), Nicaragua (historical archive), Jamaica (historical archive), Chile (Corbo 1989 and CIAT combined), Ecuador (CIAT-IDB), Egypt (paper), and Sierra Leone (historical archive).
+- Load the ICTD no-GDP auxiliary file, restrict to a defined list of 22 countries and relevant year ranges, reconstruct aggregate series, and save as a separate working file.
+- Append all 11 working files, merge with aux_data/other_gdp_to_nni.dta, multiply all percentage series by the GDP value to convert to absolute amounts, and save.
+
+**Important to keep in mind for the update:**
+
+- This dofile was updated in October 2024 to correct missing observations for Egypt (34), Qatar (2), Russia (13), and Zimbabwe (8). A second update in December 2024 changed the ECU handling.
+- The ICTD no-GDP country list was extended in June 2025. At each future update, check whether new countries appear in aux_data/data_ICTD_nogdp.
+- Argentina's raw values are stored as percentages multiplied by 100 and require division by 100. This correction is hardcoded and must be retained.
+- Chile combines two sources (Corbo 1989 and CIAT) via merge-update. If either raw file is revised, check continuity around the overlap period.
+
+---
+
+## 1_8_revenue_combine.do
+
+**Short description:** This dofile is the consolidation step in the revenue sub-routine. It appends all cleaned source datasets into a single panel, reshapes to wide format, and creates unique series identifiers for each country-source combination. The output is the master revenue dataset used by all downstream ETR dofiles.
+
+**Objective:** Produce a single wide-format dataset (work_data/data_8_combine.dta) containing tax revenue from all sources (OECD, HA, IMF, NS, ICTD, IMF historical, and other), with one row per country-year-source and tax codes as columns.
+
+**Main activities:**
+
+- Append OECD, HA, and IMF datasets, collapse to the sum of subcategories by country-year-tax_code-source, and reshape to wide format.
+- Append the remaining sources (NS, ICTD, IMF historical) to the wide dataset.
+- Generate a series_id variable concatenating country, source, and NS_new to uniquely identify each revenue series. Label all variables and save.
+
+**Important to keep in mind for the update:**
+
+- All seven upstream source datasets must be successfully produced before running this dofile. Running it with a stale or missing input will silently produce an incomplete dataset.
+- The series_id variable uses NS_new as a third component to distinguish old, big-three, and new NS observations for the same country.
+- Note that data_7_other.dta is not appended in this dofile. Verify with the master dofile where and how the other source is introduced into the pipeline.
+
+---
+
+## 1_9_revenue_nni_1_collect.do
+
+**Short description:** This dofile extracts Net National Income (NNI) data from the WID raw dataset, converts it from constant to current prices using the WID price index, applies two country-specific corrections for Gambia and Guinea, and saves a clean country-year NNI series used as the revenue denominator in the ETR pipeline.
+
+**Objective:** Produce a clean dataset of NNI in current prices (aux_data/nni_current.dta) covering all available countries from 1965 onwards.
+
+**Main activities:**
+
+- Load work_data/wid_basic_raw.dta, keep the NNI, price index (nyixx), and GDP variables from 1965 onwards, and assign ISO3 codes via the isocodes command.
+- Convert NNI from constant to current prices by multiplying nninc by the price index nyixx.
+- For Gambia (GMB), correct a discontinuity in the price index between 1990 and 1991. For Guinea (GIN), correct an anomalous drop in NNI in 2016 by interpolating the GDP-to-NNI ratio from adjacent years.
+
+**Important to keep in mind for the update:**
+
+- The input file wid_basic_raw.dta must be updated at each cycle when a new WID vintage is released.
+- Four non-standard WID regional codes are explicitly dropped (XR, XN, XL, XM). If WID introduces new non-standard codes, they must be added to this drop list.
+- Verify at each update whether the Guinea 2016 anomaly has been corrected in the new WID vintage, in which case the fix can be removed.
+
+---
+
+## 1_9_revenue_nni_2_append.do
+
+**Short description:** This dofile merges the combined revenue dataset with the NNI series, restricts the sample to country-years where both revenue and NNI data are available, and saves the result as the final pre-currency dataset.
+
+**Objective:** Produce a dataset (work_data/data_9_nni.dta) that combines all tax revenue sources with their corresponding NNI values, retaining only country-years with matched observations.
+
+**Main activities:**
+
+- Load data_8_combine.dta and merge many-to-one with aux_data/nni_current.dta on country and year, keeping only the nni variable.
+- Drop unmatched observations from the NNI side (_merge == 2) and from the revenue side (_merge == 1) as these are pre-1965 country-years outside the analysis sample.
+
+**Important to keep in mind for the update:**
+
+- This dofile acts as a gatekeeper for the sample. Any country-year in data_8_combine but not in nni_current will be silently dropped. After each update, check for _merge == 1 cases with year > 1965.
+- Both upstream files must reflect the current update vintage before running this dofile.
+
+---
+
+## 1_10_revenue_currency.do
+
+**Short description:** This dofile applies all historical currency conversions needed to make tax revenue values from different sources comparable over time and across sources. It is the most historically complex dofile in the revenue pipeline.
+
+**Objective:** Produce a currency-harmonised dataset (work_data/data_10_currency.dta) in which tax revenue and NNI values are expressed in consistent historical currency units for every country-year.
+
+**Main activities:**
+
+- Flag approximately 130 country-year exchange rate events covering currency reforms, devaluations, and regime changes.
+- Rescale NNI values to match the historical local currency units used in the HA and NS revenue data, applying country-specific multiplication factors for 70+ countries.
+- Apply the same conversion factors to all amount_tax variables in the OECD, IMF, ICTD, NS, and IMF historical datasets, generating a conversion_factor variable and populating unit_revised and currency_note string variables.
+- Apply manual country-specific adjustments for Brazil, Nigeria, Uganda, Tanzania, Kenya, Sudan, Indonesia, Vietnam, DRC, Afghanistan, Peru, Chile, Ecuador, Nicaragua, Liberia, Jamaica, and Angola.
+
+**Important to keep in mind for the update:**
+
+- This dofile should only be modified when a new source introduces a currency unit not already covered, or when a known issue with an existing series is identified and corrected.
+- The conversion factors for NNI and for each source are applied separately in four distinct loops. If a new source is added, a corresponding conversion loop must be added here.
+- Vietnam NNI is set to missing for years before 1975 because the pre-1975 revenue data refers to South Vietnam while the WID NNI refers to North Vietnam or a combined series. This is a deliberate methodological decision.
+
+---
+
+## 1_11_revenue_pct.do
+
+**Short description:** This dofile reconstructs all tax revenue aggregate series from their subcategories, handles source-specific aggregation rules for ICTD, NS, and IMF historical data, converts all amount variables to percentages of NNI, and produces a set of supplementary percentage and amount variables ready for ETR construction.
+
+**Objective:** Produce a dataset (work_data/data_11_pct.dta) containing fully reconstructed aggregate tax revenue series (amt_* and pct_*) for all tax categories from 1000 to 7000, expressed both as absolute amounts and as shares of NNI.
+
+**Main activities:**
+
+- Declare the dataset as a time series using id and year, then reconstruct aggregate amount variables by summing subcategories for all series. Apply source-specific overrides for ICTD, new NS (NS_new == 2, except India), and IMF historical data.
+- Apply a specific correction for Greece (GRC) in 1996 where amount_tax4500 is 100 times too large. Drop Poland 1989 and Syria 2007 as intractable country-years.
+- Rename all amount_tax* variables to amt_*, drop observations with missing or zero subtotals (except IMF historical), and reorder variables.
+- Divide all aggregate amount series by NNI to produce pct_* percentage variables.
+
+**Important to keep in mind for the update:**
+
+- The Greece 1996 correction is hardcoded. Verify at each update whether this anomaly has been corrected upstream.
+- Poland 1989 and Syria 2007 are permanently dropped. If new source data resolves these cases, the drops can be removed.
+- India is explicitly excluded from the NS override because its new NS series includes disaggregated subcategories unlike the other new NS countries.
+
+---
+
+## 1_12_revenue_clean.do
+
+**Short description:** This is the final dofile in the revenue sub-routine. It appends two supplementary social contributions datasets (UN and RPC), appends the other-source dataset, collapses duplicates, retains a clean set of variables, generates within-series composition ratios, reshapes the data from long to wide format by source, and saves the final revenue dataset.
+
+**Objective:** Produce the final wide-format revenue dataset (output/ETR_1_revenue_raw.dta) with one row per country-year and one column per source for each percentage and ratio variable.
+
+**Main activities:**
+
+- Append aux_data/UN social contributions.dta and aux_data/tax and 2000 _ RPC.dta, then append work_data/data_7_other.dta.
+- Drop GDP variables, regenerate series_id and id, and collapse duplicates using firstnm to retain the first non-missing value across duplicate rows.
+- Retain a defined set of variables, apply tsfill to complete the panel, and rename pct_subset to pct_subtotal_1245.
+- Generate within-series composition ratios (win_*) for all main tax categories. Reshape from long to wide by source, alphabetically order all variables, and save.
+
+**Important to keep in mind for the update:**
+
+- The two supplementary files (UN social contributions and tax and 2000 _ RPC) must be updated if new years of social contributions data become available.
+- The reshape from long to wide uses source as the j variable. If a new source is introduced upstream, verify that downstream ETR dofiles can handle any new source columns.
+- The final save path is output/ETR_1_revenue_raw.dta. A commented-out alternative save with a 2026 vintage suffix can be activated if a versioned save is needed.

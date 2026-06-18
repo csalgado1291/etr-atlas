@@ -1,0 +1,27 @@
+---
+title: "How to Run the Pipeline"
+---
+
+Set the root path at the top of `0_master.do` to point to the pipeline root folder on your machine. The root path is defined as a global macro and all dofiles inherit it automatically — do not edit paths in individual dofiles.
+
+Then run `0_master.do`. This file calls the three module masters in order:
+
+1. `1_0_revenue_master.do`
+2. `2_0_factorshares_master.do`
+3. `3_0_ETR_master.do`
+
+Each master calls its own sub-dofiles in sequence.
+
+## Output locations
+
+| Location | Contents |
+|---|---|
+| `work_data/` | Intermediate datasets used between dofiles |
+| `aux_data/` | Crosswalks, lookups, and auxiliary reference files |
+| `output/` | Final datasets and figures |
+
+## Important rules
+
+- Do not run individual dofiles in isolation unless you are testing a specific step.
+- Always ensure all upstream files are current before running any dofile midway through the pipeline.
+- If you change the vintage label (e.g. from 2026 to 2027), update the output filenames consistently across all dofiles that save or load versioned files.

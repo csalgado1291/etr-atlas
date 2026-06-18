@@ -1,0 +1,57 @@
+---
+title: "Pipeline Map"
+---
+
+The table below lists all substantive dofiles in execution order, with their primary input and output files and a status indicator.
+
+**Status indicators:**
+
+- **Stable:** no changes expected at a routine update.
+- **Review:** the file or its inputs require attention when new data arrives.
+
+| Dofile | Primary input | Primary output | Status |
+|---|---|---|---|
+| **0_master** | All the code | All the routine outputs | Stable |
+| **1_0_revenue_master** | Each revenue dofile | output/ETR_1_revenue_raw.dta | Stable |
+| 1_01_revenue_crosswalks | reclassify_online_code.xlsx | aux_data/*_crosswalk.dta | Stable |
+| 1_1_revenue_oecd | oecd-revenue-2023.csv | work_data/data_1_oecd.dta | Review |
+| 1_2_revenue_ha | raw_data/HA/*.dta | work_data/data_2_ha.dta | Stable |
+| 1_3_revenue_imf | imf-revenue-2022-timeseries.csv | work_data/data_3_imf.dta | Review |
+| 1_4_revenue_ns_1_old | raw_data/NS/1_old/*.xlsx | work_data/NS/data_4_ns_old.dta | Stable |
+| 1_4_revenue_ns_2_bigthree | raw_data/NS/2_bigthree/*.dta | work_data/NS/data_4_ns_bigthree.dta | Stable |
+| 1_4_revenue_ns_3_new_updt | raw_data/NS/3_new/*.dta | work_data/NS/data_4_ns_new_updt.dta | Review |
+| 1_4_revenue_ns_4_append | data_4_ns_old/bigthree/new_updt | work_data/data_4_ns.dta | Stable |
+| 1_5_revenue_ictd | ICTD-import-2025.xlsx | work_data/data_5_ictd.dta | Review |
+| 1_6_revenue_imf_hist | raw_data/imf_hist_raw.xlsx | work_data/data_6_imf_hist.dta | Stable |
+| 1_7_revenue_other | 10 country files + ICTD no-GDP | work_data/data_7_other.dta | Review |
+| 1_8_revenue_combine | data_1 through data_7 | work_data/data_8_combine.dta | Review |
+| 1_9_revenue_nni_1_collect | wid_basic_raw.dta | aux_data/nni_current.dta | Review |
+| 1_9_revenue_nni_2_append | data_8_combine + nni_current | work_data/data_9_nni.dta | Stable |
+| 1_10_revenue_currency | data_9_nni.dta | work_data/data_10_currency.dta | Review |
+| 1_11_revenue_pct | data_10_currency.dta | work_data/data_11_pct.dta | Review |
+| 1_12_revenue_clean | data_11_pct + UN/RPC/other | output/ETR_1_revenue_raw.dta | Review |
+| **2_0_factorshares_master** | Master for factor shares | output/ETR_2_factorincome_2026.dta | Stable |
+| 2_1_factorshares_importwid_2026 | WID raw download | work_data/Lsh_compo_wid2026_raw.dta | Review |
+| 2_2_factorshares_importsna1968 | Factor shares import files 1968 | work_data/sna1968_compo.dta | Stable |
+| 2_2_factorshares_importsna1968_1gdp | sna1968_basic_raw.dta | work_data/sna1968_basic_pct_gdp.dta | Stable |
+| 2_2_factorshares_importsna1968_2compo | sna1968_basic_pct_gdp.dta | work_data/sna1968_compo.dta | Stable |
+| 2_3_factorshares_importsna2024 | Master for national income dofiles | work_data/sna2025.dta | Stable |
+| 2_3_factorshares_importsna2024_1import | UN SNA CSV files | work_data/sna2025_all_raw.dta | Review |
+| 2_3_factorshares_importsna2024_2clean | sna2025_all_raw + wid_cfc | work_data/sna2025.dta | Review |
+| 2_4_factorshares_import_chn | OECD SNA CHN + PYZ data | work_data/chn_sna2026_correct.dta | Review |
+| 2_5_factorshares_combine | Master to combine factor shares | work_data/Lsh_compo_harmonized_2026.dta | Stable |
+| 2_5_factorshares_combine_1sna1968 | WID2026 + sna1968_compo | work_data/Lsh_compo_harmonized_1968.dta | Stable |
+| 2_5_factorshares_combine_2sna2024chn | WID2026 + sna2025 + CHN | work_data/Lsh_compo_harmonized_2026.dta | Review |
+| 2_5_factorshares_combine_3all | harmonized_1968 and 2026 | work_data/Lsh_compo_harmonized_all.dta | Stable |
+| 2_6_factorshares_countrychecks | Lsh_compo_harmonized_all | work_data/Lsh_compo_checked.dta | Review |
+| 2_7_factorshares_imputemissing | Lsh_compo_checked.dta | work_data/compo_full.dta | Review |
+| 2_8_factorshares_clean | compo_full.dta | output/ETR_2_factorincome_2026.dta | Review |
+| **3_0_ETR_master** | Master for ETR construction | aux_data/ETR_robust_2026.dta | Stable |
+| 3_1_ETR_revenue_source | ETR_1_revenue_raw.dta | work_data/revenue_harmonized_v24/*.dta | Review |
+| 3_2_ETR_revenue_merge | revenue_harmonized_v24/*.dta | output/ETR_3_revenue_2026.dta | Stable |
+| 3_3_ETR_revenue_factor | ETR_3 + ETR_2 + nni_current | output/ETR_4_revenue_factor_2026.dta | Stable |
+| 3_4_ETR_clean | ETR_4_revenue_factor_2026 | output/ETR_5_preliminary_2026.dta | Review |
+| 3_5_ETR_construction | ETR_5_preliminary_2026 | output/ETR_6_preatlas_2026.dta | Review |
+| 3_6_ETR_countrychecks | ETR_6_preatlas_2026 | output/ETR_7_atlas_2026.dta | Review |
+| 3_7_ETR_atlas | ETR_7_atlas_2026 | output/ETR_fully_balanced_2026.dta + Excel | Review |
+| 3_8_ETR_robust | ETR_4_revenue_factor_2026 | aux_data/ETR_robust_2026.dta | Stable |

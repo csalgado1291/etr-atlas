@@ -1,0 +1,55 @@
+---
+title: "Update Checklist"
+---
+
+Follow these steps in order at each annual update cycle.
+
+## Raw data downloads
+
+1. Download the new OECD Global Revenue Statistics CSV. Verify the filename and column structure against the previous vintage before saving to `raw_data/`.
+
+2. Download the new IMF GFS time series CSV. Navigate to Government Finance Statistics, Revenue, Statement of Operations, and download all components. Verify column structure.
+
+3. Refresh the WID raw data download. Uncomment the download block in `2_1_factorshares_importwid_2026.do`, verify the API indicator codes, and re-run. Update `wid_rename_2026.do` and `wid_labels_2026.do` if WID has changed any variable names.
+
+4. Download the new ICTD Government Revenue Dataset. Verify the sheet name and column layout against the previous vintage.
+
+5. Download the new UN SNA CSV files by institutional sector. Add new numbered files following the pattern in `2_3_factorshares_importsna2024_1import.do`. Note: this source is complementary to the WID database and in 2026 was not updated for the majority of countries.
+
+6. Refresh the OECD SNA data for China (`CHN_raw_oecdsna_2026.csv`). Download from OECD Data Explorer, Annual non-financial accounts by institutional sector.
+
+7. Update the IMF WEO GDP file (`gdp_weo_new.dta`) to cover the latest years used by the ICTD conversion step.
+
+8. Update the INSEE tax credits file for France if new years are available.
+
+## Re-run and verify
+
+1. Run `1_01_revenue_crosswalks.do`. No changes expected unless new tax categories have appeared in the source data.
+
+2. Run `1_1_revenue_oecd.do`. Check the backfill country list and review the four powercode corrections (ROU, HRV, UKR, BGR).
+
+3. Run `1_3_revenue_imf.do`. Check for new columns in the raw CSV if the IMF extended the time series. Review any unmatched country names after the ISO3 merge.
+
+4. Run `1_4_revenue_ns_3_new_updt.do` if any of the 16 active NS countries have new data. Update the corresponding raw file in `raw_data/NS/3_new` first.
+
+5. Run `1_5_revenue_ictd.do`. Verify the Belarus 1994 GDP correction and the ICTD no-GDP country list.
+
+6. Run the full revenue pipeline through `1_12_revenue_clean.do`.
+
+7. Run the full factor shares pipeline through `2_8_factorshares_clean.do`. Run the comparison block at the end of `2_8` manually before proceeding to the ETR module.
+
+8. Run `3_1_ETR_revenue_source.do`. For any country with new source data or extended years, add or revise the relevant country block. Update the output folder path if the vintage label changes.
+
+9. Run `3_2` through `3_5`. Review the diagnostic tabulations at the top of `3_6_ETR_countrychecks.do` before proceeding to winsorization.
+
+10. Run `3_6` and `3_7`. Activate the WDD denominator block in `3_7` manually if CIT and NDP values in USD billions are needed for the Atlas website.
+
+## Quality checks
+
+1. Check the edition comparison table against the previous vintage. Flag ETR differences above 5 percentage points for review.
+
+2. Verify that the country count in each region is stable across the full time series.
+
+3. Update the data vintage table in the [Data Sources](data-sources.qmd) page.
+
+4. Update the dofile block in the relevant inventory page for any file that was modified during this update cycle.

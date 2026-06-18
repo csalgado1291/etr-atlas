@@ -1,0 +1,160 @@
+---
+title: "Formulas and Revision Guide"
+---
+
+This page covers the three ETR formulas used in the Atlas pipeline and a practical guide for diagnosing outliers. It is intended as a reference for research assistants who need to understand what drives each ETR and where to look in the data when a country shows an unexpected value.
+
+## 1. ETR Formulas
+
+### 1.1 Effective Tax Rate on Capital (ETR_K)
+
+ETR_K measures the share of total pre-tax capital income paid in taxes. Because the Personal Income Tax (PIT) applies to both wages and capital income, only the fraction attributed to capital enters the numerator. This fraction is determined by the parameter **alpha_prime**, which represents the capital share of PIT.
+
+$$ETR\_K = \frac{\alpha' \cdot PIT + CIT + \text{Property Taxes}}{OS_{corp} + OS_{hh} + 0.25 \cdot MI_{hh}}$$
+
+**Numerator:**
+
+- **alpha_prime · pct_1100:** the capital share of Personal Income Tax. alpha_prime is constructed from PIT exemption thresholds (Jensen 2021) and adjusted for dual PIT systems using the OECD dividend-to-PIT rate ratio.
+- **pct_1200:** Corporate Income Tax revenue.
+- **pct_4000:** Property and wealth tax revenue.
+
+**Denominator:**
+
+- **os_corp:** net operating surplus of corporations (corporate profits before tax).
+- **os_hh:** net operating surplus of households (capital income accruing directly to households).
+- **0.25 · mi_hh:** 25% of net mixed income (the assumed capital share of self-employment and unincorporated business income).
+
+---
+
+### 1.2 Effective Tax Rate on Corporate Income (ETR_cit)
+
+ETR_cit isolates the tax burden on corporate profits alone.
+
+$$ETR\_{cit} = \frac{CIT}{OS_{corp}}$$
+
+**Numerator:**
+
+- **pct_1200:** Corporate Income Tax revenue.
+
+**Denominator:**
+
+- **os_corp:** net operating surplus of corporations. Corrected for Mozambique and Chad by adding os_gov to the denominator, to account for the unusually high share of public-sector capital income in those economies (applied in `3_6_ETR_countrychecks.do`). France is corrected for tax credits on CIT revenue (also applied in `3_6_ETR_countrychecks.do`).
+
+---
+
+### 1.3 Effective Tax Rate on Labour (ETR_L)
+
+ETR_L measures the share of total pre-tax labour income paid in labour-related taxes.
+
+$$ETR\_L = \frac{(1 - \alpha') \cdot PIT + \text{Social Contributions}}{CE + 0.75 \cdot MI_{hh}}$$
+
+**Numerator:**
+
+- **(1 - alpha_prime) · pct_1100:** the labour share of Personal Income Tax.
+- **pct_2000:** payroll taxes and social security contributions.
+
+**Denominator:**
+
+- **ce_hh:** total compensation of employees across all sectors (households, corporations, government). Revised in 2026: now constructed as the sum of three sector-level WID variables (mceuhn + mceuco + mceugo).
+- **0.75 · mi_hh:** 75% of net mixed income (the assumed labour share of self-employment income).
+
+---
+
+### 1.4 The alpha_prime Parameter
+
+alpha_prime is the key incidence parameter that splits PIT between labour and capital. It is constructed in three steps in `3_5_ETR_construction.do`.
+
+**Step 1: PIT threshold adjustment**
+
+Using PIT exemption thresholds from Jensen (2021 AER):
+
+- Countries with threshold at or below the 50th percentile (mostly OECD): **alpha_pit = 0.15**
+- Countries with threshold above the 99th percentile (low-income): **alpha_pit = 0.30**
+- All others: linearly interpolated between 0.15 and 0.30.
+
+**Step 2: Dual PIT system adjustment**
+
+For countries with preferential dividend taxation, alpha_pit is adjusted upward using the OECD dividend-to-PIT statutory rate ratio (div_pit_oecd). The adjustment assumes that 50% of capital income faces the preferential dividend rate. The result is **alpha_prime**.
+
+**Step 3: Rescaling using observed factor shares**
+
+alpha_prime is further rescaled using observed country-year labour and capital shares (Lsh, Ksh) rather than the fixed PSZ (2018) US-based 70/30 split. This revision was introduced in December 2023.
+
+---
+
+### 1.5 Unallocable Income Tax (pct_1300)
+
+Category 1300 covers income taxes that cannot be attributed to PIT or CIT in the source data. It is split **50/50 between labour and capital** throughout (alpha_1300 = 0.50). This is a global parameter set at the top of `3_5_ETR_construction.do`.
+
+---
+
+## 2. Revision Guide for ETR Outliers
+
+This section explains where to look when a country shows an unexpected ETR value. An outlier can come from the numerator (tax side) going up, the denominator (income side) going down, or both. Always check the source flags first before investigating the components.
+
+**Source flags to check first for any ETR:**
+
+- **source_tax:** did the revenue source change in the flagged year? Source transitions (for example from ICTD to OECD) often produce level shifts in individual tax categories.
+- **source_sna:** did the SNA source change? The WID 2026 update revised os_corp and ce_hh for many countries, which can mechanically shift ETR_K and ETR_L.
+- **imputed:** if equal to 1, factor share components may be carried forward from the previous year rather than reflecting actual data for the flagged year.
+
+---
+
+### 2.1 Diagnosing ETR_K Outliers
+
+$$ETR\_K = \frac{\alpha' \cdot PIT + CIT + \text{Property Taxes}}{OS_{corp} + OS_{hh} + 0.25 \cdot MI_{hh}}$$
+
+**Numerator drivers:**
+
+- **pct_1200 (CIT):** most direct driver of ETR_K. An increase here mechanically raises ETR_K. Check whether it reflects genuine revenue growth or a source change, since OECD and ICTD often report CIT at different levels.
+- **pct_1100 (PIT capital share):** only the alpha_prime fraction enters. If PIT rose sharply or alpha_prime changed, it contributes. Check both.
+- **pct_4000 (property taxes):** usually small but worth checking for anomalies.
+
+**Denominator drivers:**
+
+- **os_corp:** if corporate profits fell while taxes stayed flat, ETR_K rises mechanically. Most common cause of ETR_K spikes in recession years. Also directly affected by the WID 2026 CE reconstruction.
+- **os_hh:** household capital income falling reduces the denominator.
+- **mi_hh:** a fall in mixed income reduces the 0.25 capital component of the denominator.
+
+**Additional flag:**
+
+- **os_corp_imputed:** if equal to 1, os_corp may be a model prediction rather than an observed value for the flagged year.
+
+---
+
+### 2.2 Diagnosing ETR_cit Outliers
+
+$$ETR\_{cit} = \frac{CIT}{OS_{corp}}$$
+
+**Numerator drivers:**
+
+- **pct_1200 (CIT):** the only tax component. Check whether an increase reflects genuine revenue growth, new legislation, or a source change. ICTD to OECD transitions often shift CIT levels significantly.
+
+**Denominator drivers:**
+
+- **os_corp:** the only income component. With WID 2026, check whether the new CE reconstruction from three sectors revised os_corp downward. If os_corp was revised down and CIT stayed flat, ETR_cit spikes mechanically.
+
+**Additional flag:**
+
+- **os_corp_imputed:** if equal to 1, check whether the imputed value is driving the spike.
+
+---
+
+### 2.3 Diagnosing ETR_L Outliers
+
+$$ETR\_L = \frac{(1 - \alpha') \cdot PIT + \text{Social Contributions}}{CE + 0.75 \cdot MI_{hh}}$$
+
+**Numerator drivers:**
+
+- **pct_2000 (social contributions):** the main driver of ETR_L. Check for genuine increases or source changes, particularly for countries where the source switched from ICTD to NS or OECD in the recent update.
+- **pct_1100 (PIT labour share):** rises if PIT increased or alpha_prime changed (reducing the labour share of PIT).
+
+**Denominator drivers:**
+
+- **ce_hh:** the dominant denominator component. Directly affected by the WID 2026 CE reconstruction from three sectors. If ce_hh was revised down for a country in 2023, ETR_L rises mechanically even with no tax change.
+- **mi_hh:** a fall in mixed income reduces the 0.75 labour component of the denominator.
+
+**Additional flags:**
+
+- **ce_hh_imputed:** if equal to 1, the CE value may be carried forward from a prior year and may not reflect actual 2023 data.
+- **mios_hh_imputed:** if equal to 1, mixed income is also imputed, reducing confidence in both ETR_L and ETR_K denominators.

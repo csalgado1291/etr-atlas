@@ -1,0 +1,38 @@
+---
+title: "ETR Atlas 2026 — Pipeline Documentation"
+---
+
+This website documents the code pipeline used to compute Effective Tax Rates (ETRs) for the **Atlas of the Offshore World**. It is intended as a working reference for research assistants and collaborators who maintain, update, or extend the routine.
+
+The pipeline is organised in three modules:
+
+- **Revenue module** (1_x dofiles): collection and harmonisation of tax revenue data from OECD, IMF, WID, ICTD, and national statistics sources.
+- **Factor shares module** (2_x dofiles): construction of national income components (CE, OS, mixed income) used as ETR denominators.
+- **ETR module** (3_x dofiles): source selection, ETR construction, quality checks, and final output.
+
+## What is in this documentation
+
+| Section | What you will find |
+|---|---|
+| [How to Run](how-to-run.qmd) | How to set the root path and run the full pipeline |
+| [Pipeline Map](pipeline-map.qmd) | All dofiles in execution order with inputs, outputs, and status |
+| [Data Sources](data-sources.qmd) | External raw data sources, download locations, and vintages |
+| [Update Checklist](update-checklist.qmd) | Step-by-step guide for each annual update cycle |
+| [Revenue Module](revenue.qmd) | Dofile-by-dofile documentation for the 1_x revenue files |
+| [Factor Shares Module](factor-shares.qmd) | Dofile-by-dofile documentation for the 2_x factor shares files |
+| [ETR Module](etr-module.qmd) | Dofile-by-dofile documentation for the 3_x ETR files |
+| [Formulas](formulas.qmd) | ETR formulas and revision guide for diagnosing outliers |
+| [Key Variables](variables.qmd) | Main variables in the final output dataset |
+| [Abbreviations](abbreviations.qmd) | All acronyms and abbreviations used in the pipeline |
+
+## About master dofiles
+
+Master dofiles (0_master, 1_0_revenue_master, 1_9_revenue_nni, 1_4_revenue_ns, 2_0_factorshares_master, 2_2_factorshares_importsna1968, 2_3_factorshares_importsna2024, 2_5_factorshares_combine, 3_0_ETR_master) are not documented individually here. These files do not perform any data transformation. Their sole function is to call and execute other dofiles in a defined order. Any change to the execution order or scope of the pipeline should be made in the relevant master dofile. Any substantive methodological change should be made and documented in the individual dofile where the work actually happens.
+
+## Living document
+
+This documentation should be updated whenever a dofile is modified, a new data source is introduced, or a country-specific correction is added. The companion variable glossary and country event register, maintained separately in Excel, provide additional reference material.
+
+::: {.callout-note}
+**Last updated:** 2026 | **Author:** C. Salgado | **Project:** Atlas of the Offshore World, International Tax Observatory, Paris School of Economics
+:::

@@ -1,0 +1,39 @@
+---
+title: "Key Variables"
+---
+
+The table below covers the main variables in the final output dataset (`ETR_fully_balanced_2026.dta`). A full variable glossary with all intermediate datasets is maintained separately in the companion Excel file.
+
+| Variable | Label | Unit | Created by |
+|---|---|---|---|
+| ETR_K | Effective Tax Rate on Capital | Rate 0 to 1, winsorized at 1 | 3_5_ETR_construction |
+| ETR_L | Effective Tax Rate on Labour | Rate 0 to 1, winsorized at 1 | 3_5_ETR_construction |
+| ETR_cit | Effective Tax Rate on Corporations | Rate 0 to 1, winsorized at 1 | 3_5_ETR_construction |
+| pct_tax | Total tax revenue as share of NDP | Rate 0 to 1 | 3_1_ETR_revenue_source |
+| pct_1000 | Income tax revenue as share of NDP | Rate | 1_11_revenue_pct |
+| pct_2000 | Social contributions as share of NDP | Rate | 1_11_revenue_pct |
+| pct_5000 | Indirect tax revenue as share of NDP | Rate | 1_11_revenue_pct |
+| nni | Net National Income, constant 2021 local currency | Constant 2021 LCU | 1_9_revenue_nni_1_collect |
+| ndp | Net Domestic Product, share of NNI | Share | 2_1_factorshares_importwid_2026 |
+| ce_hh | Compensation of employees, all sectors | Share of NNI | 2_1_factorshares_importwid_2026 |
+| os_corp | Net operating surplus, corporations | Share of NNI | 2_1_factorshares_importwid_2026 |
+| os_hh | Net operating surplus, households | Share of NNI | 2_1_factorshares_importwid_2026 |
+| mi_hh | Net mixed income, households | Share of NNI | 2_1_factorshares_importwid_2026 |
+| os_gov | Net operating surplus, government | Share of NNI | 2_1_factorshares_importwid_2026 |
+| cfc | Consumption of fixed capital | Share of NNI | 2_1_factorshares_importwid_2026 |
+| nfi | Net factor income from abroad | Share of NNI | 2_1_factorshares_importwid_2026 |
+| stitch | Flag: revenue source transition year | 0 or 1 | 3_1_ETR_revenue_source |
+| interpolated | Flag: interpolated observation | 0 or 1 | 3_1_ETR_revenue_source |
+| imputed | Flag: imputed factor share | 0 or 1 | 2_7_factorshares_imputemissing |
+| source_tax | Primary revenue source | String | 3_1_ETR_revenue_source |
+| source_sna | Primary SNA source | String | 2_8_factorshares_clean |
+| ndp_usd | Net domestic product, constant 2021 USD | Constant 2021 USD | 3_4_ETR_clean |
+| alpha_prime | Capital share of PIT | Share 0 to 1 | 3_5_ETR_construction |
+| Ksh | Capital share of factor-price NDP | Share 0 to 1 | 3_5_ETR_construction |
+| Lsh | Labour share of factor-price NDP | Share 0 to 1 | 3_5_ETR_construction |
+| Tau_K | Tax revenue on capital, share of factor-price NDP | Share | 3_5_ETR_construction |
+| Tau_L | Tax revenue on labour, share of factor-price NDP | Share | 3_5_ETR_construction |
+
+::: {.callout-note}
+All `pct_*` variables in the final output dataset are expressed as shares of NDP after re-scaling in `3_4_ETR_clean.do`. In intermediate datasets they are expressed as shares of NNI.
+:::

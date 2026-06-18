@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Dofile Inventory — ETR Module – ETR Atlas 2026</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-fd7a8af413f073a9aed129c24f141b63.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">ETR Atlas 2026</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-pipeline" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Pipeline</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-pipeline">    
+        <li>
+    <a class="dropdown-item" href="./how-to-run.html">
+ <span class="dropdown-text">How to Run</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pipeline-map.html">
+ <span class="dropdown-text">Pipeline Map</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./data-sources.html">
+ <span class="dropdown-text">Data Sources</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./update-checklist.html">
+ <span class="dropdown-text">Update Checklist</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-dofile-inventory" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Dofile Inventory</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-dofile-inventory">    
+        <li>
+    <a class="dropdown-item" href="./revenue.html">
+ <span class="dropdown-text">Revenue Module</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./factor-shares.html">
+ <span class="dropdown-text">Factor Shares Module</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./etr-module.html">
+ <span class="dropdown-text">ETR Module</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-reference" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Reference</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-reference">    
+        <li>
+    <a class="dropdown-item" href="./formulas.html">
+ <span class="dropdown-text">Formulas and Revision Guide</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./variables.html">
+ <span class="dropdown-text">Key Variables</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./abbreviations.html">
+ <span class="dropdown-text">Abbreviations</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./revenue.html">Dofile Inventory</a></li><li class="breadcrumb-item"><a href="./etr-module.html">Dofile Inventory — ETR Module</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Pipeline</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./how-to-run.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How to Run the Pipeline</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pipeline-map.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Pipeline Map</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data-sources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Sources</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./update-checklist.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Update Checklist</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Dofile Inventory</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./revenue.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dofile Inventory — Revenue Module</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./factor-shares.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dofile Inventory — Factor Shares Module</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./etr-module.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Dofile Inventory — ETR Module</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Reference</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./formulas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Formulas and Revision Guide</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Key Variables</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./abbreviations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Abbreviations</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#etr_revenue_source.do" id="toc-etr_revenue_source.do" class="nav-link active" data-scroll-target="#etr_revenue_source.do">3_1_ETR_revenue_source.do</a></li>
+  <li><a href="#etr_revenue_merge.do" id="toc-etr_revenue_merge.do" class="nav-link" data-scroll-target="#etr_revenue_merge.do">3_2_ETR_revenue_merge.do</a></li>
+  <li><a href="#etr_revenue_factor.do" id="toc-etr_revenue_factor.do" class="nav-link" data-scroll-target="#etr_revenue_factor.do">3_3_ETR_revenue_factor.do</a></li>
+  <li><a href="#etr_clean.do" id="toc-etr_clean.do" class="nav-link" data-scroll-target="#etr_clean.do">3_4_ETR_clean.do</a></li>
+  <li><a href="#etr_construction.do" id="toc-etr_construction.do" class="nav-link" data-scroll-target="#etr_construction.do">3_5_ETR_construction.do</a></li>
+  <li><a href="#etr_countrychecks.do" id="toc-etr_countrychecks.do" class="nav-link" data-scroll-target="#etr_countrychecks.do">3_6_ETR_countrychecks.do</a></li>
+  <li><a href="#etr_atlas.do" id="toc-etr_atlas.do" class="nav-link" data-scroll-target="#etr_atlas.do">3_7_ETR_atlas.do</a></li>
+  <li><a href="#etr_robust.do" id="toc-etr_robust.do" class="nav-link" data-scroll-target="#etr_robust.do">3_8_ETR_robust.do</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./revenue.html">Dofile Inventory</a></li><li class="breadcrumb-item"><a href="./etr-module.html">Dofile Inventory — ETR Module</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Dofile Inventory — ETR Module</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This page documents all substantive dofiles in the ETR module (3_x), in execution order.</p>
+<hr>
+<section id="etr_revenue_source.do" class="level2">
+<h2 class="anchored" data-anchor-id="etr_revenue_source.do">3_1_ETR_revenue_source.do</h2>
+<p><strong>Short description:</strong> This is the first dofile in the ETR revenue module. It takes the raw harmonized revenue dataset (ETR_1_revenue_raw.dta) and, country by country, selects the appropriate source(s) for each tax series, stitches together multiple sources across time, applies interpolations to fill gaps, reconstructs aggregates from disaggregates where needed, and saves one harmonized country-level file per country into work_data/revenue_harmonized_v24/.</p>
+<p><strong>Objective:</strong> Produce a set of country-level files in work_data/revenue_harmonized_v24/, each containing harmonized annual tax revenue series (as shares of NNI) covering the main OECD tax categories (1000, 1100, 1200, 1300, 2000, 4000, 5000, 6000), alongside source, stitch, and interpolation flags.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>For each of the approximately 160 countries, load ETR_1_revenue_raw.dta and subset to the country of interest. Initialize blank pct_X series for all tax categories and assign values from the best available source by time period.</li>
+<li>Where a source transition creates a discontinuity, flag stitch years (stitch = 1) and bridge short gaps by linear interpolation, with interpolated years flagged accordingly.</li>
+<li>For several countries, reconstruct sub-aggregate series by computing their ratio to the aggregate in an overlap period and applying that ratio to the other source’s aggregate.</li>
+<li>Recompute aggregates (pct_1000, pct_5000, pct_tax) from disaggregates after any stitching or interpolation. Apply ad hoc corrections where needed. Save each country file.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>The dofile is structured as a long sequential script with one block per country. There is no looping over countries. Any country added or substantially revised requires a dedicated new or modified block.</li>
+<li>The output folder is work_data/revenue_harmonized_v24/. If the vintage changes, this path must be updated consistently throughout all approximately 160 save statements and in all downstream dofiles.</li>
+<li>VUT (entry 159) is currently commented out entirely due to data ambiguity. It should be reviewed at each update.</li>
+<li>The 2000 (social contributions) series is frequently the most difficult to harmonize and receives country-specific treatment in many blocks.</li>
+</ul>
+<hr>
+</section>
+<section id="etr_revenue_merge.do" class="level2">
+<h2 class="anchored" data-anchor-id="etr_revenue_merge.do">3_2_ETR_revenue_merge.do</h2>
+<p><strong>Short description:</strong> This is a short utility dofile that appends all country-level harmonized revenue files produced in the previous step into a single panel dataset, applies a small set of cleaning rules, and saves the consolidated revenue output used by downstream ETR construction dofiles.</p>
+<p><strong>Objective:</strong> Produce output/ETR_3_revenue_2026.dta, a balanced panel of harmonized tax revenue shares (as a percentage of NNI) for all countries from 1965 to 2023.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Change directory to work_data/revenue_harmonized_v24/ and loop over all .dta files in that folder, appending them sequentially.</li>
+<li>Compute the latest available year per country and tabulate which countries only reach 2022, as a diagnostic check on coverage.</li>
+<li>Drop observations where pct_tax is missing and drop year 2024 from the panel.</li>
+<li>Replace all remaining missing values across all pct_* variables with zero and save the final panel.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>The append loop picks up all .dta files in the folder indiscriminately. Any stale or test files left in that directory will be silently included.</li>
+<li>The zero-fill for missing pct_* values treats missing sub-categories as truly zero rather than unknown. This is appropriate when a tax category is structurally absent but could be misleading if missingness reflects data gaps.</li>
+<li>The tabulation of countries with last == 2022 should be reviewed at each update to confirm which countries are lagging.</li>
+</ul>
+<hr>
+</section>
+<section id="etr_revenue_factor.do" class="level2">
+<h2 class="anchored" data-anchor-id="etr_revenue_factor.do">3_3_ETR_revenue_factor.do</h2>
+<p><strong>Short description:</strong> This is a short merging dofile that joins the harmonized revenue panel with the factor income dataset, brings in the NNI current LCU series, applies a small set of sample restriction rules, declares the panel structure, and saves the merged dataset used by downstream ETR construction dofiles.</p>
+<p><strong>Objective:</strong> Produce output/ETR_4_revenue_factor_2026.dta, a fully merged panel combining harmonized tax revenue shares, factor income components, and NNI in current LCU for all countries from 1965 to 2023.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Load ETR_3_revenue_2026.dta and merge 1:1 on country and year with ETR_2_factorincome_2026.dta. Drop unmatched revenue observations.</li>
+<li>Drop countries that never have any tax data in the merged panel.</li>
+<li>Merge 1:1 on country and year with work_data/nni_current to bring in NNI in current LCU from WID.</li>
+<li>Declare the panel by encoding country as a numeric identifier (cid) and calling tsset cid year. Save the merged panel.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>Both input files reference the 2026 vintage suffix. If the vintage label changes, both merge statements must be updated.</li>
+<li>The approximately 140 country-years dropped due to missing factor shares include Venezuela and Myanmar. Review the tab country if _merge==1 output at each update.</li>
+<li>The nni_current file is sourced from WID May 2024. Verify at each update whether a newer vintage for NNI in current LCU is available.</li>
+</ul>
+<hr>
+</section>
+<section id="etr_clean.do" class="level2">
+<h2 class="anchored" data-anchor-id="etr_clean.do">3_4_ETR_clean.do</h2>
+<p><strong>Short description:</strong> This dofile takes the merged revenue-factor panel, harmonizes denominators, cleans flags, merges auxiliary variables (NNI weights, PIT thresholds, dividend-PIT ratios), and saves the pre-ETR dataset used in the construction step.</p>
+<p><strong>Objective:</strong> Produce output/ETR_5_preliminary_2026.dta, a clean, fully labelled panel with all revenue and factor income components expressed as shares of NDP minus NIT, augmented with PIT and dividend tax auxiliary variables, ready for ETR construction.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Correct China’s GDP and NDP using the sum of factor income components.</li>
+<li>Re-express all revenue and factor income variables as shares of NDP minus NIT. Consolidate SNA stitch flags and standardize all flag variables to 0/1.</li>
+<li>Merge WID NNI weights, drop years before 1965 and countries that never have any tax data. Construct NDP equivalents in PPP and USD.</li>
+<li>Merge PIT exemption threshold and pit_alpha, carrying forward pit_thr for 2023 where missing. Merge OECD dividend-to-PIT statutory rate ratio and back-fill to the earliest available year.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>The China GDP correction is a manual patch applied here. If the CHN country routine is ever updated to correct GDP upstream, this block should be removed to avoid double-correction.</li>
+<li>The pit_thr carry-forward for 2023 was added in Update 2026. Verify at the next update whether 2024 is similarly missing.</li>
+<li>The div_pit_oecd back-fill loop was extended to 2024 in Update 2026. Check at each update whether the auxiliary file has been extended and adjust the loop bound.</li>
+</ul>
+<hr>
+</section>
+<section id="etr_construction.do" class="level2">
+<h2 class="anchored" data-anchor-id="etr_construction.do">3_5_ETR_construction.do</h2>
+<p><strong>Short description:</strong> This is the core ETR construction dofile. It takes the preliminary merged panel, applies tax incidence assumptions to allocate PIT revenue between labor and capital, computes labor and capital tax revenue aggregates, derives factor income shares, calculates the three benchmark effective tax rates, applies a sample restriction for ex-communist countries, and saves the pre-atlas output.</p>
+<p><strong>Objective:</strong> Produce output/ETR_6_preatlas_2026.dta, a country-year panel containing ETR_L, ETR_K, and ETR_cit alongside factor income shares, tax revenue components, and key income aggregates, for all countries from 1965 to 2023.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Define global incidence parameters: 50% of the unallocable 1300 income tax series is attributed to labor and 50% to capital.</li>
+<li>Construct the country-year PIT capital share (alpha_prime) using PIT exemption thresholds (0.15 for OECD, 0.30 for low-income, interpolated in between) and adjust for dual PIT systems using the OECD dividend-to-PIT statutory rate ratio.</li>
+<li>Compute labor tax revenue (Tau_L) as the labor share of PIT plus 50% of the 1300 series plus social contributions. Compute capital tax revenue (Tau_K) as the capital share of PIT plus CIT plus 50% of the 1300 series plus property taxes.</li>
+<li>Calculate ETR_L, ETR_K, and ETR_cit. Drop all country-years before 1994 for ex-communist economies.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>The alpha_prime rescaling depends on mi_hh_L and mi_hh_K being available. If the factor income variables are renamed upstream, this block will silently produce missing values.</li>
+<li>The 1994 cutoff for ex-communist countries is hardcoded. If the sample is extended backward for any of these countries, the drop condition must be revised explicitly.</li>
+<li>ETR_cit uses os_corp as the denominator. If os_corp is missing or near-zero, ETR_cit will be missing or extreme. No winsorization is applied at this stage.</li>
+</ul>
+<hr>
+</section>
+<section id="etr_countrychecks.do" class="level2">
+<h2 class="anchored" data-anchor-id="etr_countrychecks.do">3_6_ETR_countrychecks.do</h2>
+<p><strong>Short description:</strong> This dofile applies post-construction quality checks, country-specific corrections, and winsorization to the ETR panel before it enters the Atlas database. It handles France’s tax credit adjustment, Mozambique and Chad’s corporate denominator correction, and a final hard winsorization of all ETR and total tax variables to the unit interval.</p>
+<p><strong>Objective:</strong> Produce output/ETR_7_atlas_2026.dta, the final ETR panel ready for the Atlas database, with outliers diagnosed, country cases corrected, and all ETR and total tax variables bounded between 0 and 1.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Run diagnostic tabulations of countries with ETR_K, ETR_L, ETR_cit and total tax revenue above 0.55 and outside the unit interval, to flag outliers before winsorization.</li>
+<li>Apply the France tax credit correction: merge INSEE tax credit data, subtract credits from CIT revenue, and recompute ETR_cit and ETR_K for France from 1995 onward.</li>
+<li>Apply the Mozambique and Chad correction: recompute ETR_cit by adding government operating surplus to the corporate operating surplus in the denominator.</li>
+<li>Apply hard winsorization: cap ETR_K, ETR_L, ETR_cit and total tax revenue at 1 from above and at 0 from below. Save the final output.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>The France correction relies on the INSEE credits file in aux_data/fra_credits. This file must be updated at each vintage to extend coverage to the latest year.</li>
+<li>The Mozambique and Chad ETR_cit correction is a permanent methodological choice applied unconditionally for all years.</li>
+<li>The April 2026 winsorization loop replaces the earlier country-by-country approach. Review the diagnostic tabulations before proceeding to winsorization at each update.</li>
+</ul>
+<hr>
+</section>
+<section id="etr_atlas.do" class="level2">
+<h2 class="anchored" data-anchor-id="etr_atlas.do">3_7_ETR_atlas.do</h2>
+<p><strong>Short description:</strong> This is the final dofile in the ETR module. It takes the quality-checked ETR panel, adjusts tax revenue denominators, merges country frame metadata, balances the panel, constructs all tooltip and summary variables for the Atlas website, and exports the results to Excel across five structured sheets.</p>
+<p><strong>Objective:</strong> Produce output/ETR_fully_balanced_2026.dta as the analytical Stata output and output/global_ETR_v26_new.xlsx as the Atlas website delivery file, containing ETR series, revenue composition shares, regional and income-group averages, and data quality indicators for all countries from 1965 to 2023.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Re-express all tax revenue shares from factor-price NDP terms back to NDP terms by multiplying by (NDP minus NIT) divided by NDP.</li>
+<li>Merge the country frame metadata (iso2, country name, region, income level). Balance the panel using tsfill, then restore string identifiers via a temporary file.</li>
+<li>Construct tooltip variables: country-level all-years averages, GDP-weighted regional and income-group averages varying by year, and revenue composition shares. All averages are computed as NDP-USD weighted means.</li>
+<li>Rename all variables to Atlas website labels and save the Stata file. Export to output/global_ETR_v26_new.xlsx across five sheets: Data, P1_2_Region_average, P1_3_Income_average, P1_1_Country_average, P2_Share_revenue, and P3_Data_quality.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>The tax revenue denominator adjustment at the top was introduced in October 2024 and must remain in place unless upstream construction dofiles are changed.</li>
+<li>The tsfill step sets the maximum year to 2023 explicitly. If the panel is extended to 2024, this line must be updated.</li>
+<li>The WDD denominator block is fully commented out and requires manual activation at each update. The target year must be changed and the raw WDD file must be refreshed before running.</li>
+</ul>
+<hr>
+</section>
+<section id="etr_robust.do" class="level2">
+<h2 class="anchored" data-anchor-id="etr_robust.do">3_8_ETR_robust.do</h2>
+<p><strong>Short description:</strong> This is a robustness check dofile that recomputes the three ETRs using absolute currency values rather than shares of NDP. It applies the same incidence assumptions as the main pipeline and saves the resulting ETR series as a separate auxiliary file for comparison against the benchmark estimates.</p>
+<p><strong>Objective:</strong> Produce aux_data/ETR_robust_2026.dta, containing ETR_K_robust, ETR_L_robust and ETR_cit_robust computed with numerators and denominators in current LCU levels.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Convert all tax revenue series and factor income components from NDP share terms to absolute current LCU levels.</li>
+<li>Reconstruct alpha_prime using the same two-step procedure as in the main pipeline.</li>
+<li>Compute labor and capital tax revenue and factor income denominators in absolute levels. Divide to obtain ETR_K, ETR_L and ETR_cit.</li>
+<li>Keep only country, year and the three ETRs, rename them with a robust suffix, and save.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>The div_pit_oecd back-fill loop runs to 2023 here, versus 2024 in the main pipeline. Both loops should be set to the same upper bound at each update.</li>
+<li>This dofile loads ETR_4_revenue_factor_2026.dta, bypassing the China GDP correction and the WID NNI weight merge applied in 3_4_ETR_clean.do. This is intentional for a clean robustness check.</li>
+<li>The test plot for France is hardcoded and will display during a standard run. It can be commented out if the dofile is run in batch mode.</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

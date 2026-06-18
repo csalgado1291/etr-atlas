@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Dofile Inventory — Factor Shares Module – ETR Atlas 2026</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-de63f62b328812d8e578a4d74e282472.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-fd7a8af413f073a9aed129c24f141b63.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>html{ scroll-behavior: smooth; }</style>
+
+
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">ETR Atlas 2026</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-pipeline" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Pipeline</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-pipeline">    
+        <li>
+    <a class="dropdown-item" href="./how-to-run.html">
+ <span class="dropdown-text">How to Run</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./pipeline-map.html">
+ <span class="dropdown-text">Pipeline Map</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./data-sources.html">
+ <span class="dropdown-text">Data Sources</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./update-checklist.html">
+ <span class="dropdown-text">Update Checklist</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-dofile-inventory" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Dofile Inventory</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-dofile-inventory">    
+        <li>
+    <a class="dropdown-item" href="./revenue.html">
+ <span class="dropdown-text">Revenue Module</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./factor-shares.html">
+ <span class="dropdown-text">Factor Shares Module</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./etr-module.html">
+ <span class="dropdown-text">ETR Module</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-reference" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Reference</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-reference">    
+        <li>
+    <a class="dropdown-item" href="./formulas.html">
+ <span class="dropdown-text">Formulas and Revision Guide</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./variables.html">
+ <span class="dropdown-text">Key Variables</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./abbreviations.html">
+ <span class="dropdown-text">Abbreviations</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./revenue.html">Dofile Inventory</a></li><li class="breadcrumb-item"><a href="./factor-shares.html">Dofile Inventory — Factor Shares Module</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Introduction</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Pipeline</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./how-to-run.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">How to Run the Pipeline</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./pipeline-map.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Pipeline Map</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data-sources.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Sources</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./update-checklist.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Update Checklist</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Dofile Inventory</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./revenue.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dofile Inventory — Revenue Module</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./factor-shares.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Dofile Inventory — Factor Shares Module</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./etr-module.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Dofile Inventory — ETR Module</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Reference</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./formulas.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Formulas and Revision Guide</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./variables.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Key Variables</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./abbreviations.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Abbreviations</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#factorshares_importwid_2026.do" id="toc-factorshares_importwid_2026.do" class="nav-link active" data-scroll-target="#factorshares_importwid_2026.do">2_1_factorshares_importwid_2026.do</a></li>
+  <li><a href="#factorshares_importsna1968_1gdp.do" id="toc-factorshares_importsna1968_1gdp.do" class="nav-link" data-scroll-target="#factorshares_importsna1968_1gdp.do">2_2_factorshares_importsna1968_1gdp.do</a></li>
+  <li><a href="#factorshares_importsna1968_2compo.do" id="toc-factorshares_importsna1968_2compo.do" class="nav-link" data-scroll-target="#factorshares_importsna1968_2compo.do">2_2_factorshares_importsna1968_2compo.do</a></li>
+  <li><a href="#factorshares_importsna2024_1import.do" id="toc-factorshares_importsna2024_1import.do" class="nav-link" data-scroll-target="#factorshares_importsna2024_1import.do">2_3_factorshares_importsna2024_1import.do</a></li>
+  <li><a href="#factorshares_importsna2024_2clean.do" id="toc-factorshares_importsna2024_2clean.do" class="nav-link" data-scroll-target="#factorshares_importsna2024_2clean.do">2_3_factorshares_importsna2024_2clean.do</a></li>
+  <li><a href="#factorshares_import_chn.do" id="toc-factorshares_import_chn.do" class="nav-link" data-scroll-target="#factorshares_import_chn.do">2_4_factorshares_import_chn.do</a></li>
+  <li><a href="#factorshares_combine_1sna1968.do" id="toc-factorshares_combine_1sna1968.do" class="nav-link" data-scroll-target="#factorshares_combine_1sna1968.do">2_5_factorshares_combine_1sna1968.do</a></li>
+  <li><a href="#factorshares_combine_2sna2024chn.do" id="toc-factorshares_combine_2sna2024chn.do" class="nav-link" data-scroll-target="#factorshares_combine_2sna2024chn.do">2_5_factorshares_combine_2sna2024chn.do</a></li>
+  <li><a href="#factorshares_combine_3all.do" id="toc-factorshares_combine_3all.do" class="nav-link" data-scroll-target="#factorshares_combine_3all.do">2_5_factorshares_combine_3all.do</a></li>
+  <li><a href="#factorshares_countrychecks.do" id="toc-factorshares_countrychecks.do" class="nav-link" data-scroll-target="#factorshares_countrychecks.do">2_6_factorshares_countrychecks.do</a></li>
+  <li><a href="#factorshares_imputemissing.do" id="toc-factorshares_imputemissing.do" class="nav-link" data-scroll-target="#factorshares_imputemissing.do">2_7_factorshares_imputemissing.do</a></li>
+  <li><a href="#factorshares_clean.do" id="toc-factorshares_clean.do" class="nav-link" data-scroll-target="#factorshares_clean.do">2_8_factorshares_clean.do</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./revenue.html">Dofile Inventory</a></li><li class="breadcrumb-item"><a href="./factor-shares.html">Dofile Inventory — Factor Shares Module</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Dofile Inventory — Factor Shares Module</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This page documents all substantive dofiles in the factor shares module (2_x), in execution order.</p>
+<hr>
+<section id="factorshares_importwid_2026.do" class="level2">
+<h2 class="anchored" data-anchor-id="factorshares_importwid_2026.do">2_1_factorshares_importwid_2026.do</h2>
+<p><strong>Short description:</strong> This dofile downloads and processes national income component data from WID to produce the factor share variables used as denominators in ETR_L and ETR_K. It is substantially updated for the 2026 vintage, primarily because the WID restructured how it reports compensation of employees (CE) and introduced new sector-level GVA variables.</p>
+<p><strong>Objective:</strong> Produce two output files: the main factor shares dataset (work_data/Lsh_compo_wid2026_raw.dta) containing all WID national income components as percentages of NNI, and an auxiliary NNI series file (work_data/wid2026_nni.dta) used by downstream dofiles.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Download WID data in three parts due to server size limits, plus a separate population download. Append all parts and save the raw file. This step is commented out and only needs to be re-run when a new WID vintage is released.</li>
+<li>Clean the raw dataset, keep only macro aggregates (m- prefix variables), drop provincial observations and pre-1950 years, reshape from long to wide, apply labels from wid_labels_2026.do, and save as wid2026_basic_raw.dta.</li>
+<li>Construct the CE total variable (ce_hh) as the sum of three sector components from WID 2026 (ce_hh_sector + ce_corp_sector + ce_gov_wid), replacing the old single concept mcomhn which no longer exists in the new WID.</li>
+<li>Reconstruct derived variables (mios_hh, mios_total, os_total, nfi, ndp), interpolate and extrapolate NFI_L and NFI_K where missing, apply the Sierra Leone NIT correction, and convert NNI to constant 2021 USD.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>The WID download block (Section 1) is commented out. At each update, uncomment it, verify the API indicator codes, and re-run to refresh the raw data.</li>
+<li>Two auxiliary dofiles must be updated before running: wid_rename_2026.do and wid_labels_2026.do. Both must reflect any new variables added in future WID vintages.</li>
+<li>The CE construction changed fundamentally in this update. The old WID reported total CE as mcomhn. The new WID 2026 reports CE split by sector. If WID changes this structure again, the construction logic must be updated.</li>
+<li>The constant-price base year was updated from 2019 to 2021. Downstream files using nni_ppp or nnipc_ppp must be aware that these series are now in 2021 USD.</li>
+<li>The output file was renamed from Lsh_compo_wid_raw.dta to Lsh_compo_wid2026_raw.dta. All downstream files must reference the new filename.</li>
+</ul>
+<hr>
+</section>
+<section id="factorshares_importsna1968_1gdp.do" class="level2">
+<h2 class="anchored" data-anchor-id="factorshares_importsna1968_1gdp.do">2_2_factorshares_importsna1968_1gdp.do</h2>
+<p><strong>Short description:</strong> This dofile takes the raw SNA 1968 database and ensures every observation has a consistent GDP value using a three-step fallback strategy: first from the same series within SNA 1968, then from any other series for the same country-year in SNA 1968, and finally from WID where neither is available.</p>
+<p><strong>Objective:</strong> Produce work_data/sna1968_basic_pct_gdp.dta, a cleaned version of the SNA 1968 raw data where all item values are expressed as percentages of GDP, covering 1965 to 1996.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Extract all GDP observations from SNA 1968 table 103, deduplicate by taking the mean, and save as a temporary reference file.</li>
+<li>Merge the full dataset against the same-series GDP first, then against the any-series GDP for the same country-year, flagging observations where GDP had to be retrieved from a different series.</li>
+<li>For remaining country-years still missing GDP, merge against WID (raw_wid2026_plus.dta) and compute GDP from the WID GDP share of NNI multiplied by NNI. Drop Kazakhstan pre-1990.</li>
+<li>Divide all item values by GDP to express them as percentages, drop the GDP row, generate a within-group id variable, and save.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>The SNA 1968 source is a historical dataset covering 1965 to 1996 and does not update annually.</li>
+<li>The WID fallback now uses raw_wid2026_plus.dta following the 2026 rename. If the WID file is renamed again, the merge path must be updated.</li>
+<li>Kazakhstan pre-1990 is dropped because no consistent GDP is available for those years in any of the three sources.</li>
+</ul>
+<hr>
+</section>
+<section id="factorshares_importsna1968_2compo.do" class="level2">
+<h2 class="anchored" data-anchor-id="factorshares_importsna1968_2compo.do">2_2_factorshares_importsna1968_2compo.do</h2>
+<p><strong>Short description:</strong> This dofile maps the SNA 1968 item descriptions to WID income concept labels (ce_hh, mios_total, mios_hh, os_corp, os_gov, nit, cfc, ce_gov), resolves cross-table consistency issues, converts gross to net variables, enforces accounting identities, and resolves duplicate country-year observations from overlapping series.</p>
+<p><strong>Objective:</strong> Produce work_data/sna1968_compo.dta, a wide-format dataset of SNA 1968 national income components in WID variable names expressed as percentages of GDP, covering 1965 to 1996, net of CFC and consistent with GDP = CE + MIOS + NIT + CFC.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Map SNA 1968 item descriptions from tables 103 to 106 to WID concept names and reshape to wide format.</li>
+<li>Resolve NIT inconsistencies and reconcile os_gov, os_corp, and mios_hh across tables. Drop known erroneous observations for BWA, CMR, DNK, and PYF.</li>
+<li>Convert gross to net variables using CFC from WID (Lsh_compo_wid2026_raw.dta). For sector-level cases, allocate CFC proportionally using a 33% share assumption for the household sector.</li>
+<li>Enforce the accounting identity with GDP and CFC held fixed. Drop observations where enforced mios_total is below 0.10. Resolve 120+ duplicate country-year observations for CAN, ESP, EST, IND, ISL, ITA, LSO, MAR, MUS, NGA, NOR, PAN, and ROU.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>The SNA 1968 source is historical and does not update. Re-run only if the raw file is corrected or the WID CFC series is updated.</li>
+<li>There are two separate WID merges in this file for CFC. Both must point to the correct filename (Lsh_compo_wid2026_raw.dta).</li>
+<li>Lithuania (LTU) 1988 requires a manual fix zeroing out all component variables. This must not be removed.</li>
+</ul>
+<hr>
+</section>
+<section id="factorshares_importsna2024_1import.do" class="level2">
+<h2 class="anchored" data-anchor-id="factorshares_importsna2024_1import.do">2_3_factorshares_importsna2024_1import.do</h2>
+<p><strong>Short description:</strong> This dofile imports and assembles the UN SNA national accounts data by institutional sector, covering the total economy and four sectors (non-financial corporations, financial corporations, government, and households including NPISH). Each sector is imported from multiple CSV files, aligned to the GDP series reference, and merged into a single dataset covering 1965 to 2022.</p>
+<p><strong>Objective:</strong> Produce work_data/sna2025_all_raw.dta, a wide-format dataset of gross national accounts components by sector (GDP, CE, gross OS by sector, gross mixed income, and net taxes on production).</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Import five CSV files for the total economy (sector S1), append them, replace 2021 and 2022 observations with the dedicated update file, align to the highest series number with CE data, collapse duplicates, and save as sna2025_s1.dta.</li>
+<li>Repeat the same import and clean routine for sectors S11, S12, S13, S14, and S15, merging each against sna2025_s1 to verify series consistency.</li>
+<li>Merge all sector files, compute total corporate OS as S11 plus S12, set gross mixed income from S14, and save the combined dataset.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>This dofile must be replicated for each new update. At each update cycle, new CSV files must be downloaded from the UN National Accounts Statistics database and added as an additional numbered file.</li>
+<li>The series alignment logic keeps only observations matching the highest series number. The exception for China 1996 to 1999 is hardcoded.</li>
+<li>The output file is named sna2025_all_raw despite being used in the 2026 update. This reflects when the routine was introduced.</li>
+</ul>
+<hr>
+</section>
+<section id="factorshares_importsna2024_2clean.do" class="level2">
+<h2 class="anchored" data-anchor-id="factorshares_importsna2024_2clean.do">2_3_factorshares_importsna2024_2clean.do</h2>
+<p><strong>Short description:</strong> This dofile takes the assembled SNA gross components, merges them with WID CFC data, computes net income measures by subtracting CFC from each sector’s gross OS, expresses all variables as shares of GDP, enforces accounting identities, and saves the final cleaned SNA dataset.</p>
+<p><strong>Objective:</strong> Produce work_data/sna2025.dta, a wide-format dataset of net national accounts components expressed as shares of GDP, with all variable names aligned to the WID pipeline convention and a _sna2025 suffix.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Import the WID raw dataset (wid_basic_raw.dta), retain CFC total and sector components, convert from constant to current prices, compute each sector’s share of total CFC, and extrapolate using a constant share assumption for years beyond the last observed decomposition.</li>
+<li>Merge the SNA raw data with the WID CFC data. Drop observations present only in SNA with no CFC data.</li>
+<li>Compute net variables (NDP, net OS for corporations, government, and households, net mixed income) by subtracting the corresponding CFC from each gross series.</li>
+<li>Convert all variables to shares of GDP, rename to WID pipeline conventions, enforce accounting identities with GDP, CFC, NIT, and CE held fixed, and add a _sna2025 suffix.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>This dofile reads from wid_basic_raw.dta, the pre-2026 WID file. Verify at the 2026 update whether this should be changed to wid2026_basic_raw.dta.</li>
+<li>The CFC extrapolation uses the most recently observed sector share held constant. Verify that extrapolated years are reasonable at each update.</li>
+<li>The output file is named sna2025 despite being used in the 2026 update.</li>
+</ul>
+<hr>
+</section>
+<section id="factorshares_import_chn.do" class="level2">
+<h2 class="anchored" data-anchor-id="factorshares_import_chn.do">2_4_factorshares_import_chn.do</h2>
+<p><strong>Short description:</strong> This dofile constructs a corrected national accounts dataset for China specifically, combining the UN SNA data extended through OECD for recent years, a correction based on the Piketty-Yang-Zucman (PYZ 2019) methodology, and WID for NNI and CFC coverage in the pre-1992 period.</p>
+<p><strong>Objective:</strong> Produce work_data/chn_sna2026_correct.dta, a wide-format dataset of net national accounts components for China expressed as shares of NNI, with all components named using the WID pipeline convention and a _chn_correct suffix, covering 1965 to 2023.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Import the OECD SNA annual accounts for China and use them to extend SNA through 2022 to 2023, where UN SNA ends at 2021. Extrapolate OS government and NIT for 2022 to 2023 using proportional shares from the last SNA year.</li>
+<li>Import the PYZ 2019 corrected household income data and allocate mixed income between labour and capital using PYZ sector-specific ratios (70/30 for agriculture, 95/5 for industry-business).</li>
+<li>Merge the PYZ corrections into the China SNA series, carrying forward 2021 PYZ values for 2022 to 2023. Subtract PYZ-implied CE and capital components to avoid double-counting.</li>
+<li>Merge with WID 2026 to obtain NNI and CFC for the pre-1992 period. Divide all variables by NNI, enforce accounting identities, and rename with a _chn_correct suffix.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>The OECD SNA download for China must be refreshed at each update from OECD Data Explorer, Annual non-financial accounts by institutional sector (SNA_TABLE14a), country CHN.</li>
+<li>The PYZ correction data only covers through 2021. When an updated PYZ dataset becomes available, the carry-forward block can be removed for the covered years.</li>
+<li>The 0.75/0.25 and 70/30/95/5 allocation parameters are the PYZ methodology and should not be changed without a methodological justification.</li>
+</ul>
+<hr>
+</section>
+<section id="factorshares_combine_1sna1968.do" class="level2">
+<h2 class="anchored" data-anchor-id="factorshares_combine_1sna1968.do">2_5_factorshares_combine_1sna1968.do</h2>
+<p><strong>Short description:</strong> This dofile integrates the WID national income component dataset with the SNA 1968 historical series to extend coverage into the pre-WID period. It converts SNA 1968 values into NNI terms, enforces accounting identities on the WID data, backcasts missing WID values using SNA 1968 growth rates, and saves a harmonised historical dataset.</p>
+<p><strong>Objective:</strong> Produce work_data/Lsh_compo_harmonized_1968.dta, combining WID national income components with SNA 1968 backcasts for CE, MIOS total, NIT, and CE government, covering all available countries from 1965 onwards.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Load the WID 2026 dataset (Lsh_compo_wid2026_raw.dta) and merge with the SNA 1968 components file (sna1968_compo.dta). Flag countries that appear in both sources.</li>
+<li>Convert SNA 1968 variables from percentage-of-GDP to NNI terms. Enforce accounting identities on the WID data with GDP and CFC held fixed.</li>
+<li>Backcast missing WID values using SNA 1968 growth rates: for each year from 2021 back to 1950, propagate the WID level forward using the ratio of adjacent SNA 1968 values.</li>
+<li>Apply country-specific corrections for Hungary and Mongolia. Drop SNA 1968 variables once integrated and save.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>Only CE, MIOS total, NIT, and CE government are backcast from SNA 1968. The sector breakdown within MIOS is intentionally not used because the statistical and conceptual distinctions were imperfect in the 1968 SNA framework.</li>
+<li>Six countries are explicitly excluded from the SNA 1968 plug-in step (ABW, GEO, HUN, KEN, PAN, SVN) because their values are known to be inconsistent with modern SNA.</li>
+</ul>
+<hr>
+</section>
+<section id="factorshares_combine_2sna2024chn.do" class="level2">
+<h2 class="anchored" data-anchor-id="factorshares_combine_2sna2024chn.do">2_5_factorshares_combine_2sna2024chn.do</h2>
+<p><strong>Short description:</strong> This dofile integrates the WID 2026 national income component dataset with the SNA 2025 series for recent years (2020 onwards) and applies the China-specific PYZ correction. It uses first differences rather than growth rates for forward extension and fully replaces China with the corrected series.</p>
+<p><strong>Objective:</strong> Produce work_data/Lsh_compo_harmonized_2026.dta, the main factor shares dataset used by all downstream ETR dofiles, combining WID as the primary source with SNA 2025 extensions and the PYZ-corrected China series throughout.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Load the WID 2026 dataset and merge with the SNA 2025 components. Drop post-socialist early 1990s observations without a WID match. Set all WID component values after 2024 to missing.</li>
+<li>Extend WID values forward into 2020 to 2024 using SNA 2025 first differences. Where no WID anchor exists within two years, plug in the raw SNA 2025 level directly.</li>
+<li>Merge the China-corrected dataset (chn_sna2026_correct.dta) and fully replace all WID component values for China with the PYZ-corrected series.</li>
+<li>Drop all working variables and save the final harmonised dataset.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>The output was renamed from Lsh_compo_harmonized_2025.dta to Lsh_compo_harmonized_2026.dta. All downstream dofiles must reference the new name.</li>
+<li>WID component values are set to missing for all years after 2024. If WID releases a new vintage covering 2025 or later, this cutoff must be updated.</li>
+<li>The cfc_mios_hh replacement for China is handled with a cap command outside the main loop due to a known Stata abbreviated naming issue. This fix must be preserved.</li>
+</ul>
+<hr>
+</section>
+<section id="factorshares_combine_3all.do" class="level2">
+<h2 class="anchored" data-anchor-id="factorshares_combine_3all.do">2_5_factorshares_combine_3all.do</h2>
+<p><strong>Short description:</strong> This is the final assembly step in the factor shares module. It combines the two harmonised datasets: WID and SNA 1968 for the pre-2020 period, and WID and SNA 2025 with the China PYZ correction for 2020 onwards.</p>
+<p><strong>Objective:</strong> Produce work_data/Lsh_compo_harmonized_all.dta, the unified factor shares dataset used as input to the ETR construction module, with a clean split at year 2020.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Load Lsh_compo_harmonized_1968.dta, drop all observations from 2020 onwards, and drop China entirely from this file.</li>
+<li>Load Lsh_compo_harmonized_2026.dta, drop all observations before 2020 except for China (which is retained for all years).</li>
+<li>Append the two files, sort by country and year, and save the combined dataset.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>The split year is 2020. For all countries except China, observations before 2020 come from WID plus the SNA 1968 backcast, and observations from 2020 onwards come from WID plus the SNA 2025 forward extension.</li>
+<li>China is fully excluded from the pre-2020 file and fully retained from the post-2019 file.</li>
+<li>This dofile is very short and purely structural. If it produces unexpected output, the issue will always originate in one of the two input files.</li>
+</ul>
+<hr>
+</section>
+<section id="factorshares_countrychecks.do" class="level2">
+<h2 class="anchored" data-anchor-id="factorshares_countrychecks.do">2_6_factorshares_countrychecks.do</h2>
+<p><strong>Short description:</strong> This dofile applies a comprehensive set of country-by-country corrections to the harmonised factor shares dataset, removing observations from periods before independence, during wars, or during periods of statistical instability, and setting specific component variables to missing where values are known to be implausible. It is an institutional knowledge register in code form.</p>
+<p><strong>Objective:</strong> Produce work_data/Lsh_compo_checked.dta, a cleaned version of the combined factor shares panel where coverage starts no earlier than each country’s relevant reference year and known data quality issues are flagged.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Drop observations before independence, statehood, or the start of reliable national accounts for approximately 100 countries.</li>
+<li>Set individual component variables to missing for specific country-year ranges where values are known to be implausible, covering countries including AZE, BFA, BLR, BTN, CIV, EST, GAB, GHA, IRQ, KAZ, LKA, LVA, MDA, MOZ, NGA, QAT, ROU, SRB, UKR, UZB, VEN, ZMB, and others.</li>
+<li>Apply the Mexico NIT correction for a structural jump in 2019, the Slovakia OS_corp correction for 2020 to 2022, and the Mozambique OS_corp correction for 2012 onwards.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>This dofile is a living register of country-specific data quality decisions. At each update, new issues may be identified and should be added here with a comment explaining the rationale.</li>
+<li>The Mexico NIT correction is currently applied through 2022. The year range may need extending at each update.</li>
+<li>The Mozambique cfc_corp correction is new in the 2026 update. ETRs for MOZ should be interpreted with caution.</li>
+</ul>
+<hr>
+</section>
+<section id="factorshares_imputemissing.do" class="level2">
+<h2 class="anchored" data-anchor-id="factorshares_imputemissing.do">2_7_factorshares_imputemissing.do</h2>
+<p><strong>Short description:</strong> This dofile imputes missing values for all national income components using a three-level nested random effects model with AR(1) errors, proceeding from aggregate to disaggregate. After each step, components are rescaled to satisfy accounting identities. A final NFI_K correction ensures the capital NFI component does not exceed the observable capital income total.</p>
+<p><strong>Objective:</strong> Produce work_data/compo_full.dta, a fully populated factor shares panel where all component variables have imputed values where observed data was missing, with prediction intervals and imputation flags attached.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Merge the gross output-to-value-added ratio (ov_ratio), declare the panel with xtset, and fill gaps using tsfill.</li>
+<li>Run three sequential imputation scripts covering CE, MIOS total, and NIT; MIOS sector breakdown; and MI_hh and OS_hh. After each step, rescale imputed values to satisfy the relevant accounting identity.</li>
+<li>Run a fourth imputation for ov_ratio and ce_gov. Set mi_hh to zero for New Zealand. Flag country-years where both CE and MIOS total are significantly imputed.</li>
+<li>Correct NFI_K where its absolute value exceeds total observable capital income by redistributing the excess to NFI_L.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>The three imputation scripts live in the code/ subfolder and are called via do. If these scripts are modified, this dofile must be re-run from the top.</li>
+<li>China is excluded from the standard rescaling at levels 1 and 2 because its components are set precisely from the PYZ correction.</li>
+<li>New Zealand mi_hh is always set to zero. This reflects StatsNZ national accounting conventions and should not be treated as a data error.</li>
+</ul>
+<hr>
+</section>
+<section id="factorshares_clean.do" class="level2">
+<h2 class="anchored" data-anchor-id="factorshares_clean.do">2_8_factorshares_clean.do</h2>
+<p><strong>Short description:</strong> This is the final dofile in the factor shares module. It takes the fully imputed components dataset, generates source tracking and stitch flags, relabels source categories for downstream compatibility, drops variables not needed in the ETR module, and saves the final factor income dataset.</p>
+<p><strong>Objective:</strong> Produce output/ETR_2_factorincome_2026.dta, the final factor shares output file containing all national income components, NNI series, NFI components, source labels, and imputation flags for all countries from 1965 to 2023.</p>
+<p><strong>Main activities:</strong></p>
+<ul>
+<li>Load compo_full.dta, declare the panel, and generate a source_id group variable. Flag country-years where the SNA source changes and where the SNA 1968 series number increases.</li>
+<li>Relabel source categories: replace composite with WID for years 2022 onwards. Reset all imputation flags for 2023 to zero.</li>
+<li>Retain a defined set of variables covering NNI, GDP, NDP, CFC, NFI components, all national income components, and all imputation flags. Drop year 2024 as unreliable.</li>
+<li>Save the final dataset with a 2026 vintage suffix.</li>
+</ul>
+<p><strong>Important to keep in mind for the update:</strong></p>
+<ul>
+<li>The output file is named ETR_2_factorincome_2026.dta. All downstream ETR dofiles must reference the new name.</li>
+<li>Year 2024 is dropped. If WID or SNA 2025 data for 2024 becomes reliable in a future update, the drop condition can be adjusted.</li>
+<li>va_corp is excluded from the 2026 output because the WID 2026 CE restructuring changed the underlying components.</li>
+<li>The comparison block at the end of the dofile (commented out) is the recommended quality check before updating downstream files.</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

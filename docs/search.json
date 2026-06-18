@@ -1,0 +1,694 @@
+[
+  {
+    "objectID": "variables.html",
+    "href": "variables.html",
+    "title": "Key Variables",
+    "section": "",
+    "text": "The table below covers the main variables in the final output dataset (ETR_fully_balanced_2026.dta). A full variable glossary with all intermediate datasets is maintained separately in the companion Excel file.\n\n\n\n\n\n\n\n\n\nVariable\nLabel\nUnit\nCreated by\n\n\n\n\nETR_K\nEffective Tax Rate on Capital\nRate 0 to 1, winsorized at 1\n3_5_ETR_construction\n\n\nETR_L\nEffective Tax Rate on Labour\nRate 0 to 1, winsorized at 1\n3_5_ETR_construction\n\n\nETR_cit\nEffective Tax Rate on Corporations\nRate 0 to 1, winsorized at 1\n3_5_ETR_construction\n\n\npct_tax\nTotal tax revenue as share of NDP\nRate 0 to 1\n3_1_ETR_revenue_source\n\n\npct_1000\nIncome tax revenue as share of NDP\nRate\n1_11_revenue_pct\n\n\npct_2000\nSocial contributions as share of NDP\nRate\n1_11_revenue_pct\n\n\npct_5000\nIndirect tax revenue as share of NDP\nRate\n1_11_revenue_pct\n\n\nnni\nNet National Income, constant 2021 local currency\nConstant 2021 LCU\n1_9_revenue_nni_1_collect\n\n\nndp\nNet Domestic Product, share of NNI\nShare\n2_1_factorshares_importwid_2026\n\n\nce_hh\nCompensation of employees, all sectors\nShare of NNI\n2_1_factorshares_importwid_2026\n\n\nos_corp\nNet operating surplus, corporations\nShare of NNI\n2_1_factorshares_importwid_2026\n\n\nos_hh\nNet operating surplus, households\nShare of NNI\n2_1_factorshares_importwid_2026\n\n\nmi_hh\nNet mixed income, households\nShare of NNI\n2_1_factorshares_importwid_2026\n\n\nos_gov\nNet operating surplus, government\nShare of NNI\n2_1_factorshares_importwid_2026\n\n\ncfc\nConsumption of fixed capital\nShare of NNI\n2_1_factorshares_importwid_2026\n\n\nnfi\nNet factor income from abroad\nShare of NNI\n2_1_factorshares_importwid_2026\n\n\nstitch\nFlag: revenue source transition year\n0 or 1\n3_1_ETR_revenue_source\n\n\ninterpolated\nFlag: interpolated observation\n0 or 1\n3_1_ETR_revenue_source\n\n\nimputed\nFlag: imputed factor share\n0 or 1\n2_7_factorshares_imputemissing\n\n\nsource_tax\nPrimary revenue source\nString\n3_1_ETR_revenue_source\n\n\nsource_sna\nPrimary SNA source\nString\n2_8_factorshares_clean\n\n\nndp_usd\nNet domestic product, constant 2021 USD\nConstant 2021 USD\n3_4_ETR_clean\n\n\nalpha_prime\nCapital share of PIT\nShare 0 to 1\n3_5_ETR_construction\n\n\nKsh\nCapital share of factor-price NDP\nShare 0 to 1\n3_5_ETR_construction\n\n\nLsh\nLabour share of factor-price NDP\nShare 0 to 1\n3_5_ETR_construction\n\n\nTau_K\nTax revenue on capital, share of factor-price NDP\nShare\n3_5_ETR_construction\n\n\nTau_L\nTax revenue on labour, share of factor-price NDP\nShare\n3_5_ETR_construction\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nAll pct_* variables in the final output dataset are expressed as shares of NDP after re-scaling in 3_4_ETR_clean.do. In intermediate datasets they are expressed as shares of NNI.",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Key Variables"
+    ]
+  },
+  {
+    "objectID": "revenue.html",
+    "href": "revenue.html",
+    "title": "Dofile Inventory — Revenue Module",
+    "section": "",
+    "text": "This page documents all substantive dofiles in the revenue module (1_x), in execution order.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Revenue Module"
+    ]
+  },
+  {
+    "objectID": "revenue.html#revenue_crosswalks.do",
+    "href": "revenue.html#revenue_crosswalks.do",
+    "title": "Dofile Inventory — Revenue Module",
+    "section": "1_01_revenue_crosswalks.do",
+    "text": "1_01_revenue_crosswalks.do\nShort description: This dofile is the first step in the revenue sub-routine. It converts the master crosswalk Excel file, which maps raw tax revenue categories from each data source into the harmonised ETR classification, into Stata .dta files ready for use downstream. It runs once at the start of each update and produces no analytical output of its own. Its sole function is to make the crosswalk lookups available to all subsequent revenue dofiles.\nObjective: Generate crosswalk .dta files that map raw tax revenue categories from each source (OECD, IMF, and National Statistics) into the harmonised ETR classification used throughout the Atlas pipeline. The crosswalks are maintained manually in a single Excel workbook (reclassify_online_code.xlsx) and converted here to .dta format so that downstream dofiles can merge against them without depending on Excel at runtime.\nMain activities:\n\nImport the OECD, IMF, and general NS crosswalk sheets from reclassify_online_code.xlsx and save each as a separate .dta file in aux_data.\nImport five country-specific NS crosswalk sheets (Bangladesh, Ethiopia, Russia, Sudan, Taiwan) and save each as a separate .dta file.\n\nImportant to keep in mind for the update:\n\nThis dofile must be run first, before any other revenue dofile. All crosswalk merges in the pipeline depend on the .dta files it produces.\nThe sole input, reclassify_online_code.xlsx, is maintained manually. If a new tax category appears in the OECD, IMF, or NS raw data, the relevant crosswalk sheet must be updated in the Excel file before re-running this dofile.\nCountry-specific NS crosswalks currently exist for BGD, ETH, RUS, SDN, and TWN. If a new country requires a bespoke mapping, a new sheet must be added to the Excel file and a new import block added to this dofile.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Revenue Module"
+    ]
+  },
+  {
+    "objectID": "revenue.html#revenue_oecd.do",
+    "href": "revenue.html#revenue_oecd.do",
+    "title": "Dofile Inventory — Revenue Module",
+    "section": "1_1_revenue_oecd.do",
+    "text": "1_1_revenue_oecd.do\nShort description: This dofile imports the OECD Global Revenue Statistics CSV, cleans and reshapes it into a long-format panel of tax revenue by country, year, and category, and appends it to the historical OECD series to produce the full panel used in the ETR pipeline. It is organised in two sections: the first prepares and saves an intermediate file covering new periods and selected backfill observations; the second applies the crosswalk, converts to common units, appends the historical data, removes duplicates, and saves the final output.\nObjective: Produce a complete long-format OECD tax revenue panel (1965 to 2023) that integrates the most recent OECD download with the existing historical series, resolves unit and powercode inconsistencies across countries, and maps all tax categories to the Atlas ETR classification.\nMain activities:\n\nImport the raw OECD CSV, keep only relevant variables, recode government levels (NES, STATE, FED, LOCAL), and drop non-applicable currency rows.\nUpdate powercode_unit_new.dta with any new countries appearing in the current download, then split the data into post-2021 observations and a selected set of pre-2022 backfill observations. Save the combined intermediate file as oecd_raw_2023.dta.\nLoad the intermediate file, merge with powercodes, clean and standardise tax category codes, verify that subcategory values do not exceed their aggregate, and reshape wide then long.\nApply the OECD crosswalk, append manually collected data for CPV and GUY, apply country-specific powercode corrections, convert all values to a common unit, append the historical panel (1965 to 2021), remove duplicates, and save the final dataset.\n\nImportant to keep in mind for the update:\n\nThe raw CSV must be downloaded manually from the OECD Global Revenue Statistics database each update cycle. The filename and column structure should be verified against the previous vintage before running.\nThe backfill country list was defined by comparing OECD coverage against the existing Atlas sources. If OECD coverage expands to new countries or earlier years, this list should be reviewed.\nFour powercode corrections were applied in the 2026 update: ROU, HRV, and UKR were corrected to billions (9) for all years, and BGR to billions only for years after 2021. These are hardcoded and must be reviewed if OECD changes its reporting units.\nCPV and GUY must be collected manually and kept current in oecd_raw_manual.dta. Colombia (COL) has category 1300 reassigned to 1230. This is a deliberate methodological decision and should not be removed.\nThe aggregate wiping logic for categories 1000 and 5000 was updated in 2026: aggregates are now only wiped when meaningful subcategory disaggregation exists. The previous version caused data loss for BGR, HRV, ROU, and UKR.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Revenue Module"
+    ]
+  },
+  {
+    "objectID": "revenue.html#revenue_ha.do",
+    "href": "revenue.html#revenue_ha.do",
+    "title": "Dofile Inventory — Revenue Module",
+    "section": "1_2_revenue_ha.do",
+    "text": "1_2_revenue_ha.do\nShort description: This dofile collects and harmonises tax revenue data from the Historical Archives (HA) source, which provides long historical series for a set of countries not fully covered by OECD or IMF. It loops over all country-level raw files, scales values to a common unit using powercodes, appends all countries into a single panel, and applies a set of corrections before saving the final dataset.\nObjective: Produce a single cleaned long-format panel of HA tax revenue data (work_data/data_2_ha.dta) covering all available countries and years, with values converted to common units and tax codes harmonised to the Atlas classification.\nMain activities:\n\nLoop over all .dta files in raw_data/HA, extract the ISO3 code from each filename, scale the raw amount using the powercode to compute amount_tax, and append all countries into a single dataset.\nClean variable types, resolve tax code inconsistencies (tax_code 2000 reclassified as 2400, tax_code 712 corrected to 7120), and drop observations with missing tax codes.\nCorrect double-year entries for Egypt and Jamaica, where historical fiscal years were coded as combined values, keeping only the first year.\nDrop duplicate years arising from overlapping HA series for Chile (1964 to 1966), Nicaragua (1982 to 1984), Argentina (1980 to 1981), and Paraguay (1952 to 1953), retaining the preferred series in each case.\n\nImportant to keep in mind for the update:\n\nThe HA source is historical and does not update annually. At each update cycle, verify whether any new country files have been added to raw_data/HA.\nThe ISO3 code for each country is extracted from the first three characters of the filename. Any new file must follow this naming convention exactly.\nAfghanistan (AFG) has a specific drop for observations in US Dollars. This is a deliberate methodological decision and should not be removed.\nThe duplicate-year corrections for CHL, NIC, ARG, and PRY are hardcoded by unit label. If the raw HA files are ever revised, these labels should be verified.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Revenue Module"
+    ]
+  },
+  {
+    "objectID": "revenue.html#revenue_imf.do",
+    "href": "revenue.html#revenue_imf.do",
+    "title": "Dofile Inventory — Revenue Module",
+    "section": "1_3_revenue_imf.do",
+    "text": "1_3_revenue_imf.do\nShort description: This dofile imports the IMF Government Finance Statistics raw CSV, cleans and reshapes it into a long-format panel of tax revenue by country, year, and category, and produces the final IMF dataset used in the ETR pipeline. It is organised in two sections: the first handles the raw data import, string cleaning, reshaping, and ISO3 code assignment; the second applies the crosswalk, selects the appropriate government sector, resolves double-counting issues, and saves the final output.\nObjective: Produce a clean long-format IMF tax revenue panel (1972 to 2023) with values in domestic currency, tax categories mapped to the Atlas ETR classification, and a single government sector selected per country-year according to a defined preference order.\nMain activities:\n\nImport the raw IMF CSV, drop Percent of GDP observations, rename year columns from the IMF index format (v10 to v61) to calendar years (1972 to 2023), strip non-numeric string flags, destring all year columns, and save the cleaned wide file.\nReshape to long format, generate the simplified IMF classification code (code_IMF_simplified), harmonise country names, assign ISO3 codes via correspondence_iso_country_names.xlsx, and save the intermediate long file.\nApply the IMF-to-ETR crosswalk, resolve double-counting in social contributions and aggregate tax codes, reclassify G11 residual as tax code 6300, and save the pre-clean file.\nSelect the best available government sector per country-year (General government first, then Central government, then Budgetary central), apply manual fixes for Argentina and Uruguay, collapse to country-year-tax_code level, apply the Sierra Leone redenomination correction, and save the final dataset.\n\nImportant to keep in mind for the update:\n\nThe raw CSV must be downloaded manually each update cycle from Government Finance Statistics, Revenue, Statement of Operations. Verify column structure before running.\nIf the IMF extends the time series in future vintages, new columns will appear and the rename loop must be updated accordingly.\nISO3 codes are assigned via a merge against correspondence_iso_country_names.xlsx. Any country that fails to match must be handled with a manual name fix before the merge.\nJamaica and Nicaragua intentionally retain two sectors because together they sum to General government. Peru has a specific drop for classification code G1214. Sierra Leone requires a redenomination correction dividing all values by 1000.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Revenue Module"
+    ]
+  },
+  {
+    "objectID": "revenue.html#revenue_ns_1_old.do",
+    "href": "revenue.html#revenue_ns_1_old.do",
+    "title": "Dofile Inventory — Revenue Module",
+    "section": "1_4_revenue_ns_1_old.do",
+    "text": "1_4_revenue_ns_1_old.do\nShort description: This dofile processes the old National Statistics (NS) data, defined as tax revenue data collected from national statistical offices prior to the 2020 version of the Atlas. It covers 19 countries and applies a shared cleaning and aggregation routine before merging each country with its corresponding crosswalk and appending all countries into a single wide-format dataset.\nObjective: Produce a cleaned wide-format panel of old NS tax revenue data (work_data/NS/data_4_ns_old.dta) covering all available countries and years, with values converted to common units and tax categories mapped to the Atlas ETR classification.\nMain activities:\n\nDefine a reusable Stata program (aggregate_category_OECD) that destringes values, drops aggregates and missing tax codes, removes duplicates, reshapes to wide, verifies subcategory consistency, and reshapes back to long.\nLoop over 13 standard countries (COD, GIN, HTI, IND, KEN, NER, PAK, LKA, UGA, UKR, KAZ, MMR, TZA), importing each NS Excel file, assigning the ISO3 code, running the cleaning program, and applying the general NS crosswalk.\nProcess Myanmar and Tanzania separately without running the cleaning program. Process five countries with country-specific crosswalks (SDN, ETH, BGD, RUS, TWN).\nAppend all country tempfiles, convert values to common units, collapse to country-year-tax_code level, reshape to wide, and save with NS_new = 0.\n\nImportant to keep in mind for the update:\n\nThis dofile processes historical NS data that does not update annually. It should only need to be re-run if a raw NS file is corrected or a crosswalk is revised.\nMyanmar (MMR) and Tanzania (TZA) are excluded from the aggregate_category_OECD program because their data structure causes it to fail.\nThe five country-specific crosswalks must be kept consistent with the general NS crosswalk. Any update to the classification scheme must be reflected in all crosswalk files.\nKazakhstan (KAZ) was flagged as a query in 2024 and should be verified to confirm it is handled correctly and not duplicated downstream.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Revenue Module"
+    ]
+  },
+  {
+    "objectID": "revenue.html#revenue_ns_2_bigthree.do",
+    "href": "revenue.html#revenue_ns_2_bigthree.do",
+    "title": "Dofile Inventory — Revenue Module",
+    "section": "1_4_revenue_ns_2_bigthree.do",
+    "text": "1_4_revenue_ns_2_bigthree.do\nShort description: This dofile processes NS tax revenue data for three large countries, China, India, and Pakistan, which rely on national statistics sources added later in the project and cover more recent years than the old NS series.\nObjective: Produce a cleaned wide-format panel of NS tax revenue data for CHN, IND, and PAK (work_data/NS/data_4_ns_bigthree.dta), with values collapsed to country-year-tax_code level and NS_new set to 1.\nMain activities:\n\nLoad each country’s raw file, reclassify source labels to a common NS designation, reshape from wide to long, and save individual country working files for CHN, IND, and PAK.\nApply two specific data corrections for India: one value for tax code 1330 in 1983 and one for tax code 6300 in 1963 are replaced due to identified errors in the Indiastat source.\nAppend the three country files, collapse to country-year-tax_code level, check for duplicates, reshape to wide, and save with NS_new set to 1.\n\nImportant to keep in mind for the update:\n\nThe raw files for CHN, IND, and PAK in raw_data/NS/2_bigthree must be updated manually if new years are added.\nPakistan’s raw file mixes federal government data from NS with provincial data from HA. The source label is reclassified to NS for consistency.\nThe two India corrections are hardcoded fixes for known errors in the Indiastat source. These should not be removed and should be verified if the raw file is ever replaced.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Revenue Module"
+    ]
+  },
+  {
+    "objectID": "revenue.html#revenue_ns_3_new_updt.do",
+    "href": "revenue.html#revenue_ns_3_new_updt.do",
+    "title": "Dofile Inventory — Revenue Module",
+    "section": "1_4_revenue_ns_3_new_updt.do",
+    "text": "1_4_revenue_ns_3_new_updt.do\nShort description: This dofile processes NS tax revenue data for 16 countries that are intended to be updated in future editions of the Atlas. Unlike the old NS and big-three series, this group covers more recent years and is the active NS series going forward.\nObjective: Produce a cleaned wide-format panel of new and updatable NS tax revenue data (work_data/NS/data_4_ns_new_updt.dta), with values scaled by powercode, collapsed to country-year-tax_code level, and identified with NS_new = 2.\nMain activities:\n\nLoad each country’s raw file from raw_data/NS/3_new, assign source as NS and the corresponding country code, reshape from wide to long, compute amount_tax by scaling the raw value by the powercode, and save individual working files for all 16 countries: MMR, TWN, BDI, IND, DZA, OMN, KWT, ETH, RUS, BLR, QAT, MKD, CYP, SRB, and UZB.\nAppend all country files, collapse to country-year-tax_code level, check for duplicates, reshape to wide, and save with NS_new set to 2.\n\nImportant to keep in mind for the update:\n\nThis is the active NS series and the one most likely to require attention at each update cycle. When new years are available for any of the 16 countries, the corresponding raw file must be updated and this dofile re-run.\nIndia appears in both this file and in the big-three file. The two series cover different time periods and care should be taken to avoid overlapping years.\nFour countries (MKD, CYP, SRB, UZB) were added in the 2025 update. New countries should follow the same import and reshape pattern.\nThis file was not updated in 2026 because the WID database was reintroduced as the primary source. It is retained for comparison purposes.\nTanzania (TZA) is listed in the comments as a former member of this group but is currently commented out of the append step. Verify at each update whether TZA needs to be reintroduced.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Revenue Module"
+    ]
+  },
+  {
+    "objectID": "revenue.html#revenue_ns_4_append.do",
+    "href": "revenue.html#revenue_ns_4_append.do",
+    "title": "Dofile Inventory — Revenue Module",
+    "section": "1_4_revenue_ns_4_append.do",
+    "text": "1_4_revenue_ns_4_append.do\nShort description: This dofile is the final step in the NS sub-routine. It appends the three NS datasets into a single panel, resolves duplicate country-year observations for countries that appear in more than one NS series, and saves the combined NS dataset for use downstream.\nObjective: Produce a single consolidated NS tax revenue dataset (work_data/data_4_ns.dta) covering all NS countries and years, with one observation per country-year-source after resolving overlaps between the three NS series.\nMain activities:\n\nAppend the three NS wide-format files (data_4_NS_old, data_4_NS_bigthree, data_4_NS_new_updt) into a single dataset.\nIdentify country-year duplicates and apply the following resolution decisions: reclassify the old NS observations for IND and PAK as source Other; drop all old NS observations for TWN and MMR, keeping only the new updated series.\nRun a second duplicate check after the resolution and save the final dataset.\n\nImportant to keep in mind for the update:\n\nAll three preceding NS dofiles must be run successfully before running this one.\nThe duplicate resolution decisions for IND, PAK, TWN, and MMR are explicit methodological choices. These should be reviewed if the underlying raw data changes substantially.\nThe second duplicate check (tag2) should show zero duplicates. If it does not, the overlap must be traced back and resolved before proceeding.\nNote that data_7_other.dta is not appended in this dofile. Verify with the master dofile where and how the other source is introduced into the pipeline.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Revenue Module"
+    ]
+  },
+  {
+    "objectID": "revenue.html#revenue_ictd.do",
+    "href": "revenue.html#revenue_ictd.do",
+    "title": "Dofile Inventory — Revenue Module",
+    "section": "1_5_revenue_ictd.do",
+    "text": "1_5_revenue_ictd.do\nShort description: This dofile imports and processes ICTD tax revenue data, which provides percentage-of-GDP revenue series for a broad set of countries and is used as a fallback source where OECD, IMF, HA, or NS data are unavailable. It applies an extensive crosswalk, computes residual allocations, converts percentages to absolute amounts using IMF WEO GDP data, and saves the final dataset.\nObjective: Produce a cleaned dataset of ICTD tax revenue in absolute amounts (work_data/data_5_ictd.dta), with all revenue categories mapped to the Atlas ETR classification and values expressed in domestic currency using IMF WEO GDP as the conversion factor.\nMain activities:\n\nImport the ICTD Excel file, label all variables, retain only the relevant columns, and save a temporary working file.\nApply the crosswalk from ICTD categories to Atlas ETR tax codes across all series. Compute residuals floored at zero for each series.\nCorrect known data inconsistencies in the ICTD source for indirect taxes, VAT, and social contributions.\nMerge with IMF WEO GDP data to convert all percentage-of-GDP series to absolute amounts. Apply the Belarus 1994 GDP correction. Save observations without a GDP match to aux_data/data_ICTD_nogdp.dta.\n\nImportant to keep in mind for the update:\n\nThe ICTD raw file (ICTD-import-2025.xlsx, downloaded March 2026) must be downloaded and placed in raw_data before running. Verify the sheet name and column structure against the previous vintage.\nThe GDP conversion uses aux_data/gdp_weo_new. At each update, verify that this file covers the most recent years in the ICTD data.\nKosovo and Palestine use non-standard ISO codes in ICTD (KSV and WBG) and are recoded to KOS and PSE.\nThe Belarus 1994 GDP correction is hardcoded and should be reviewed if the WEO data for BLR is ever updated for that year.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Revenue Module"
+    ]
+  },
+  {
+    "objectID": "revenue.html#revenue_imf_hist.do",
+    "href": "revenue.html#revenue_imf_hist.do",
+    "title": "Dofile Inventory — Revenue Module",
+    "section": "1_6_revenue_imf_hist.do",
+    "text": "1_6_revenue_imf_hist.do\nShort description: This dofile imports and harmonises IMF historical tax revenue data from a multi-sheet Excel workbook covering 162 countries for the period 1972 to 1989. It is a stable historical file that is not expected to change at future updates.\nObjective: Produce a wide-format dataset of IMF historical tax revenue (work_data/data_6_imf_hist.dta) covering 162 countries for 1972 to 1989, with values expressed in common units and mapped to the Atlas ETR tax code classification.\nMain activities:\n\nClear the existing data_6_imf_hist.dta file before the loop to avoid accumulating stale observations across runs.\nLoop over all 162 sheets in raw_data/imf_hist_raw, renaming year columns to y_1972 through y_1989, assigning ISO3 codes via the isocodes command, and mapping original IMF category labels to Atlas tax codes.\nApply the conversion factor to scale values, handle missing value flags, collapse to resolve duplicate rows for categories 2000 and 5000, reshape, and append each country to the cumulative dataset.\nAfter the loop, rename amount_tax8000 to amount_taxtax to align with the naming convention used downstream.\n\nImportant to keep in mind for the update:\n\nThis dofile processes a fixed historical source (1972 to 1989) that does not update. It should only need to be re-run if the raw Excel file is corrected.\nThe loop clears data_6_imf_hist.dta at the start of every run. Do not interrupt the run midway.\nTax code 8000 is a temporary code used only in this dofile and should not be confused with a standard OECD category.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Revenue Module"
+    ]
+  },
+  {
+    "objectID": "revenue.html#revenue_other.do",
+    "href": "revenue.html#revenue_other.do",
+    "title": "Dofile Inventory — Revenue Module",
+    "section": "1_7_revenue_other.do",
+    "text": "1_7_revenue_other.do\nShort description: This dofile collects and harmonises a set of country-specific tax revenue data that does not fit into any of the standard sources (OECD, IMF, HA, NS, ICTD). It covers ten countries sourced from academic papers, historical archives, and CIAT, plus a supplementary group of countries drawn from the ICTD dataset that have revenue data but no IMF WEO GDP available.\nObjective: Produce a cleaned dataset of other-source tax revenue data (work_data/data_7_other.dta) covering ten country-specific series and a set of ICTD no-GDP countries, with all percentage values converted to absolute terms using the GDP-to-NNI conversion factor.\nMain activities:\n\nLoad and clean each of the ten country-specific raw files individually: Russia (Ivanova 2005), Brazil (Afonso Araujo 2004), Argentina (Alvaredo 2010), Lebanon (Saleh 2004), Nicaragua (historical archive), Jamaica (historical archive), Chile (Corbo 1989 and CIAT combined), Ecuador (CIAT-IDB), Egypt (paper), and Sierra Leone (historical archive).\nLoad the ICTD no-GDP auxiliary file, restrict to a defined list of 22 countries and relevant year ranges, reconstruct aggregate series, and save as a separate working file.\nAppend all 11 working files, merge with aux_data/other_gdp_to_nni.dta, multiply all percentage series by the GDP value to convert to absolute amounts, and save.\n\nImportant to keep in mind for the update:\n\nThis dofile was updated in October 2024 to correct missing observations for Egypt (34), Qatar (2), Russia (13), and Zimbabwe (8). A second update in December 2024 changed the ECU handling.\nThe ICTD no-GDP country list was extended in June 2025. At each future update, check whether new countries appear in aux_data/data_ICTD_nogdp.\nArgentina’s raw values are stored as percentages multiplied by 100 and require division by 100. This correction is hardcoded and must be retained.\nChile combines two sources (Corbo 1989 and CIAT) via merge-update. If either raw file is revised, check continuity around the overlap period.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Revenue Module"
+    ]
+  },
+  {
+    "objectID": "revenue.html#revenue_combine.do",
+    "href": "revenue.html#revenue_combine.do",
+    "title": "Dofile Inventory — Revenue Module",
+    "section": "1_8_revenue_combine.do",
+    "text": "1_8_revenue_combine.do\nShort description: This dofile is the consolidation step in the revenue sub-routine. It appends all cleaned source datasets into a single panel, reshapes to wide format, and creates unique series identifiers for each country-source combination. The output is the master revenue dataset used by all downstream ETR dofiles.\nObjective: Produce a single wide-format dataset (work_data/data_8_combine.dta) containing tax revenue from all sources (OECD, HA, IMF, NS, ICTD, IMF historical, and other), with one row per country-year-source and tax codes as columns.\nMain activities:\n\nAppend OECD, HA, and IMF datasets, collapse to the sum of subcategories by country-year-tax_code-source, and reshape to wide format.\nAppend the remaining sources (NS, ICTD, IMF historical) to the wide dataset.\nGenerate a series_id variable concatenating country, source, and NS_new to uniquely identify each revenue series. Label all variables and save.\n\nImportant to keep in mind for the update:\n\nAll seven upstream source datasets must be successfully produced before running this dofile. Running it with a stale or missing input will silently produce an incomplete dataset.\nThe series_id variable uses NS_new as a third component to distinguish old, big-three, and new NS observations for the same country.\nNote that data_7_other.dta is not appended in this dofile. Verify with the master dofile where and how the other source is introduced into the pipeline.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Revenue Module"
+    ]
+  },
+  {
+    "objectID": "revenue.html#revenue_nni_1_collect.do",
+    "href": "revenue.html#revenue_nni_1_collect.do",
+    "title": "Dofile Inventory — Revenue Module",
+    "section": "1_9_revenue_nni_1_collect.do",
+    "text": "1_9_revenue_nni_1_collect.do\nShort description: This dofile extracts Net National Income (NNI) data from the WID raw dataset, converts it from constant to current prices using the WID price index, applies two country-specific corrections for Gambia and Guinea, and saves a clean country-year NNI series used as the revenue denominator in the ETR pipeline.\nObjective: Produce a clean dataset of NNI in current prices (aux_data/nni_current.dta) covering all available countries from 1965 onwards.\nMain activities:\n\nLoad work_data/wid_basic_raw.dta, keep the NNI, price index (nyixx), and GDP variables from 1965 onwards, and assign ISO3 codes via the isocodes command.\nConvert NNI from constant to current prices by multiplying nninc by the price index nyixx.\nFor Gambia (GMB), correct a discontinuity in the price index between 1990 and 1991. For Guinea (GIN), correct an anomalous drop in NNI in 2016 by interpolating the GDP-to-NNI ratio from adjacent years.\n\nImportant to keep in mind for the update:\n\nThe input file wid_basic_raw.dta must be updated at each cycle when a new WID vintage is released.\nFour non-standard WID regional codes are explicitly dropped (XR, XN, XL, XM). If WID introduces new non-standard codes, they must be added to this drop list.\nVerify at each update whether the Guinea 2016 anomaly has been corrected in the new WID vintage, in which case the fix can be removed.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Revenue Module"
+    ]
+  },
+  {
+    "objectID": "revenue.html#revenue_nni_2_append.do",
+    "href": "revenue.html#revenue_nni_2_append.do",
+    "title": "Dofile Inventory — Revenue Module",
+    "section": "1_9_revenue_nni_2_append.do",
+    "text": "1_9_revenue_nni_2_append.do\nShort description: This dofile merges the combined revenue dataset with the NNI series, restricts the sample to country-years where both revenue and NNI data are available, and saves the result as the final pre-currency dataset.\nObjective: Produce a dataset (work_data/data_9_nni.dta) that combines all tax revenue sources with their corresponding NNI values, retaining only country-years with matched observations.\nMain activities:\n\nLoad data_8_combine.dta and merge many-to-one with aux_data/nni_current.dta on country and year, keeping only the nni variable.\nDrop unmatched observations from the NNI side (_merge == 2) and from the revenue side (_merge == 1) as these are pre-1965 country-years outside the analysis sample.\n\nImportant to keep in mind for the update:\n\nThis dofile acts as a gatekeeper for the sample. Any country-year in data_8_combine but not in nni_current will be silently dropped. After each update, check for _merge == 1 cases with year &gt; 1965.\nBoth upstream files must reflect the current update vintage before running this dofile.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Revenue Module"
+    ]
+  },
+  {
+    "objectID": "revenue.html#revenue_currency.do",
+    "href": "revenue.html#revenue_currency.do",
+    "title": "Dofile Inventory — Revenue Module",
+    "section": "1_10_revenue_currency.do",
+    "text": "1_10_revenue_currency.do\nShort description: This dofile applies all historical currency conversions needed to make tax revenue values from different sources comparable over time and across sources. It is the most historically complex dofile in the revenue pipeline.\nObjective: Produce a currency-harmonised dataset (work_data/data_10_currency.dta) in which tax revenue and NNI values are expressed in consistent historical currency units for every country-year.\nMain activities:\n\nFlag approximately 130 country-year exchange rate events covering currency reforms, devaluations, and regime changes.\nRescale NNI values to match the historical local currency units used in the HA and NS revenue data, applying country-specific multiplication factors for 70+ countries.\nApply the same conversion factors to all amount_tax variables in the OECD, IMF, ICTD, NS, and IMF historical datasets, generating a conversion_factor variable and populating unit_revised and currency_note string variables.\nApply manual country-specific adjustments for Brazil, Nigeria, Uganda, Tanzania, Kenya, Sudan, Indonesia, Vietnam, DRC, Afghanistan, Peru, Chile, Ecuador, Nicaragua, Liberia, Jamaica, and Angola.\n\nImportant to keep in mind for the update:\n\nThis dofile should only be modified when a new source introduces a currency unit not already covered, or when a known issue with an existing series is identified and corrected.\nThe conversion factors for NNI and for each source are applied separately in four distinct loops. If a new source is added, a corresponding conversion loop must be added here.\nVietnam NNI is set to missing for years before 1975 because the pre-1975 revenue data refers to South Vietnam while the WID NNI refers to North Vietnam or a combined series. This is a deliberate methodological decision.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Revenue Module"
+    ]
+  },
+  {
+    "objectID": "revenue.html#revenue_pct.do",
+    "href": "revenue.html#revenue_pct.do",
+    "title": "Dofile Inventory — Revenue Module",
+    "section": "1_11_revenue_pct.do",
+    "text": "1_11_revenue_pct.do\nShort description: This dofile reconstructs all tax revenue aggregate series from their subcategories, handles source-specific aggregation rules for ICTD, NS, and IMF historical data, converts all amount variables to percentages of NNI, and produces a set of supplementary percentage and amount variables ready for ETR construction.\nObjective: Produce a dataset (work_data/data_11_pct.dta) containing fully reconstructed aggregate tax revenue series (amt_* and pct_*) for all tax categories from 1000 to 7000, expressed both as absolute amounts and as shares of NNI.\nMain activities:\n\nDeclare the dataset as a time series using id and year, then reconstruct aggregate amount variables by summing subcategories for all series. Apply source-specific overrides for ICTD, new NS (NS_new == 2, except India), and IMF historical data.\nApply a specific correction for Greece (GRC) in 1996 where amount_tax4500 is 100 times too large. Drop Poland 1989 and Syria 2007 as intractable country-years.\nRename all amount_tax* variables to amt_*, drop observations with missing or zero subtotals (except IMF historical), and reorder variables.\nDivide all aggregate amount series by NNI to produce pct_* percentage variables.\n\nImportant to keep in mind for the update:\n\nThe Greece 1996 correction is hardcoded. Verify at each update whether this anomaly has been corrected upstream.\nPoland 1989 and Syria 2007 are permanently dropped. If new source data resolves these cases, the drops can be removed.\nIndia is explicitly excluded from the NS override because its new NS series includes disaggregated subcategories unlike the other new NS countries.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Revenue Module"
+    ]
+  },
+  {
+    "objectID": "revenue.html#revenue_clean.do",
+    "href": "revenue.html#revenue_clean.do",
+    "title": "Dofile Inventory — Revenue Module",
+    "section": "1_12_revenue_clean.do",
+    "text": "1_12_revenue_clean.do\nShort description: This is the final dofile in the revenue sub-routine. It appends two supplementary social contributions datasets (UN and RPC), appends the other-source dataset, collapses duplicates, retains a clean set of variables, generates within-series composition ratios, reshapes the data from long to wide format by source, and saves the final revenue dataset.\nObjective: Produce the final wide-format revenue dataset (output/ETR_1_revenue_raw.dta) with one row per country-year and one column per source for each percentage and ratio variable.\nMain activities:\n\nAppend aux_data/UN social contributions.dta and aux_data/tax and 2000 _ RPC.dta, then append work_data/data_7_other.dta.\nDrop GDP variables, regenerate series_id and id, and collapse duplicates using firstnm to retain the first non-missing value across duplicate rows.\nRetain a defined set of variables, apply tsfill to complete the panel, and rename pct_subset to pct_subtotal_1245.\nGenerate within-series composition ratios (win_*) for all main tax categories. Reshape from long to wide by source, alphabetically order all variables, and save.\n\nImportant to keep in mind for the update:\n\nThe two supplementary files (UN social contributions and tax and 2000 _ RPC) must be updated if new years of social contributions data become available.\nThe reshape from long to wide uses source as the j variable. If a new source is introduced upstream, verify that downstream ETR dofiles can handle any new source columns.\nThe final save path is output/ETR_1_revenue_raw.dta. A commented-out alternative save with a 2026 vintage suffix can be activated if a versioned save is needed.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Revenue Module"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "ETR Atlas 2026 — Pipeline Documentation",
+    "section": "",
+    "text": "This website documents the code pipeline used to compute Effective Tax Rates (ETRs) for the Atlas of the Offshore World. It is intended as a working reference for research assistants and collaborators who maintain, update, or extend the routine.\nThe pipeline is organised in three modules:",
+    "crumbs": [
+      "Home",
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "index.html#what-is-in-this-documentation",
+    "href": "index.html#what-is-in-this-documentation",
+    "title": "ETR Atlas 2026 — Pipeline Documentation",
+    "section": "What is in this documentation",
+    "text": "What is in this documentation\n\n\n\nSection\nWhat you will find\n\n\n\n\nHow to Run\nHow to set the root path and run the full pipeline\n\n\nPipeline Map\nAll dofiles in execution order with inputs, outputs, and status\n\n\nData Sources\nExternal raw data sources, download locations, and vintages\n\n\nUpdate Checklist\nStep-by-step guide for each annual update cycle\n\n\nRevenue Module\nDofile-by-dofile documentation for the 1_x revenue files\n\n\nFactor Shares Module\nDofile-by-dofile documentation for the 2_x factor shares files\n\n\nETR Module\nDofile-by-dofile documentation for the 3_x ETR files\n\n\nFormulas\nETR formulas and revision guide for diagnosing outliers\n\n\nKey Variables\nMain variables in the final output dataset\n\n\nAbbreviations\nAll acronyms and abbreviations used in the pipeline",
+    "crumbs": [
+      "Home",
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "index.html#about-master-dofiles",
+    "href": "index.html#about-master-dofiles",
+    "title": "ETR Atlas 2026 — Pipeline Documentation",
+    "section": "About master dofiles",
+    "text": "About master dofiles\nMaster dofiles (0_master, 1_0_revenue_master, 1_9_revenue_nni, 1_4_revenue_ns, 2_0_factorshares_master, 2_2_factorshares_importsna1968, 2_3_factorshares_importsna2024, 2_5_factorshares_combine, 3_0_ETR_master) are not documented individually here. These files do not perform any data transformation. Their sole function is to call and execute other dofiles in a defined order. Any change to the execution order or scope of the pipeline should be made in the relevant master dofile. Any substantive methodological change should be made and documented in the individual dofile where the work actually happens.",
+    "crumbs": [
+      "Home",
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "index.html#living-document",
+    "href": "index.html#living-document",
+    "title": "ETR Atlas 2026 — Pipeline Documentation",
+    "section": "Living document",
+    "text": "Living document\nThis documentation should be updated whenever a dofile is modified, a new data source is introduced, or a country-specific correction is added. The companion variable glossary and country event register, maintained separately in Excel, provide additional reference material.\n\n\n\n\n\n\nNote\n\n\n\nLast updated: 2026 | Author: C. Salgado | Project: Atlas of the Offshore World, International Tax Observatory, Paris School of Economics",
+    "crumbs": [
+      "Home",
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "formulas.html",
+    "href": "formulas.html",
+    "title": "Formulas and Revision Guide",
+    "section": "",
+    "text": "This page covers the three ETR formulas used in the Atlas pipeline and a practical guide for diagnosing outliers. It is intended as a reference for research assistants who need to understand what drives each ETR and where to look in the data when a country shows an unexpected value.",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Formulas and Revision Guide"
+    ]
+  },
+  {
+    "objectID": "formulas.html#etr-formulas",
+    "href": "formulas.html#etr-formulas",
+    "title": "Formulas and Revision Guide",
+    "section": "1. ETR Formulas",
+    "text": "1. ETR Formulas\n\n1.1 Effective Tax Rate on Capital (ETR_K)\nETR_K measures the share of total pre-tax capital income paid in taxes. Because the Personal Income Tax (PIT) applies to both wages and capital income, only the fraction attributed to capital enters the numerator. This fraction is determined by the parameter alpha_prime, which represents the capital share of PIT.\n\\[ETR\\_K = \\frac{\\alpha' \\cdot PIT + CIT + \\text{Property Taxes}}{OS_{corp} + OS_{hh} + 0.25 \\cdot MI_{hh}}\\]\nNumerator:\n\nalpha_prime · pct_1100: the capital share of Personal Income Tax. alpha_prime is constructed from PIT exemption thresholds (Jensen 2021) and adjusted for dual PIT systems using the OECD dividend-to-PIT rate ratio.\npct_1200: Corporate Income Tax revenue.\npct_4000: Property and wealth tax revenue.\n\nDenominator:\n\nos_corp: net operating surplus of corporations (corporate profits before tax).\nos_hh: net operating surplus of households (capital income accruing directly to households).\n0.25 · mi_hh: 25% of net mixed income (the assumed capital share of self-employment and unincorporated business income).\n\n\n\n\n1.2 Effective Tax Rate on Corporate Income (ETR_cit)\nETR_cit isolates the tax burden on corporate profits alone.\n\\[ETR\\_{cit} = \\frac{CIT}{OS_{corp}}\\]\nNumerator:\n\npct_1200: Corporate Income Tax revenue.\n\nDenominator:\n\nos_corp: net operating surplus of corporations. Corrected for Mozambique and Chad by adding os_gov to the denominator, to account for the unusually high share of public-sector capital income in those economies (applied in 3_6_ETR_countrychecks.do). France is corrected for tax credits on CIT revenue (also applied in 3_6_ETR_countrychecks.do).\n\n\n\n\n1.3 Effective Tax Rate on Labour (ETR_L)\nETR_L measures the share of total pre-tax labour income paid in labour-related taxes.\n\\[ETR\\_L = \\frac{(1 - \\alpha') \\cdot PIT + \\text{Social Contributions}}{CE + 0.75 \\cdot MI_{hh}}\\]\nNumerator:\n\n(1 - alpha_prime) · pct_1100: the labour share of Personal Income Tax.\npct_2000: payroll taxes and social security contributions.\n\nDenominator:\n\nce_hh: total compensation of employees across all sectors (households, corporations, government). Revised in 2026: now constructed as the sum of three sector-level WID variables (mceuhn + mceuco + mceugo).\n0.75 · mi_hh: 75% of net mixed income (the assumed labour share of self-employment income).\n\n\n\n\n1.4 The alpha_prime Parameter\nalpha_prime is the key incidence parameter that splits PIT between labour and capital. It is constructed in three steps in 3_5_ETR_construction.do.\nStep 1: PIT threshold adjustment\nUsing PIT exemption thresholds from Jensen (2021 AER):\n\nCountries with threshold at or below the 50th percentile (mostly OECD): alpha_pit = 0.15\nCountries with threshold above the 99th percentile (low-income): alpha_pit = 0.30\nAll others: linearly interpolated between 0.15 and 0.30.\n\nStep 2: Dual PIT system adjustment\nFor countries with preferential dividend taxation, alpha_pit is adjusted upward using the OECD dividend-to-PIT statutory rate ratio (div_pit_oecd). The adjustment assumes that 50% of capital income faces the preferential dividend rate. The result is alpha_prime.\nStep 3: Rescaling using observed factor shares\nalpha_prime is further rescaled using observed country-year labour and capital shares (Lsh, Ksh) rather than the fixed PSZ (2018) US-based 70/30 split. This revision was introduced in December 2023.\n\n\n\n1.5 Unallocable Income Tax (pct_1300)\nCategory 1300 covers income taxes that cannot be attributed to PIT or CIT in the source data. It is split 50/50 between labour and capital throughout (alpha_1300 = 0.50). This is a global parameter set at the top of 3_5_ETR_construction.do.",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Formulas and Revision Guide"
+    ]
+  },
+  {
+    "objectID": "formulas.html#revision-guide-for-etr-outliers",
+    "href": "formulas.html#revision-guide-for-etr-outliers",
+    "title": "Formulas and Revision Guide",
+    "section": "2. Revision Guide for ETR Outliers",
+    "text": "2. Revision Guide for ETR Outliers\nThis section explains where to look when a country shows an unexpected ETR value. An outlier can come from the numerator (tax side) going up, the denominator (income side) going down, or both. Always check the source flags first before investigating the components.\nSource flags to check first for any ETR:\n\nsource_tax: did the revenue source change in the flagged year? Source transitions (for example from ICTD to OECD) often produce level shifts in individual tax categories.\nsource_sna: did the SNA source change? The WID 2026 update revised os_corp and ce_hh for many countries, which can mechanically shift ETR_K and ETR_L.\nimputed: if equal to 1, factor share components may be carried forward from the previous year rather than reflecting actual data for the flagged year.\n\n\n\n2.1 Diagnosing ETR_K Outliers\n\\[ETR\\_K = \\frac{\\alpha' \\cdot PIT + CIT + \\text{Property Taxes}}{OS_{corp} + OS_{hh} + 0.25 \\cdot MI_{hh}}\\]\nNumerator drivers:\n\npct_1200 (CIT): most direct driver of ETR_K. An increase here mechanically raises ETR_K. Check whether it reflects genuine revenue growth or a source change, since OECD and ICTD often report CIT at different levels.\npct_1100 (PIT capital share): only the alpha_prime fraction enters. If PIT rose sharply or alpha_prime changed, it contributes. Check both.\npct_4000 (property taxes): usually small but worth checking for anomalies.\n\nDenominator drivers:\n\nos_corp: if corporate profits fell while taxes stayed flat, ETR_K rises mechanically. Most common cause of ETR_K spikes in recession years. Also directly affected by the WID 2026 CE reconstruction.\nos_hh: household capital income falling reduces the denominator.\nmi_hh: a fall in mixed income reduces the 0.25 capital component of the denominator.\n\nAdditional flag:\n\nos_corp_imputed: if equal to 1, os_corp may be a model prediction rather than an observed value for the flagged year.\n\n\n\n\n2.2 Diagnosing ETR_cit Outliers\n\\[ETR\\_{cit} = \\frac{CIT}{OS_{corp}}\\]\nNumerator drivers:\n\npct_1200 (CIT): the only tax component. Check whether an increase reflects genuine revenue growth, new legislation, or a source change. ICTD to OECD transitions often shift CIT levels significantly.\n\nDenominator drivers:\n\nos_corp: the only income component. With WID 2026, check whether the new CE reconstruction from three sectors revised os_corp downward. If os_corp was revised down and CIT stayed flat, ETR_cit spikes mechanically.\n\nAdditional flag:\n\nos_corp_imputed: if equal to 1, check whether the imputed value is driving the spike.\n\n\n\n\n2.3 Diagnosing ETR_L Outliers\n\\[ETR\\_L = \\frac{(1 - \\alpha') \\cdot PIT + \\text{Social Contributions}}{CE + 0.75 \\cdot MI_{hh}}\\]\nNumerator drivers:\n\npct_2000 (social contributions): the main driver of ETR_L. Check for genuine increases or source changes, particularly for countries where the source switched from ICTD to NS or OECD in the recent update.\npct_1100 (PIT labour share): rises if PIT increased or alpha_prime changed (reducing the labour share of PIT).\n\nDenominator drivers:\n\nce_hh: the dominant denominator component. Directly affected by the WID 2026 CE reconstruction from three sectors. If ce_hh was revised down for a country in 2023, ETR_L rises mechanically even with no tax change.\nmi_hh: a fall in mixed income reduces the 0.75 labour component of the denominator.\n\nAdditional flags:\n\nce_hh_imputed: if equal to 1, the CE value may be carried forward from a prior year and may not reflect actual 2023 data.\nmios_hh_imputed: if equal to 1, mixed income is also imputed, reducing confidence in both ETR_L and ETR_K denominators.",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Formulas and Revision Guide"
+    ]
+  },
+  {
+    "objectID": "etr-module.html",
+    "href": "etr-module.html",
+    "title": "Dofile Inventory — ETR Module",
+    "section": "",
+    "text": "This page documents all substantive dofiles in the ETR module (3_x), in execution order.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — ETR Module"
+    ]
+  },
+  {
+    "objectID": "etr-module.html#etr_revenue_source.do",
+    "href": "etr-module.html#etr_revenue_source.do",
+    "title": "Dofile Inventory — ETR Module",
+    "section": "3_1_ETR_revenue_source.do",
+    "text": "3_1_ETR_revenue_source.do\nShort description: This is the first dofile in the ETR revenue module. It takes the raw harmonized revenue dataset (ETR_1_revenue_raw.dta) and, country by country, selects the appropriate source(s) for each tax series, stitches together multiple sources across time, applies interpolations to fill gaps, reconstructs aggregates from disaggregates where needed, and saves one harmonized country-level file per country into work_data/revenue_harmonized_v24/.\nObjective: Produce a set of country-level files in work_data/revenue_harmonized_v24/, each containing harmonized annual tax revenue series (as shares of NNI) covering the main OECD tax categories (1000, 1100, 1200, 1300, 2000, 4000, 5000, 6000), alongside source, stitch, and interpolation flags.\nMain activities:\n\nFor each of the approximately 160 countries, load ETR_1_revenue_raw.dta and subset to the country of interest. Initialize blank pct_X series for all tax categories and assign values from the best available source by time period.\nWhere a source transition creates a discontinuity, flag stitch years (stitch = 1) and bridge short gaps by linear interpolation, with interpolated years flagged accordingly.\nFor several countries, reconstruct sub-aggregate series by computing their ratio to the aggregate in an overlap period and applying that ratio to the other source’s aggregate.\nRecompute aggregates (pct_1000, pct_5000, pct_tax) from disaggregates after any stitching or interpolation. Apply ad hoc corrections where needed. Save each country file.\n\nImportant to keep in mind for the update:\n\nThe dofile is structured as a long sequential script with one block per country. There is no looping over countries. Any country added or substantially revised requires a dedicated new or modified block.\nThe output folder is work_data/revenue_harmonized_v24/. If the vintage changes, this path must be updated consistently throughout all approximately 160 save statements and in all downstream dofiles.\nVUT (entry 159) is currently commented out entirely due to data ambiguity. It should be reviewed at each update.\nThe 2000 (social contributions) series is frequently the most difficult to harmonize and receives country-specific treatment in many blocks.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — ETR Module"
+    ]
+  },
+  {
+    "objectID": "etr-module.html#etr_revenue_merge.do",
+    "href": "etr-module.html#etr_revenue_merge.do",
+    "title": "Dofile Inventory — ETR Module",
+    "section": "3_2_ETR_revenue_merge.do",
+    "text": "3_2_ETR_revenue_merge.do\nShort description: This is a short utility dofile that appends all country-level harmonized revenue files produced in the previous step into a single panel dataset, applies a small set of cleaning rules, and saves the consolidated revenue output used by downstream ETR construction dofiles.\nObjective: Produce output/ETR_3_revenue_2026.dta, a balanced panel of harmonized tax revenue shares (as a percentage of NNI) for all countries from 1965 to 2023.\nMain activities:\n\nChange directory to work_data/revenue_harmonized_v24/ and loop over all .dta files in that folder, appending them sequentially.\nCompute the latest available year per country and tabulate which countries only reach 2022, as a diagnostic check on coverage.\nDrop observations where pct_tax is missing and drop year 2024 from the panel.\nReplace all remaining missing values across all pct_* variables with zero and save the final panel.\n\nImportant to keep in mind for the update:\n\nThe append loop picks up all .dta files in the folder indiscriminately. Any stale or test files left in that directory will be silently included.\nThe zero-fill for missing pct_* values treats missing sub-categories as truly zero rather than unknown. This is appropriate when a tax category is structurally absent but could be misleading if missingness reflects data gaps.\nThe tabulation of countries with last == 2022 should be reviewed at each update to confirm which countries are lagging.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — ETR Module"
+    ]
+  },
+  {
+    "objectID": "etr-module.html#etr_revenue_factor.do",
+    "href": "etr-module.html#etr_revenue_factor.do",
+    "title": "Dofile Inventory — ETR Module",
+    "section": "3_3_ETR_revenue_factor.do",
+    "text": "3_3_ETR_revenue_factor.do\nShort description: This is a short merging dofile that joins the harmonized revenue panel with the factor income dataset, brings in the NNI current LCU series, applies a small set of sample restriction rules, declares the panel structure, and saves the merged dataset used by downstream ETR construction dofiles.\nObjective: Produce output/ETR_4_revenue_factor_2026.dta, a fully merged panel combining harmonized tax revenue shares, factor income components, and NNI in current LCU for all countries from 1965 to 2023.\nMain activities:\n\nLoad ETR_3_revenue_2026.dta and merge 1:1 on country and year with ETR_2_factorincome_2026.dta. Drop unmatched revenue observations.\nDrop countries that never have any tax data in the merged panel.\nMerge 1:1 on country and year with work_data/nni_current to bring in NNI in current LCU from WID.\nDeclare the panel by encoding country as a numeric identifier (cid) and calling tsset cid year. Save the merged panel.\n\nImportant to keep in mind for the update:\n\nBoth input files reference the 2026 vintage suffix. If the vintage label changes, both merge statements must be updated.\nThe approximately 140 country-years dropped due to missing factor shares include Venezuela and Myanmar. Review the tab country if _merge==1 output at each update.\nThe nni_current file is sourced from WID May 2024. Verify at each update whether a newer vintage for NNI in current LCU is available.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — ETR Module"
+    ]
+  },
+  {
+    "objectID": "etr-module.html#etr_clean.do",
+    "href": "etr-module.html#etr_clean.do",
+    "title": "Dofile Inventory — ETR Module",
+    "section": "3_4_ETR_clean.do",
+    "text": "3_4_ETR_clean.do\nShort description: This dofile takes the merged revenue-factor panel, harmonizes denominators, cleans flags, merges auxiliary variables (NNI weights, PIT thresholds, dividend-PIT ratios), and saves the pre-ETR dataset used in the construction step.\nObjective: Produce output/ETR_5_preliminary_2026.dta, a clean, fully labelled panel with all revenue and factor income components expressed as shares of NDP minus NIT, augmented with PIT and dividend tax auxiliary variables, ready for ETR construction.\nMain activities:\n\nCorrect China’s GDP and NDP using the sum of factor income components.\nRe-express all revenue and factor income variables as shares of NDP minus NIT. Consolidate SNA stitch flags and standardize all flag variables to 0/1.\nMerge WID NNI weights, drop years before 1965 and countries that never have any tax data. Construct NDP equivalents in PPP and USD.\nMerge PIT exemption threshold and pit_alpha, carrying forward pit_thr for 2023 where missing. Merge OECD dividend-to-PIT statutory rate ratio and back-fill to the earliest available year.\n\nImportant to keep in mind for the update:\n\nThe China GDP correction is a manual patch applied here. If the CHN country routine is ever updated to correct GDP upstream, this block should be removed to avoid double-correction.\nThe pit_thr carry-forward for 2023 was added in Update 2026. Verify at the next update whether 2024 is similarly missing.\nThe div_pit_oecd back-fill loop was extended to 2024 in Update 2026. Check at each update whether the auxiliary file has been extended and adjust the loop bound.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — ETR Module"
+    ]
+  },
+  {
+    "objectID": "etr-module.html#etr_construction.do",
+    "href": "etr-module.html#etr_construction.do",
+    "title": "Dofile Inventory — ETR Module",
+    "section": "3_5_ETR_construction.do",
+    "text": "3_5_ETR_construction.do\nShort description: This is the core ETR construction dofile. It takes the preliminary merged panel, applies tax incidence assumptions to allocate PIT revenue between labor and capital, computes labor and capital tax revenue aggregates, derives factor income shares, calculates the three benchmark effective tax rates, applies a sample restriction for ex-communist countries, and saves the pre-atlas output.\nObjective: Produce output/ETR_6_preatlas_2026.dta, a country-year panel containing ETR_L, ETR_K, and ETR_cit alongside factor income shares, tax revenue components, and key income aggregates, for all countries from 1965 to 2023.\nMain activities:\n\nDefine global incidence parameters: 50% of the unallocable 1300 income tax series is attributed to labor and 50% to capital.\nConstruct the country-year PIT capital share (alpha_prime) using PIT exemption thresholds (0.15 for OECD, 0.30 for low-income, interpolated in between) and adjust for dual PIT systems using the OECD dividend-to-PIT statutory rate ratio.\nCompute labor tax revenue (Tau_L) as the labor share of PIT plus 50% of the 1300 series plus social contributions. Compute capital tax revenue (Tau_K) as the capital share of PIT plus CIT plus 50% of the 1300 series plus property taxes.\nCalculate ETR_L, ETR_K, and ETR_cit. Drop all country-years before 1994 for ex-communist economies.\n\nImportant to keep in mind for the update:\n\nThe alpha_prime rescaling depends on mi_hh_L and mi_hh_K being available. If the factor income variables are renamed upstream, this block will silently produce missing values.\nThe 1994 cutoff for ex-communist countries is hardcoded. If the sample is extended backward for any of these countries, the drop condition must be revised explicitly.\nETR_cit uses os_corp as the denominator. If os_corp is missing or near-zero, ETR_cit will be missing or extreme. No winsorization is applied at this stage.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — ETR Module"
+    ]
+  },
+  {
+    "objectID": "etr-module.html#etr_countrychecks.do",
+    "href": "etr-module.html#etr_countrychecks.do",
+    "title": "Dofile Inventory — ETR Module",
+    "section": "3_6_ETR_countrychecks.do",
+    "text": "3_6_ETR_countrychecks.do\nShort description: This dofile applies post-construction quality checks, country-specific corrections, and winsorization to the ETR panel before it enters the Atlas database. It handles France’s tax credit adjustment, Mozambique and Chad’s corporate denominator correction, and a final hard winsorization of all ETR and total tax variables to the unit interval.\nObjective: Produce output/ETR_7_atlas_2026.dta, the final ETR panel ready for the Atlas database, with outliers diagnosed, country cases corrected, and all ETR and total tax variables bounded between 0 and 1.\nMain activities:\n\nRun diagnostic tabulations of countries with ETR_K, ETR_L, ETR_cit and total tax revenue above 0.55 and outside the unit interval, to flag outliers before winsorization.\nApply the France tax credit correction: merge INSEE tax credit data, subtract credits from CIT revenue, and recompute ETR_cit and ETR_K for France from 1995 onward.\nApply the Mozambique and Chad correction: recompute ETR_cit by adding government operating surplus to the corporate operating surplus in the denominator.\nApply hard winsorization: cap ETR_K, ETR_L, ETR_cit and total tax revenue at 1 from above and at 0 from below. Save the final output.\n\nImportant to keep in mind for the update:\n\nThe France correction relies on the INSEE credits file in aux_data/fra_credits. This file must be updated at each vintage to extend coverage to the latest year.\nThe Mozambique and Chad ETR_cit correction is a permanent methodological choice applied unconditionally for all years.\nThe April 2026 winsorization loop replaces the earlier country-by-country approach. Review the diagnostic tabulations before proceeding to winsorization at each update.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — ETR Module"
+    ]
+  },
+  {
+    "objectID": "etr-module.html#etr_atlas.do",
+    "href": "etr-module.html#etr_atlas.do",
+    "title": "Dofile Inventory — ETR Module",
+    "section": "3_7_ETR_atlas.do",
+    "text": "3_7_ETR_atlas.do\nShort description: This is the final dofile in the ETR module. It takes the quality-checked ETR panel, adjusts tax revenue denominators, merges country frame metadata, balances the panel, constructs all tooltip and summary variables for the Atlas website, and exports the results to Excel across five structured sheets.\nObjective: Produce output/ETR_fully_balanced_2026.dta as the analytical Stata output and output/global_ETR_v26_new.xlsx as the Atlas website delivery file, containing ETR series, revenue composition shares, regional and income-group averages, and data quality indicators for all countries from 1965 to 2023.\nMain activities:\n\nRe-express all tax revenue shares from factor-price NDP terms back to NDP terms by multiplying by (NDP minus NIT) divided by NDP.\nMerge the country frame metadata (iso2, country name, region, income level). Balance the panel using tsfill, then restore string identifiers via a temporary file.\nConstruct tooltip variables: country-level all-years averages, GDP-weighted regional and income-group averages varying by year, and revenue composition shares. All averages are computed as NDP-USD weighted means.\nRename all variables to Atlas website labels and save the Stata file. Export to output/global_ETR_v26_new.xlsx across five sheets: Data, P1_2_Region_average, P1_3_Income_average, P1_1_Country_average, P2_Share_revenue, and P3_Data_quality.\n\nImportant to keep in mind for the update:\n\nThe tax revenue denominator adjustment at the top was introduced in October 2024 and must remain in place unless upstream construction dofiles are changed.\nThe tsfill step sets the maximum year to 2023 explicitly. If the panel is extended to 2024, this line must be updated.\nThe WDD denominator block is fully commented out and requires manual activation at each update. The target year must be changed and the raw WDD file must be refreshed before running.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — ETR Module"
+    ]
+  },
+  {
+    "objectID": "etr-module.html#etr_robust.do",
+    "href": "etr-module.html#etr_robust.do",
+    "title": "Dofile Inventory — ETR Module",
+    "section": "3_8_ETR_robust.do",
+    "text": "3_8_ETR_robust.do\nShort description: This is a robustness check dofile that recomputes the three ETRs using absolute currency values rather than shares of NDP. It applies the same incidence assumptions as the main pipeline and saves the resulting ETR series as a separate auxiliary file for comparison against the benchmark estimates.\nObjective: Produce aux_data/ETR_robust_2026.dta, containing ETR_K_robust, ETR_L_robust and ETR_cit_robust computed with numerators and denominators in current LCU levels.\nMain activities:\n\nConvert all tax revenue series and factor income components from NDP share terms to absolute current LCU levels.\nReconstruct alpha_prime using the same two-step procedure as in the main pipeline.\nCompute labor and capital tax revenue and factor income denominators in absolute levels. Divide to obtain ETR_K, ETR_L and ETR_cit.\nKeep only country, year and the three ETRs, rename them with a robust suffix, and save.\n\nImportant to keep in mind for the update:\n\nThe div_pit_oecd back-fill loop runs to 2023 here, versus 2024 in the main pipeline. Both loops should be set to the same upper bound at each update.\nThis dofile loads ETR_4_revenue_factor_2026.dta, bypassing the China GDP correction and the WID NNI weight merge applied in 3_4_ETR_clean.do. This is intentional for a clean robustness check.\nThe test plot for France is hardcoded and will display during a standard run. It can be commented out if the dofile is run in batch mode.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — ETR Module"
+    ]
+  },
+  {
+    "objectID": "abbreviations.html",
+    "href": "abbreviations.html",
+    "title": "Abbreviations",
+    "section": "",
+    "text": "Term\nMeaning\n\n\n\n\nETR\nEffective Tax Rate\n\n\nETR_K\nEffective Tax Rate on Capital\n\n\nETR_L\nEffective Tax Rate on Labour\n\n\nETR_cit\nEffective Tax Rate on Corporations (CIT)\n\n\nNNI\nNet National Income\n\n\nNDP\nNet Domestic Product\n\n\nNIT\nNet Indirect Taxes (taxes on production minus subsidies)\n\n\nCFC\nConsumption of Fixed Capital (depreciation)\n\n\nCE\nCompensation of Employees\n\n\nOS\nOperating Surplus\n\n\nMI\nMixed Income\n\n\nMIOS\nMixed Income and Operating Surplus combined\n\n\nNFI\nNet Factor Income from abroad\n\n\nWID\nWorld Inequality Database\n\n\nSNA\nSystem of National Accounts\n\n\nHA\nHistorical Archives (long historical revenue source)\n\n\nNS\nNational Statistics (country-level revenue source)\n\n\nICTD\nInternational Centre for Tax and Development\n\n\nGFS\nGovernment Finance Statistics (IMF)\n\n\nOECD GRS\nOECD Global Revenue Statistics\n\n\nPYZ\nPiketty-Yang-Zucman (2019) methodology for China\n\n\nRPC\nRevenue and Primary Commodities (supplementary social contributions source)\n\n\nPIT\nPersonal Income Tax\n\n\nCIT\nCorporate Income Tax",
+    "crumbs": [
+      "Home",
+      "Reference",
+      "Abbreviations"
+    ]
+  },
+  {
+    "objectID": "data-sources.html",
+    "href": "data-sources.html",
+    "title": "Data Sources",
+    "section": "",
+    "text": "The table below lists all external raw data sources used in the pipeline, the current file name in raw_data/, the last download date, and the dofile that first uses each source.\n\n\n\n\n\n\n\n\n\nSource\nFile in raw_data/\nLast downloaded\nUsed by\n\n\n\n\nOECD Global Revenue Statistics\noecd-revenue-2023.csv\nJan 2026\n1_1_revenue_oecd\n\n\nIMF Government Finance Statistics\nimf-revenue-2022-timeseries.csv\nApr 2025\n1_3_revenue_imf\n\n\nWID (World Inequality Database)\nwid_basic_raw.dta, wid2026_basic_raw.dta\n2026 vintage\n1_9_revenue_nni_1_collect, 2_1_factorshares_importwid_2026\n\n\nICTD Government Revenue Dataset\nICTD-import-2025.xlsx\nMar 2026\n1_5_revenue_ictd\n\n\nUN National Accounts (SNA 2025)\nSNA CSV files by sector\n2025 vintage\n2_3_factorshares_importsna2024_1import\n\n\nOECD SNA — China\nCHN_raw_oecdsna_2026.csv\n2026 vintage\n2_4_factorshares_import_chn\n\n\nPYZ (Piketty-Yang-Zucman 2019)\nCHN_raw_1_PYZdata\nStatic (covers to 2021)\n2_4_factorshares_import_chn\n\n\nIMF WEO GDP\ngdp_weo_new.dta\n2025 vintage\n1_5_revenue_ictd\n\n\nHistorical Archives (HA)\nraw_data/HA/*.dta\nFixed historical\n1_2_revenue_ha\n\n\nINSEE tax credits — France\naux_data/fra_credits\nUpdated per vintage\n3_6_ETR_countrychecks\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nWID note: wid2026_basic_raw.dta is the active file for the 2026 update. wid_basic_raw.dta is the pre-2026 vintage retained for reference in 2_3_factorshares_importsna2024_2clean.do.\n\n\n\n\n\n\n\n\nNote\n\n\n\nIMF GFS note: The April 2025 download covers data through 2023, which is the current end of the panel. The March 2025 online release is the correct current vintage.",
+    "crumbs": [
+      "Home",
+      "Pipeline",
+      "Data Sources"
+    ]
+  },
+  {
+    "objectID": "factor-shares.html",
+    "href": "factor-shares.html",
+    "title": "Dofile Inventory — Factor Shares Module",
+    "section": "",
+    "text": "This page documents all substantive dofiles in the factor shares module (2_x), in execution order.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Factor Shares Module"
+    ]
+  },
+  {
+    "objectID": "factor-shares.html#factorshares_importwid_2026.do",
+    "href": "factor-shares.html#factorshares_importwid_2026.do",
+    "title": "Dofile Inventory — Factor Shares Module",
+    "section": "2_1_factorshares_importwid_2026.do",
+    "text": "2_1_factorshares_importwid_2026.do\nShort description: This dofile downloads and processes national income component data from WID to produce the factor share variables used as denominators in ETR_L and ETR_K. It is substantially updated for the 2026 vintage, primarily because the WID restructured how it reports compensation of employees (CE) and introduced new sector-level GVA variables.\nObjective: Produce two output files: the main factor shares dataset (work_data/Lsh_compo_wid2026_raw.dta) containing all WID national income components as percentages of NNI, and an auxiliary NNI series file (work_data/wid2026_nni.dta) used by downstream dofiles.\nMain activities:\n\nDownload WID data in three parts due to server size limits, plus a separate population download. Append all parts and save the raw file. This step is commented out and only needs to be re-run when a new WID vintage is released.\nClean the raw dataset, keep only macro aggregates (m- prefix variables), drop provincial observations and pre-1950 years, reshape from long to wide, apply labels from wid_labels_2026.do, and save as wid2026_basic_raw.dta.\nConstruct the CE total variable (ce_hh) as the sum of three sector components from WID 2026 (ce_hh_sector + ce_corp_sector + ce_gov_wid), replacing the old single concept mcomhn which no longer exists in the new WID.\nReconstruct derived variables (mios_hh, mios_total, os_total, nfi, ndp), interpolate and extrapolate NFI_L and NFI_K where missing, apply the Sierra Leone NIT correction, and convert NNI to constant 2021 USD.\n\nImportant to keep in mind for the update:\n\nThe WID download block (Section 1) is commented out. At each update, uncomment it, verify the API indicator codes, and re-run to refresh the raw data.\nTwo auxiliary dofiles must be updated before running: wid_rename_2026.do and wid_labels_2026.do. Both must reflect any new variables added in future WID vintages.\nThe CE construction changed fundamentally in this update. The old WID reported total CE as mcomhn. The new WID 2026 reports CE split by sector. If WID changes this structure again, the construction logic must be updated.\nThe constant-price base year was updated from 2019 to 2021. Downstream files using nni_ppp or nnipc_ppp must be aware that these series are now in 2021 USD.\nThe output file was renamed from Lsh_compo_wid_raw.dta to Lsh_compo_wid2026_raw.dta. All downstream files must reference the new filename.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Factor Shares Module"
+    ]
+  },
+  {
+    "objectID": "factor-shares.html#factorshares_importsna1968_1gdp.do",
+    "href": "factor-shares.html#factorshares_importsna1968_1gdp.do",
+    "title": "Dofile Inventory — Factor Shares Module",
+    "section": "2_2_factorshares_importsna1968_1gdp.do",
+    "text": "2_2_factorshares_importsna1968_1gdp.do\nShort description: This dofile takes the raw SNA 1968 database and ensures every observation has a consistent GDP value using a three-step fallback strategy: first from the same series within SNA 1968, then from any other series for the same country-year in SNA 1968, and finally from WID where neither is available.\nObjective: Produce work_data/sna1968_basic_pct_gdp.dta, a cleaned version of the SNA 1968 raw data where all item values are expressed as percentages of GDP, covering 1965 to 1996.\nMain activities:\n\nExtract all GDP observations from SNA 1968 table 103, deduplicate by taking the mean, and save as a temporary reference file.\nMerge the full dataset against the same-series GDP first, then against the any-series GDP for the same country-year, flagging observations where GDP had to be retrieved from a different series.\nFor remaining country-years still missing GDP, merge against WID (raw_wid2026_plus.dta) and compute GDP from the WID GDP share of NNI multiplied by NNI. Drop Kazakhstan pre-1990.\nDivide all item values by GDP to express them as percentages, drop the GDP row, generate a within-group id variable, and save.\n\nImportant to keep in mind for the update:\n\nThe SNA 1968 source is a historical dataset covering 1965 to 1996 and does not update annually.\nThe WID fallback now uses raw_wid2026_plus.dta following the 2026 rename. If the WID file is renamed again, the merge path must be updated.\nKazakhstan pre-1990 is dropped because no consistent GDP is available for those years in any of the three sources.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Factor Shares Module"
+    ]
+  },
+  {
+    "objectID": "factor-shares.html#factorshares_importsna1968_2compo.do",
+    "href": "factor-shares.html#factorshares_importsna1968_2compo.do",
+    "title": "Dofile Inventory — Factor Shares Module",
+    "section": "2_2_factorshares_importsna1968_2compo.do",
+    "text": "2_2_factorshares_importsna1968_2compo.do\nShort description: This dofile maps the SNA 1968 item descriptions to WID income concept labels (ce_hh, mios_total, mios_hh, os_corp, os_gov, nit, cfc, ce_gov), resolves cross-table consistency issues, converts gross to net variables, enforces accounting identities, and resolves duplicate country-year observations from overlapping series.\nObjective: Produce work_data/sna1968_compo.dta, a wide-format dataset of SNA 1968 national income components in WID variable names expressed as percentages of GDP, covering 1965 to 1996, net of CFC and consistent with GDP = CE + MIOS + NIT + CFC.\nMain activities:\n\nMap SNA 1968 item descriptions from tables 103 to 106 to WID concept names and reshape to wide format.\nResolve NIT inconsistencies and reconcile os_gov, os_corp, and mios_hh across tables. Drop known erroneous observations for BWA, CMR, DNK, and PYF.\nConvert gross to net variables using CFC from WID (Lsh_compo_wid2026_raw.dta). For sector-level cases, allocate CFC proportionally using a 33% share assumption for the household sector.\nEnforce the accounting identity with GDP and CFC held fixed. Drop observations where enforced mios_total is below 0.10. Resolve 120+ duplicate country-year observations for CAN, ESP, EST, IND, ISL, ITA, LSO, MAR, MUS, NGA, NOR, PAN, and ROU.\n\nImportant to keep in mind for the update:\n\nThe SNA 1968 source is historical and does not update. Re-run only if the raw file is corrected or the WID CFC series is updated.\nThere are two separate WID merges in this file for CFC. Both must point to the correct filename (Lsh_compo_wid2026_raw.dta).\nLithuania (LTU) 1988 requires a manual fix zeroing out all component variables. This must not be removed.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Factor Shares Module"
+    ]
+  },
+  {
+    "objectID": "factor-shares.html#factorshares_importsna2024_1import.do",
+    "href": "factor-shares.html#factorshares_importsna2024_1import.do",
+    "title": "Dofile Inventory — Factor Shares Module",
+    "section": "2_3_factorshares_importsna2024_1import.do",
+    "text": "2_3_factorshares_importsna2024_1import.do\nShort description: This dofile imports and assembles the UN SNA national accounts data by institutional sector, covering the total economy and four sectors (non-financial corporations, financial corporations, government, and households including NPISH). Each sector is imported from multiple CSV files, aligned to the GDP series reference, and merged into a single dataset covering 1965 to 2022.\nObjective: Produce work_data/sna2025_all_raw.dta, a wide-format dataset of gross national accounts components by sector (GDP, CE, gross OS by sector, gross mixed income, and net taxes on production).\nMain activities:\n\nImport five CSV files for the total economy (sector S1), append them, replace 2021 and 2022 observations with the dedicated update file, align to the highest series number with CE data, collapse duplicates, and save as sna2025_s1.dta.\nRepeat the same import and clean routine for sectors S11, S12, S13, S14, and S15, merging each against sna2025_s1 to verify series consistency.\nMerge all sector files, compute total corporate OS as S11 plus S12, set gross mixed income from S14, and save the combined dataset.\n\nImportant to keep in mind for the update:\n\nThis dofile must be replicated for each new update. At each update cycle, new CSV files must be downloaded from the UN National Accounts Statistics database and added as an additional numbered file.\nThe series alignment logic keeps only observations matching the highest series number. The exception for China 1996 to 1999 is hardcoded.\nThe output file is named sna2025_all_raw despite being used in the 2026 update. This reflects when the routine was introduced.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Factor Shares Module"
+    ]
+  },
+  {
+    "objectID": "factor-shares.html#factorshares_importsna2024_2clean.do",
+    "href": "factor-shares.html#factorshares_importsna2024_2clean.do",
+    "title": "Dofile Inventory — Factor Shares Module",
+    "section": "2_3_factorshares_importsna2024_2clean.do",
+    "text": "2_3_factorshares_importsna2024_2clean.do\nShort description: This dofile takes the assembled SNA gross components, merges them with WID CFC data, computes net income measures by subtracting CFC from each sector’s gross OS, expresses all variables as shares of GDP, enforces accounting identities, and saves the final cleaned SNA dataset.\nObjective: Produce work_data/sna2025.dta, a wide-format dataset of net national accounts components expressed as shares of GDP, with all variable names aligned to the WID pipeline convention and a _sna2025 suffix.\nMain activities:\n\nImport the WID raw dataset (wid_basic_raw.dta), retain CFC total and sector components, convert from constant to current prices, compute each sector’s share of total CFC, and extrapolate using a constant share assumption for years beyond the last observed decomposition.\nMerge the SNA raw data with the WID CFC data. Drop observations present only in SNA with no CFC data.\nCompute net variables (NDP, net OS for corporations, government, and households, net mixed income) by subtracting the corresponding CFC from each gross series.\nConvert all variables to shares of GDP, rename to WID pipeline conventions, enforce accounting identities with GDP, CFC, NIT, and CE held fixed, and add a _sna2025 suffix.\n\nImportant to keep in mind for the update:\n\nThis dofile reads from wid_basic_raw.dta, the pre-2026 WID file. Verify at the 2026 update whether this should be changed to wid2026_basic_raw.dta.\nThe CFC extrapolation uses the most recently observed sector share held constant. Verify that extrapolated years are reasonable at each update.\nThe output file is named sna2025 despite being used in the 2026 update.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Factor Shares Module"
+    ]
+  },
+  {
+    "objectID": "factor-shares.html#factorshares_import_chn.do",
+    "href": "factor-shares.html#factorshares_import_chn.do",
+    "title": "Dofile Inventory — Factor Shares Module",
+    "section": "2_4_factorshares_import_chn.do",
+    "text": "2_4_factorshares_import_chn.do\nShort description: This dofile constructs a corrected national accounts dataset for China specifically, combining the UN SNA data extended through OECD for recent years, a correction based on the Piketty-Yang-Zucman (PYZ 2019) methodology, and WID for NNI and CFC coverage in the pre-1992 period.\nObjective: Produce work_data/chn_sna2026_correct.dta, a wide-format dataset of net national accounts components for China expressed as shares of NNI, with all components named using the WID pipeline convention and a _chn_correct suffix, covering 1965 to 2023.\nMain activities:\n\nImport the OECD SNA annual accounts for China and use them to extend SNA through 2022 to 2023, where UN SNA ends at 2021. Extrapolate OS government and NIT for 2022 to 2023 using proportional shares from the last SNA year.\nImport the PYZ 2019 corrected household income data and allocate mixed income between labour and capital using PYZ sector-specific ratios (70/30 for agriculture, 95/5 for industry-business).\nMerge the PYZ corrections into the China SNA series, carrying forward 2021 PYZ values for 2022 to 2023. Subtract PYZ-implied CE and capital components to avoid double-counting.\nMerge with WID 2026 to obtain NNI and CFC for the pre-1992 period. Divide all variables by NNI, enforce accounting identities, and rename with a _chn_correct suffix.\n\nImportant to keep in mind for the update:\n\nThe OECD SNA download for China must be refreshed at each update from OECD Data Explorer, Annual non-financial accounts by institutional sector (SNA_TABLE14a), country CHN.\nThe PYZ correction data only covers through 2021. When an updated PYZ dataset becomes available, the carry-forward block can be removed for the covered years.\nThe 0.75/0.25 and 70/30/95/5 allocation parameters are the PYZ methodology and should not be changed without a methodological justification.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Factor Shares Module"
+    ]
+  },
+  {
+    "objectID": "factor-shares.html#factorshares_combine_1sna1968.do",
+    "href": "factor-shares.html#factorshares_combine_1sna1968.do",
+    "title": "Dofile Inventory — Factor Shares Module",
+    "section": "2_5_factorshares_combine_1sna1968.do",
+    "text": "2_5_factorshares_combine_1sna1968.do\nShort description: This dofile integrates the WID national income component dataset with the SNA 1968 historical series to extend coverage into the pre-WID period. It converts SNA 1968 values into NNI terms, enforces accounting identities on the WID data, backcasts missing WID values using SNA 1968 growth rates, and saves a harmonised historical dataset.\nObjective: Produce work_data/Lsh_compo_harmonized_1968.dta, combining WID national income components with SNA 1968 backcasts for CE, MIOS total, NIT, and CE government, covering all available countries from 1965 onwards.\nMain activities:\n\nLoad the WID 2026 dataset (Lsh_compo_wid2026_raw.dta) and merge with the SNA 1968 components file (sna1968_compo.dta). Flag countries that appear in both sources.\nConvert SNA 1968 variables from percentage-of-GDP to NNI terms. Enforce accounting identities on the WID data with GDP and CFC held fixed.\nBackcast missing WID values using SNA 1968 growth rates: for each year from 2021 back to 1950, propagate the WID level forward using the ratio of adjacent SNA 1968 values.\nApply country-specific corrections for Hungary and Mongolia. Drop SNA 1968 variables once integrated and save.\n\nImportant to keep in mind for the update:\n\nOnly CE, MIOS total, NIT, and CE government are backcast from SNA 1968. The sector breakdown within MIOS is intentionally not used because the statistical and conceptual distinctions were imperfect in the 1968 SNA framework.\nSix countries are explicitly excluded from the SNA 1968 plug-in step (ABW, GEO, HUN, KEN, PAN, SVN) because their values are known to be inconsistent with modern SNA.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Factor Shares Module"
+    ]
+  },
+  {
+    "objectID": "factor-shares.html#factorshares_combine_2sna2024chn.do",
+    "href": "factor-shares.html#factorshares_combine_2sna2024chn.do",
+    "title": "Dofile Inventory — Factor Shares Module",
+    "section": "2_5_factorshares_combine_2sna2024chn.do",
+    "text": "2_5_factorshares_combine_2sna2024chn.do\nShort description: This dofile integrates the WID 2026 national income component dataset with the SNA 2025 series for recent years (2020 onwards) and applies the China-specific PYZ correction. It uses first differences rather than growth rates for forward extension and fully replaces China with the corrected series.\nObjective: Produce work_data/Lsh_compo_harmonized_2026.dta, the main factor shares dataset used by all downstream ETR dofiles, combining WID as the primary source with SNA 2025 extensions and the PYZ-corrected China series throughout.\nMain activities:\n\nLoad the WID 2026 dataset and merge with the SNA 2025 components. Drop post-socialist early 1990s observations without a WID match. Set all WID component values after 2024 to missing.\nExtend WID values forward into 2020 to 2024 using SNA 2025 first differences. Where no WID anchor exists within two years, plug in the raw SNA 2025 level directly.\nMerge the China-corrected dataset (chn_sna2026_correct.dta) and fully replace all WID component values for China with the PYZ-corrected series.\nDrop all working variables and save the final harmonised dataset.\n\nImportant to keep in mind for the update:\n\nThe output was renamed from Lsh_compo_harmonized_2025.dta to Lsh_compo_harmonized_2026.dta. All downstream dofiles must reference the new name.\nWID component values are set to missing for all years after 2024. If WID releases a new vintage covering 2025 or later, this cutoff must be updated.\nThe cfc_mios_hh replacement for China is handled with a cap command outside the main loop due to a known Stata abbreviated naming issue. This fix must be preserved.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Factor Shares Module"
+    ]
+  },
+  {
+    "objectID": "factor-shares.html#factorshares_combine_3all.do",
+    "href": "factor-shares.html#factorshares_combine_3all.do",
+    "title": "Dofile Inventory — Factor Shares Module",
+    "section": "2_5_factorshares_combine_3all.do",
+    "text": "2_5_factorshares_combine_3all.do\nShort description: This is the final assembly step in the factor shares module. It combines the two harmonised datasets: WID and SNA 1968 for the pre-2020 period, and WID and SNA 2025 with the China PYZ correction for 2020 onwards.\nObjective: Produce work_data/Lsh_compo_harmonized_all.dta, the unified factor shares dataset used as input to the ETR construction module, with a clean split at year 2020.\nMain activities:\n\nLoad Lsh_compo_harmonized_1968.dta, drop all observations from 2020 onwards, and drop China entirely from this file.\nLoad Lsh_compo_harmonized_2026.dta, drop all observations before 2020 except for China (which is retained for all years).\nAppend the two files, sort by country and year, and save the combined dataset.\n\nImportant to keep in mind for the update:\n\nThe split year is 2020. For all countries except China, observations before 2020 come from WID plus the SNA 1968 backcast, and observations from 2020 onwards come from WID plus the SNA 2025 forward extension.\nChina is fully excluded from the pre-2020 file and fully retained from the post-2019 file.\nThis dofile is very short and purely structural. If it produces unexpected output, the issue will always originate in one of the two input files.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Factor Shares Module"
+    ]
+  },
+  {
+    "objectID": "factor-shares.html#factorshares_countrychecks.do",
+    "href": "factor-shares.html#factorshares_countrychecks.do",
+    "title": "Dofile Inventory — Factor Shares Module",
+    "section": "2_6_factorshares_countrychecks.do",
+    "text": "2_6_factorshares_countrychecks.do\nShort description: This dofile applies a comprehensive set of country-by-country corrections to the harmonised factor shares dataset, removing observations from periods before independence, during wars, or during periods of statistical instability, and setting specific component variables to missing where values are known to be implausible. It is an institutional knowledge register in code form.\nObjective: Produce work_data/Lsh_compo_checked.dta, a cleaned version of the combined factor shares panel where coverage starts no earlier than each country’s relevant reference year and known data quality issues are flagged.\nMain activities:\n\nDrop observations before independence, statehood, or the start of reliable national accounts for approximately 100 countries.\nSet individual component variables to missing for specific country-year ranges where values are known to be implausible, covering countries including AZE, BFA, BLR, BTN, CIV, EST, GAB, GHA, IRQ, KAZ, LKA, LVA, MDA, MOZ, NGA, QAT, ROU, SRB, UKR, UZB, VEN, ZMB, and others.\nApply the Mexico NIT correction for a structural jump in 2019, the Slovakia OS_corp correction for 2020 to 2022, and the Mozambique OS_corp correction for 2012 onwards.\n\nImportant to keep in mind for the update:\n\nThis dofile is a living register of country-specific data quality decisions. At each update, new issues may be identified and should be added here with a comment explaining the rationale.\nThe Mexico NIT correction is currently applied through 2022. The year range may need extending at each update.\nThe Mozambique cfc_corp correction is new in the 2026 update. ETRs for MOZ should be interpreted with caution.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Factor Shares Module"
+    ]
+  },
+  {
+    "objectID": "factor-shares.html#factorshares_imputemissing.do",
+    "href": "factor-shares.html#factorshares_imputemissing.do",
+    "title": "Dofile Inventory — Factor Shares Module",
+    "section": "2_7_factorshares_imputemissing.do",
+    "text": "2_7_factorshares_imputemissing.do\nShort description: This dofile imputes missing values for all national income components using a three-level nested random effects model with AR(1) errors, proceeding from aggregate to disaggregate. After each step, components are rescaled to satisfy accounting identities. A final NFI_K correction ensures the capital NFI component does not exceed the observable capital income total.\nObjective: Produce work_data/compo_full.dta, a fully populated factor shares panel where all component variables have imputed values where observed data was missing, with prediction intervals and imputation flags attached.\nMain activities:\n\nMerge the gross output-to-value-added ratio (ov_ratio), declare the panel with xtset, and fill gaps using tsfill.\nRun three sequential imputation scripts covering CE, MIOS total, and NIT; MIOS sector breakdown; and MI_hh and OS_hh. After each step, rescale imputed values to satisfy the relevant accounting identity.\nRun a fourth imputation for ov_ratio and ce_gov. Set mi_hh to zero for New Zealand. Flag country-years where both CE and MIOS total are significantly imputed.\nCorrect NFI_K where its absolute value exceeds total observable capital income by redistributing the excess to NFI_L.\n\nImportant to keep in mind for the update:\n\nThe three imputation scripts live in the code/ subfolder and are called via do. If these scripts are modified, this dofile must be re-run from the top.\nChina is excluded from the standard rescaling at levels 1 and 2 because its components are set precisely from the PYZ correction.\nNew Zealand mi_hh is always set to zero. This reflects StatsNZ national accounting conventions and should not be treated as a data error.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Factor Shares Module"
+    ]
+  },
+  {
+    "objectID": "factor-shares.html#factorshares_clean.do",
+    "href": "factor-shares.html#factorshares_clean.do",
+    "title": "Dofile Inventory — Factor Shares Module",
+    "section": "2_8_factorshares_clean.do",
+    "text": "2_8_factorshares_clean.do\nShort description: This is the final dofile in the factor shares module. It takes the fully imputed components dataset, generates source tracking and stitch flags, relabels source categories for downstream compatibility, drops variables not needed in the ETR module, and saves the final factor income dataset.\nObjective: Produce output/ETR_2_factorincome_2026.dta, the final factor shares output file containing all national income components, NNI series, NFI components, source labels, and imputation flags for all countries from 1965 to 2023.\nMain activities:\n\nLoad compo_full.dta, declare the panel, and generate a source_id group variable. Flag country-years where the SNA source changes and where the SNA 1968 series number increases.\nRelabel source categories: replace composite with WID for years 2022 onwards. Reset all imputation flags for 2023 to zero.\nRetain a defined set of variables covering NNI, GDP, NDP, CFC, NFI components, all national income components, and all imputation flags. Drop year 2024 as unreliable.\nSave the final dataset with a 2026 vintage suffix.\n\nImportant to keep in mind for the update:\n\nThe output file is named ETR_2_factorincome_2026.dta. All downstream ETR dofiles must reference the new name.\nYear 2024 is dropped. If WID or SNA 2025 data for 2024 becomes reliable in a future update, the drop condition can be adjusted.\nva_corp is excluded from the 2026 output because the WID 2026 CE restructuring changed the underlying components.\nThe comparison block at the end of the dofile (commented out) is the recommended quality check before updating downstream files.",
+    "crumbs": [
+      "Home",
+      "Dofile Inventory",
+      "Dofile Inventory — Factor Shares Module"
+    ]
+  },
+  {
+    "objectID": "how-to-run.html",
+    "href": "how-to-run.html",
+    "title": "How to Run the Pipeline",
+    "section": "",
+    "text": "Set the root path at the top of 0_master.do to point to the pipeline root folder on your machine. The root path is defined as a global macro and all dofiles inherit it automatically — do not edit paths in individual dofiles.\nThen run 0_master.do. This file calls the three module masters in order:\nEach master calls its own sub-dofiles in sequence.",
+    "crumbs": [
+      "Home",
+      "Pipeline",
+      "How to Run the Pipeline"
+    ]
+  },
+  {
+    "objectID": "how-to-run.html#output-locations",
+    "href": "how-to-run.html#output-locations",
+    "title": "How to Run the Pipeline",
+    "section": "Output locations",
+    "text": "Output locations\n\n\n\nLocation\nContents\n\n\n\n\nwork_data/\nIntermediate datasets used between dofiles\n\n\naux_data/\nCrosswalks, lookups, and auxiliary reference files\n\n\noutput/\nFinal datasets and figures",
+    "crumbs": [
+      "Home",
+      "Pipeline",
+      "How to Run the Pipeline"
+    ]
+  },
+  {
+    "objectID": "how-to-run.html#important-rules",
+    "href": "how-to-run.html#important-rules",
+    "title": "How to Run the Pipeline",
+    "section": "Important rules",
+    "text": "Important rules\n\nDo not run individual dofiles in isolation unless you are testing a specific step.\nAlways ensure all upstream files are current before running any dofile midway through the pipeline.\nIf you change the vintage label (e.g. from 2026 to 2027), update the output filenames consistently across all dofiles that save or load versioned files.",
+    "crumbs": [
+      "Home",
+      "Pipeline",
+      "How to Run the Pipeline"
+    ]
+  },
+  {
+    "objectID": "pipeline-map.html",
+    "href": "pipeline-map.html",
+    "title": "Pipeline Map",
+    "section": "",
+    "text": "The table below lists all substantive dofiles in execution order, with their primary input and output files and a status indicator.\nStatus indicators:\n\nStable: no changes expected at a routine update.\nReview: the file or its inputs require attention when new data arrives.\n\n\n\n\n\n\n\n\n\n\nDofile\nPrimary input\nPrimary output\nStatus\n\n\n\n\n0_master\nAll the code\nAll the routine outputs\nStable\n\n\n1_0_revenue_master\nEach revenue dofile\noutput/ETR_1_revenue_raw.dta\nStable\n\n\n1_01_revenue_crosswalks\nreclassify_online_code.xlsx\naux_data/*_crosswalk.dta\nStable\n\n\n1_1_revenue_oecd\noecd-revenue-2023.csv\nwork_data/data_1_oecd.dta\nReview\n\n\n1_2_revenue_ha\nraw_data/HA/*.dta\nwork_data/data_2_ha.dta\nStable\n\n\n1_3_revenue_imf\nimf-revenue-2022-timeseries.csv\nwork_data/data_3_imf.dta\nReview\n\n\n1_4_revenue_ns_1_old\nraw_data/NS/1_old/*.xlsx\nwork_data/NS/data_4_ns_old.dta\nStable\n\n\n1_4_revenue_ns_2_bigthree\nraw_data/NS/2_bigthree/*.dta\nwork_data/NS/data_4_ns_bigthree.dta\nStable\n\n\n1_4_revenue_ns_3_new_updt\nraw_data/NS/3_new/*.dta\nwork_data/NS/data_4_ns_new_updt.dta\nReview\n\n\n1_4_revenue_ns_4_append\ndata_4_ns_old/bigthree/new_updt\nwork_data/data_4_ns.dta\nStable\n\n\n1_5_revenue_ictd\nICTD-import-2025.xlsx\nwork_data/data_5_ictd.dta\nReview\n\n\n1_6_revenue_imf_hist\nraw_data/imf_hist_raw.xlsx\nwork_data/data_6_imf_hist.dta\nStable\n\n\n1_7_revenue_other\n10 country files + ICTD no-GDP\nwork_data/data_7_other.dta\nReview\n\n\n1_8_revenue_combine\ndata_1 through data_7\nwork_data/data_8_combine.dta\nReview\n\n\n1_9_revenue_nni_1_collect\nwid_basic_raw.dta\naux_data/nni_current.dta\nReview\n\n\n1_9_revenue_nni_2_append\ndata_8_combine + nni_current\nwork_data/data_9_nni.dta\nStable\n\n\n1_10_revenue_currency\ndata_9_nni.dta\nwork_data/data_10_currency.dta\nReview\n\n\n1_11_revenue_pct\ndata_10_currency.dta\nwork_data/data_11_pct.dta\nReview\n\n\n1_12_revenue_clean\ndata_11_pct + UN/RPC/other\noutput/ETR_1_revenue_raw.dta\nReview\n\n\n2_0_factorshares_master\nMaster for factor shares\noutput/ETR_2_factorincome_2026.dta\nStable\n\n\n2_1_factorshares_importwid_2026\nWID raw download\nwork_data/Lsh_compo_wid2026_raw.dta\nReview\n\n\n2_2_factorshares_importsna1968\nFactor shares import files 1968\nwork_data/sna1968_compo.dta\nStable\n\n\n2_2_factorshares_importsna1968_1gdp\nsna1968_basic_raw.dta\nwork_data/sna1968_basic_pct_gdp.dta\nStable\n\n\n2_2_factorshares_importsna1968_2compo\nsna1968_basic_pct_gdp.dta\nwork_data/sna1968_compo.dta\nStable\n\n\n2_3_factorshares_importsna2024\nMaster for national income dofiles\nwork_data/sna2025.dta\nStable\n\n\n2_3_factorshares_importsna2024_1import\nUN SNA CSV files\nwork_data/sna2025_all_raw.dta\nReview\n\n\n2_3_factorshares_importsna2024_2clean\nsna2025_all_raw + wid_cfc\nwork_data/sna2025.dta\nReview\n\n\n2_4_factorshares_import_chn\nOECD SNA CHN + PYZ data\nwork_data/chn_sna2026_correct.dta\nReview\n\n\n2_5_factorshares_combine\nMaster to combine factor shares\nwork_data/Lsh_compo_harmonized_2026.dta\nStable\n\n\n2_5_factorshares_combine_1sna1968\nWID2026 + sna1968_compo\nwork_data/Lsh_compo_harmonized_1968.dta\nStable\n\n\n2_5_factorshares_combine_2sna2024chn\nWID2026 + sna2025 + CHN\nwork_data/Lsh_compo_harmonized_2026.dta\nReview\n\n\n2_5_factorshares_combine_3all\nharmonized_1968 and 2026\nwork_data/Lsh_compo_harmonized_all.dta\nStable\n\n\n2_6_factorshares_countrychecks\nLsh_compo_harmonized_all\nwork_data/Lsh_compo_checked.dta\nReview\n\n\n2_7_factorshares_imputemissing\nLsh_compo_checked.dta\nwork_data/compo_full.dta\nReview\n\n\n2_8_factorshares_clean\ncompo_full.dta\noutput/ETR_2_factorincome_2026.dta\nReview\n\n\n3_0_ETR_master\nMaster for ETR construction\naux_data/ETR_robust_2026.dta\nStable\n\n\n3_1_ETR_revenue_source\nETR_1_revenue_raw.dta\nwork_data/revenue_harmonized_v24/*.dta\nReview\n\n\n3_2_ETR_revenue_merge\nrevenue_harmonized_v24/*.dta\noutput/ETR_3_revenue_2026.dta\nStable\n\n\n3_3_ETR_revenue_factor\nETR_3 + ETR_2 + nni_current\noutput/ETR_4_revenue_factor_2026.dta\nStable\n\n\n3_4_ETR_clean\nETR_4_revenue_factor_2026\noutput/ETR_5_preliminary_2026.dta\nReview\n\n\n3_5_ETR_construction\nETR_5_preliminary_2026\noutput/ETR_6_preatlas_2026.dta\nReview\n\n\n3_6_ETR_countrychecks\nETR_6_preatlas_2026\noutput/ETR_7_atlas_2026.dta\nReview\n\n\n3_7_ETR_atlas\nETR_7_atlas_2026\noutput/ETR_fully_balanced_2026.dta + Excel\nReview\n\n\n3_8_ETR_robust\nETR_4_revenue_factor_2026\naux_data/ETR_robust_2026.dta\nStable",
+    "crumbs": [
+      "Home",
+      "Pipeline",
+      "Pipeline Map"
+    ]
+  },
+  {
+    "objectID": "update-checklist.html",
+    "href": "update-checklist.html",
+    "title": "Update Checklist",
+    "section": "",
+    "text": "Follow these steps in order at each annual update cycle.",
+    "crumbs": [
+      "Home",
+      "Pipeline",
+      "Update Checklist"
+    ]
+  },
+  {
+    "objectID": "update-checklist.html#raw-data-downloads",
+    "href": "update-checklist.html#raw-data-downloads",
+    "title": "Update Checklist",
+    "section": "Raw data downloads",
+    "text": "Raw data downloads\n\nDownload the new OECD Global Revenue Statistics CSV. Verify the filename and column structure against the previous vintage before saving to raw_data/.\nDownload the new IMF GFS time series CSV. Navigate to Government Finance Statistics, Revenue, Statement of Operations, and download all components. Verify column structure.\nRefresh the WID raw data download. Uncomment the download block in 2_1_factorshares_importwid_2026.do, verify the API indicator codes, and re-run. Update wid_rename_2026.do and wid_labels_2026.do if WID has changed any variable names.\nDownload the new ICTD Government Revenue Dataset. Verify the sheet name and column layout against the previous vintage.\nDownload the new UN SNA CSV files by institutional sector. Add new numbered files following the pattern in 2_3_factorshares_importsna2024_1import.do. Note: this source is complementary to the WID database and in 2026 was not updated for the majority of countries.\nRefresh the OECD SNA data for China (CHN_raw_oecdsna_2026.csv). Download from OECD Data Explorer, Annual non-financial accounts by institutional sector.\nUpdate the IMF WEO GDP file (gdp_weo_new.dta) to cover the latest years used by the ICTD conversion step.\nUpdate the INSEE tax credits file for France if new years are available.",
+    "crumbs": [
+      "Home",
+      "Pipeline",
+      "Update Checklist"
+    ]
+  },
+  {
+    "objectID": "update-checklist.html#re-run-and-verify",
+    "href": "update-checklist.html#re-run-and-verify",
+    "title": "Update Checklist",
+    "section": "Re-run and verify",
+    "text": "Re-run and verify\n\nRun 1_01_revenue_crosswalks.do. No changes expected unless new tax categories have appeared in the source data.\nRun 1_1_revenue_oecd.do. Check the backfill country list and review the four powercode corrections (ROU, HRV, UKR, BGR).\nRun 1_3_revenue_imf.do. Check for new columns in the raw CSV if the IMF extended the time series. Review any unmatched country names after the ISO3 merge.\nRun 1_4_revenue_ns_3_new_updt.do if any of the 16 active NS countries have new data. Update the corresponding raw file in raw_data/NS/3_new first.\nRun 1_5_revenue_ictd.do. Verify the Belarus 1994 GDP correction and the ICTD no-GDP country list.\nRun the full revenue pipeline through 1_12_revenue_clean.do.\nRun the full factor shares pipeline through 2_8_factorshares_clean.do. Run the comparison block at the end of 2_8 manually before proceeding to the ETR module.\nRun 3_1_ETR_revenue_source.do. For any country with new source data or extended years, add or revise the relevant country block. Update the output folder path if the vintage label changes.\nRun 3_2 through 3_5. Review the diagnostic tabulations at the top of 3_6_ETR_countrychecks.do before proceeding to winsorization.\nRun 3_6 and 3_7. Activate the WDD denominator block in 3_7 manually if CIT and NDP values in USD billions are needed for the Atlas website.",
+    "crumbs": [
+      "Home",
+      "Pipeline",
+      "Update Checklist"
+    ]
+  },
+  {
+    "objectID": "update-checklist.html#quality-checks",
+    "href": "update-checklist.html#quality-checks",
+    "title": "Update Checklist",
+    "section": "Quality checks",
+    "text": "Quality checks\n\nCheck the edition comparison table against the previous vintage. Flag ETR differences above 5 percentage points for review.\nVerify that the country count in each region is stable across the full time series.\nUpdate the data vintage table in the Data Sources page.\nUpdate the dofile block in the relevant inventory page for any file that was modified during this update cycle.",
+    "crumbs": [
+      "Home",
+      "Pipeline",
+      "Update Checklist"
+    ]
+  }
+]
