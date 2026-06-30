@@ -4,18 +4,18 @@ title: "Data Sources"
 
 The table below lists all external raw data sources used in the pipeline, the current file name in `raw_data/`, the last download date, and the dofile that first uses each source.
 
-| Source | File in raw_data/ | Last downloaded | Used by |
+| Source | Download | Last downloaded | Used by |
 |---|---|---|---|
-| OECD Global Revenue Statistics | oecd-revenue-2023.csv | Jan 2026 | 1_1_revenue_oecd |
-| IMF Government Finance Statistics | imf-revenue-2022-timeseries.csv | Apr 2025 | 1_3_revenue_imf |
-| WID (World Inequality Database) | wid_basic_raw.dta, wid2026_basic_raw.dta | 2026 vintage | 1_9_revenue_nni_1_collect, 2_1_factorshares_importwid_2026 |
-| ICTD Government Revenue Dataset | ICTD-import-2025.xlsx | Mar 2026 | 1_5_revenue_ictd |
-| UN National Accounts (SNA 2025) | SNA CSV files by sector | 2025 vintage | 2_3_factorshares_importsna2024_1import |
-| OECD SNA — China | CHN_raw_oecdsna_2026.csv | 2026 vintage | 2_4_factorshares_import_chn |
+| OECD Global Revenue Statistics | https://www.oecd.org/en/data/datasets | Jan 2026 | 1_1_revenue_oecd |
+| IMF Government Finance Statistics | https://data.imf.org/en | Apr 2025 | 1_3_revenue_imf |
+| WID (World Inequality Database) | https://wid.world/ | 2026 vintage | 1_9_revenue_nni_1_collect, 2_1_factorshares_importwid_2026 |
+| ICTD Government Revenue Dataset | https://www.ictd.ac/dataset| Mar 2026 | 1_5_revenue_ictd |
+| UN National Accounts (SNA 2025) | https://unstats.un.org/UNSDWebsite/| 2025 vintage | 2_3_factorshares_importsna2024_1import |
+| OECD SNA — China | https://data-explorer.oecd.org/ | 2026 vintage | 2_4_factorshares_import_chn |
 | PYZ (Piketty-Yang-Zucman 2019) | CHN_raw_1_PYZdata | Static (covers to 2021) | 2_4_factorshares_import_chn |
-| IMF WEO GDP | gdp_weo_new.dta | 2025 vintage | 1_5_revenue_ictd |
+| IMF WEO GDP | https://www.imf.org/en/publications/sprolls/world-economic-outlook-databases | 2025 vintage | 1_5_revenue_ictd |
 | Historical Archives (HA) | raw_data/HA/*.dta | Fixed historical | 1_2_revenue_ha |
-| INSEE tax credits — France | aux_data/fra_credits | Updated per vintage | 3_6_ETR_countrychecks |
+| INSEE tax credits — France | https://www.insee.fr/fr/statistiques | Updated per vintage | 3_6_ETR_countrychecks |
 
 ::: {.callout-note}
 **WID note:** `wid2026_basic_raw.dta` is the active file for the 2026 update. `wid_basic_raw.dta` is the pre-2026 vintage retained for reference in `2_3_factorshares_importsna2024_2clean.do`.
