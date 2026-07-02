@@ -232,7 +232,7 @@
     "href": "index.html",
     "title": "ETR Atlas 2026 — Pipeline Documentation",
     "section": "",
-    "text": "This website documents the code pipeline used to compute Effective Tax Rates (ETRs) for the Atlas of the Offshore World. It is intended as a working reference for research assistants and collaborators who maintain, update, or extend the routine.\nThe pipeline is organised in three modules:",
+    "text": "The Atlas of the Offshore World is a joint effort by the International Tax Observatory and Skatteforsk - Norwegian Centre for Tax Research to inform the global debate around international tax evasion and avoidance. It offers up-to-date information on the dynamics of profit shifting by multinational companies, offshore wealth, and the taxation of capital and labour across countries.\nThis website documents the code pipeline used to compute Effective Tax Rates (ETRs) for the Atlas. ETRs measure how much each factor of production actually remits in taxes as a share of the income it earns in the economy, covering capital (ETR_K), labour (ETR_L), and corporate profits (ETR_cit), alongside total tax revenue as a share of net domestic product, for 155 countries from 1965 to 2023. Because ETRs are based on revenues actually collected rather than statutory rates, they capture the net effect of all tax rules, evasion, and avoidance, and can be constructed in a comparable fashion across countries and back in time.\nThe pipeline is organised in three modules:",
     "crumbs": [
       "Home",
       "Introduction"
