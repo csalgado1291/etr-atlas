@@ -324,6 +324,7 @@ ul.task-list li input[type="checkbox"] {
 <th>Source</th>
 <th>Download</th>
 <th>Last downloaded</th>
+<th>Notes</th>
 <th>Used by</th>
 </tr>
 </thead>
@@ -332,60 +333,70 @@ ul.task-list li input[type="checkbox"] {
 <td>OECD Global Revenue Statistics</td>
 <td><a href="https://www.oecd.org/en/data/datasets">OECD website</a></td>
 <td>Jan 2026</td>
+<td>Preferred source for OECD countries; most detailed tax disaggregation available</td>
 <td>1_1_revenue_oecd</td>
 </tr>
 <tr class="even">
 <td>IMF Government Finance Statistics</td>
 <td><a href="https://data.imf.org/en">IMF website</a></td>
 <td>Apr 2025</td>
+<td>Fallback where OECD is unavailable; extends historical coverage to 1972</td>
 <td>1_3_revenue_imf</td>
 </tr>
 <tr class="odd">
 <td>WID (World Inequality Database)</td>
 <td><a href="https://wid.world/">WID website</a></td>
 <td>2026 vintage</td>
+<td>Primary source for ETR denominators; provides income components by institutional sector</td>
 <td>1_9_revenue_nni_1_collect, 2_1_factorshares_importwid_2026</td>
 </tr>
 <tr class="even">
 <td>ICTD Government Revenue Dataset</td>
 <td><a href="https://www.ictd.ac/dataset">ICTD website</a></td>
 <td>Mar 2026</td>
+<td>Main fallback for developing countries not covered by OECD or IMF</td>
 <td>1_5_revenue_ictd</td>
 </tr>
 <tr class="odd">
 <td>UN National Accounts (SNA 2025)</td>
 <td><a href="https://unstats.un.org/UNSDWebsite/">UN Stats website</a></td>
 <td>2025 vintage</td>
+<td>Complements WID with recent sector-level national accounts data</td>
 <td>2_3_factorshares_importsna2024_1import</td>
 </tr>
 <tr class="even">
 <td>OECD SNA — China</td>
 <td><a href="https://data-explorer.oecd.org/">OECD Data Explorer</a></td>
 <td>2026 vintage</td>
+<td>Extends China sector accounts to 2023 where UN SNA ends at 2021</td>
 <td>2_4_factorshares_import_chn</td>
 </tr>
 <tr class="odd">
 <td>PYZ (Piketty-Yang-Zucman 2019)</td>
 <td>CHN_raw_1_PYZdata</td>
 <td>Static (covers to 2021)</td>
+<td>Corrects Chinese household and corporate income using survey micro-data</td>
 <td>2_4_factorshares_import_chn</td>
 </tr>
 <tr class="even">
 <td>IMF WEO GDP</td>
 <td><a href="https://www.imf.org/en/publications/sprolls/world-economic-outlook-databases">IMF WEO website</a></td>
 <td>2025 vintage</td>
+<td>Converts ICTD percentage-of-GDP series to absolute currency amounts</td>
 <td>1_5_revenue_ictd</td>
 </tr>
 <tr class="odd">
 <td>Historical Archives (HA)</td>
 <td>raw_data/HA/*.dta</td>
 <td>Fixed historical</td>
+<td>Provides pre-1972 revenue coverage not available in OECD or IMF</td>
 <td>1_2_revenue_ha</td>
 </tr>
 <tr class="even">
 <td>INSEE tax credits — France</td>
 <td><a href="https://www.insee.fr/fr/statistiques">INSEE website</a></td>
 <td>Updated per vintage</td>
+<td>Corrects French ETR_cit for tax credits not captured in revenue statistics</td>
 <td>3_6_ETR_countrychecks</td>
 </tr>
 </tbody>
